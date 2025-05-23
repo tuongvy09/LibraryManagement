@@ -46,6 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\BorrowSlip.cs" />
+    <Compile Include="Models\BorrowSlipDetail.cs" />
+    <Compile Include="Repositories\BorrowSlipDetailRepository.cs" />
+    <Compile Include="Repositories\BorrowSlipRepository.cs" />
+    <Compile Include="Services\BorrowService.cs" />
     <Compile Include="UI\Home.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +67,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\Login.Designer.cs" />
+    <Compile Include="UI\UC_BorrowSlip.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\UC_BorrowSlip.Designer.cs">
+      <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="UI\Home.resx">
       <DependentUpon>Home.cs</DependentUpon>
     </EmbeddedResource>
@@ -76,6 +87,9 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="UI\Login.resx" />
+    <EmbeddedResource Include="UI\UC_BorrowSlip.resx">
+      <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
