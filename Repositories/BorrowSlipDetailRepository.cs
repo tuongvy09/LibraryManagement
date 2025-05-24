@@ -21,7 +21,7 @@ namespace LibraryManagement.Repositories
         {
             var list = new List<BorrowSlipDetail>();
             string query = "SELECT * FROM BorrowSlipDetails WHERE SlipID = @SlipID";
-            using (SqlCommand cmd = new SqlCommand(query, db.conn))
+            using (SqlCommand cmd = new SqlCommand(query, db.GetConnection()))
             {
                 cmd.Parameters.AddWithValue("@SlipID", slipId);
                 using (SqlDataReader reader = cmd.ExecuteReader())

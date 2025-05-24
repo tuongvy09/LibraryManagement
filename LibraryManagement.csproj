@@ -48,9 +48,62 @@
   <ItemGroup>
     <Compile Include="Models\BorrowSlip.cs" />
     <Compile Include="Models\BorrowSlipDetail.cs" />
+    <Compile Include="Models\CuonSach.cs" />
+    <Compile Include="Models\CuonSachDetailModel.cs" />
+    <Compile Include="Models\DauSach.cs" />
+    <Compile Include="Models\NhaXuatBan.cs" />
+    <Compile Include="Models\TheLoai.cs" />
     <Compile Include="Repositories\BorrowSlipDetailRepository.cs" />
     <Compile Include="Repositories\BorrowSlipRepository.cs" />
+    <Compile Include="Repositories\CuonSachRepository.cs" />
+    <Compile Include="Repositories\DauSachRepository.cs" />
+    <Compile Include="Repositories\DauSachTacGiaRepository.cs" />
+    <Compile Include="Repositories\NXBRepository.cs" />
+    <Compile Include="Repositories\TacGiaRepository.cs" />
+    <Compile Include="Repositories\TheLoaiRepository.cs" />
     <Compile Include="Services\BorrowService.cs" />
+    <Compile Include="UI\AuthorModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AuthorModal.Designer.cs">
+      <DependentUpon>AuthorModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\CategoryModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\CategoryModal.Designer.cs">
+      <DependentUpon>CategoryModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddCuonSach.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddCuonSach.Designer.cs">
+      <DependentUpon>FormAddCuonSach.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddDauSach.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddDauSach.Designer.cs">
+      <DependentUpon>FormAddDauSach.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddNXB.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddNXB.Designer.cs">
+      <DependentUpon>FormAddNXB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddTG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddTG.Designer.cs">
+      <DependentUpon>FormAddTG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormUpdateCuonSach.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormUpdateCuonSach.Designer.cs">
+      <DependentUpon>FormUpdateCuonSach.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Home.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -73,6 +126,24 @@
     <Compile Include="UI\UC_BorrowSlip.Designer.cs">
       <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\Books\BookControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Books\BookControl.Designer.cs">
+      <DependentUpon>BookControl.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="UI\FormAddCuonSach.resx">
+      <DependentUpon>FormAddCuonSach.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormAddDauSach.resx">
+      <DependentUpon>FormAddDauSach.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormAddNXB.resx">
+      <DependentUpon>FormAddNXB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormAddTG.resx">
+      <DependentUpon>FormAddTG.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Home.resx">
       <DependentUpon>Home.cs</DependentUpon>
     </EmbeddedResource>
@@ -90,6 +161,9 @@
     <EmbeddedResource Include="UI\UC_BorrowSlip.resx">
       <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Books\BookControl.resx">
+      <DependentUpon>BookControl.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -105,6 +179,22 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Resources\teamwork.png" />
+    <None Include="Resources\voucher.png" />
+    <None Include="Resources\reciept.png" />
+    <None Include="Resources\readers.png" />
+    <None Include="Resources\user.png" />
+    <None Include="Resources\receipt %281%29.png" />
+    <None Include="Resources\receipt.png" />
+    <None Include="Resources\pupil.png" />
+    <None Include="Resources\bg_home_left.bmp" />
+    <None Include="Resources\bg_home_left.jpg" />
+    <None Include="Resources\bg_home_r.png" />
+    <None Include="Resources\home_logo %282%29.png" />
+    <None Include="Resources\book.png" />
+    <None Include="Resources\borrow.png" />
+    <None Include="Resources\book %281%29.png" />
+    <None Include="Resources\books.png" />
     <Content Include="Resources\home_logo.png" />
     <Content Include="Resources\login.jpg" />
     <Content Include="Resources\logo.png" />

@@ -22,23 +22,30 @@ namespace LibraryManagement.Repositories
             User user = null;
             string query = "SELECT UserID, Username, Password, Role FROM Users WHERE Username = @Username";
 
-            using (SqlCommand cmd = new SqlCommand(query, dbConnection.conn))
+            using (SqlConnection conn = dbConnection.GetConnection())
             {
-                cmd.Parameters.AddWithValue("@Username", username);
+                conn.Open();
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    if (reader.Read())
+                    cmd.Parameters.AddWithValue("@Username", username);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        user = new User
+                        if (reader.Read())
                         {
-                            UserID = (int)reader["UserID"],
-                            Username = reader["Username"].ToString(),
-                            Password = reader["Password"].ToString(),
-                            Role = reader["Role"].ToString()
-                        };
+                            user = new User
+                            {
+                                UserID = (int)reader["UserID"],
+                                Username = reader["Username"].ToString(),
+                                Password = reader["Password"].ToString(),
+                                Role = reader["Role"].ToString()
+                            };
+                        }
                     }
                 }
+
+                conn.Close();
             }
             return user;
         }
