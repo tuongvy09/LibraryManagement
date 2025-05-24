@@ -8,20 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LibraryManagement
+namespace LibraryManagement.UI
 {
-    public partial class Home : Form
+    public partial class AuthorModal : Form
     {
-        public Home()
+        public AuthorModal()
         {
             InitializeComponent();
-            InitializeMenuButtons();
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

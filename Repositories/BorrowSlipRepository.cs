@@ -21,7 +21,7 @@ namespace LibraryManagement.Repositories
         {
             var list = new List<BorrowSlip>();
             string query = "SELECT * FROM BorrowSlips";
-            using (SqlCommand cmd = new SqlCommand(query, db.conn))
+            using (SqlCommand cmd = new SqlCommand(query, db.GetConnection()))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
