@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LibraryManagement.Models;
 
 namespace LibraryManagement.Repositories
 {
@@ -17,38 +18,64 @@ namespace LibraryManagement.Repositories
         {
             public void AddTacGia(string tenTG)
             {
-                string query = "INSERT INTO TacGia (TenTG) VALUES (@TenTG)";
-                SqlCommand cmd = new SqlCommand(query, GetConnection());
-                cmd.Parameters.AddWithValue("@TenTG", tenTG);
-                GetConnection().Open();
-                cmd.ExecuteNonQuery();
-                GetConnection().Close();
+                using (SqlConnection conn = GetConnection())
+                {
+                    string query = "INSERT INTO TacGia (TenTG) VALUES (@TenTG)";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@TenTG", tenTG);
+
+                    try
+                    {
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi khi thêm Tác giả: " + ex.Message);
+                    }
+                }
             }
 
             public void UpdateTacGia(int maTacGia, string tenTG)
             {
                 string query = "UPDATE TacGia SET TenTG = @TenTG WHERE MaTacGia = @MaTacGia";
-                SqlCommand cmd = new SqlCommand(query, GetConnection());
-                cmd.Parameters.AddWithValue("@MaTacGia", maTacGia);
-                cmd.Parameters.AddWithValue("@TenTG", tenTG);
-                GetConnection().Open();
-                cmd.ExecuteNonQuery();
-                GetConnection().Close();
+
+                using (SqlConnection conn = GetConnection())
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaTacGia", maTacGia);
+                    cmd.Parameters.AddWithValue("@TenTG", tenTG);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
             }
 
             public void DeleteTacGia(int maTacGia)
             {
-                string query = "DELETE FROM TacGia WHERE MaTacGia = @MaTacGia";
-                SqlCommand cmd = new SqlCommand(query, GetConnection());
-                cmd.Parameters.AddWithValue("@MaTacGia", maTacGia);
-                GetConnection().Open();
-                cmd.ExecuteNonQuery();
-                GetConnection().Close();
+                using (SqlConnection conn = GetConnection())
+                {
+                    conn.Open();
+
+                    string deleteLinksQuery = "DELETE FROM DauSach_TacGia WHERE MaTacGia = @MaTacGia";
+                    using (SqlCommand cmdLinks = new SqlCommand(deleteLinksQuery, conn))
+                    {
+                        cmdLinks.Parameters.AddWithValue("@MaTacGia", maTacGia);
+                        cmdLinks.ExecuteNonQuery();
+                    }
+
+                    string deleteTacGiaQuery = "DELETE FROM TacGia WHERE MaTacGia = @MaTacGia";
+                    using (SqlCommand cmdDelete = new SqlCommand(deleteTacGiaQuery, conn))
+                    {
+                        cmdDelete.Parameters.AddWithValue("@MaTacGia", maTacGia);
+                        cmdDelete.ExecuteNonQuery();
+                    }
+                }
             }
 
-            public List<(int MaTacGia, string TenTG)> GetAllTacGia()
+            public List<TacGia> GetAllTacGia()
             {
-                List<(int, string)> result = new List<(int, string)>();
+                List<TacGia> result = new List<TacGia>();
                 string query = "SELECT MaTacGia, TenTG FROM TacGia";
 
                 var db = new DBConnection();
@@ -70,7 +97,12 @@ namespace LibraryManagement.Repositories
                             {
                                 while (reader.Read())
                                 {
-                                    result.Add((reader.GetInt32(0), reader.GetString(1)));
+                                    TacGia tg = new TacGia
+                                    {
+                                        MaTacGia = reader.GetInt32(0),
+                                        TenTG = reader.GetString(1)
+                                    };
+                                    result.Add(tg);
                                 }
                             }
                         }
@@ -89,20 +121,43 @@ namespace LibraryManagement.Repositories
                 return result;
             }
 
-            public List<string> SearchTacGia(string keyword)
+            public List<TacGia> GetTacGias(string searchTerm = "")
             {
-                List<string> result = new List<string>();
-                string query = "SELECT TenTG FROM TacGia WHERE TenTG LIKE @Keyword";
-                SqlCommand cmd = new SqlCommand(query, GetConnection());
-                cmd.Parameters.AddWithValue("@Keyword", "%" + keyword + "%");
-                GetConnection().Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+                List<TacGia> list = new List<TacGia>();
+
+                using (SqlConnection conn = GetConnection())
                 {
-                    result.Add(reader.GetString(0));
+                    conn.Open();
+
+                    string query = "SELECT * FROM TacGia";
+
+                    if (!string.IsNullOrEmpty(searchTerm))
+                    {
+                        query += " WHERE TenTG LIKE @SearchTerm";
+                    }
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        if (!string.IsNullOrEmpty(searchTerm))
+                        {
+                            cmd.Parameters.AddWithValue("@SearchTerm", "%" + searchTerm + "%");
+                        }
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                TacGia tg = new TacGia()
+                                {
+                                    MaTacGia = (int)reader["MaTacGia"],
+                                    TenTG = reader["TenTG"].ToString(),
+                                };
+                                list.Add(tg);
+                            }
+                        }
+                    }
                 }
-                GetConnection().Close();
-                return result;
+                return list;
             }
         }
     }

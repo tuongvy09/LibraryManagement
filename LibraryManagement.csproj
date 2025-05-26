@@ -52,6 +52,7 @@
     <Compile Include="Models\CuonSachDetailModel.cs" />
     <Compile Include="Models\DauSach.cs" />
     <Compile Include="Models\NhaXuatBan.cs" />
+    <Compile Include="Models\TacGia.cs" />
     <Compile Include="Models\TheLoai.cs" />
     <Compile Include="Repositories\BorrowSlipDetailRepository.cs" />
     <Compile Include="Repositories\BorrowSlipRepository.cs" />
@@ -68,11 +69,11 @@
     <Compile Include="UI\AuthorModal.Designer.cs">
       <DependentUpon>AuthorModal.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\CategoryModal.cs">
+    <Compile Include="UI\FormAddTheLoai.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\CategoryModal.Designer.cs">
-      <DependentUpon>CategoryModal.cs</DependentUpon>
+    <Compile Include="UI\FormAddTheLoai.Designer.cs">
+      <DependentUpon>FormAddTheLoai.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\FormAddCuonSach.cs">
       <SubType>Form</SubType>
@@ -97,6 +98,30 @@
     </Compile>
     <Compile Include="UI\FormAddTG.Designer.cs">
       <DependentUpon>FormAddTG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormManageDauSach.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormManageDauSach.Designer.cs">
+      <DependentUpon>FormManageDauSach.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormManageNXB.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormManageNXB.Designer.cs">
+      <DependentUpon>FormManageNXB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormManageTG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormManageTG.Designer.cs">
+      <DependentUpon>FormManageTG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormManageTheLoai.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormManageTheLoai.Designer.cs">
+      <DependentUpon>FormManageTheLoai.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\FormUpdateCuonSach.cs">
       <SubType>Form</SubType>
@@ -126,11 +151,23 @@
     <Compile Include="UI\UC_BorrowSlip.Designer.cs">
       <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\Books\BookControl.cs">
+    <Compile Include="UserControls\SachControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\Books\BookControl.Designer.cs">
-      <DependentUpon>BookControl.cs</DependentUpon>
+    <Compile Include="UserControls\SachControl.Designer.cs">
+      <DependentUpon>SachControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\LichSuControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\LichSuControl.Designer.cs">
+      <DependentUpon>LichSuControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\NguoiDungControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\NguoiDungControl.Designer.cs">
+      <DependentUpon>NguoiDungControl.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="UI\FormAddCuonSach.resx">
       <DependentUpon>FormAddCuonSach.cs</DependentUpon>
@@ -161,8 +198,8 @@
     <EmbeddedResource Include="UI\UC_BorrowSlip.resx">
       <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\Books\BookControl.resx">
-      <DependentUpon>BookControl.cs</DependentUpon>
+    <EmbeddedResource Include="UserControls\SachControl.resx">
+      <DependentUpon>SachControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -195,6 +232,7 @@
     <None Include="Resources\borrow.png" />
     <None Include="Resources\book %281%29.png" />
     <None Include="Resources\books.png" />
+    <None Include="Resources\history-book.png" />
     <Content Include="Resources\home_logo.png" />
     <Content Include="Resources\login.jpg" />
     <Content Include="Resources\logo.png" />
