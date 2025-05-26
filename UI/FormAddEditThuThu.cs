@@ -14,9 +14,8 @@ namespace LibraryManagement.UI
     {
         private Label lblTitle;
         private Label lblTenThuThu, lblEmail, lblSoDienThoai, lblDiaChi;
-        private Label lblNgayBatDauLam, lblNgaySinh, lblGioiTinh, lblUsername, lblPassword;
+        private Label lblNgayBatDauLam, lblNgaySinh, lblGioiTinh;
         private TextBox txtTenThuThu, txtEmail, txtSoDienThoai, txtDiaChi;
-        private TextBox txtUsername, txtPassword;
         private DateTimePicker dtpNgayBatDauLam, dtpNgaySinh;
         private ComboBox cboGioiTinh;
 
@@ -29,7 +28,6 @@ namespace LibraryManagement.UI
             this.ClientSize = new System.Drawing.Size(821, 383);
             this.Name = "FormAddEditThuThu";
             this.ResumeLayout(false);
-
         }
 
         private CheckBox chkTrangThai;
@@ -58,7 +56,7 @@ namespace LibraryManagement.UI
         private void InitializeComponentForm()
         {
             this.Text = "Thêm/Sửa Thủ thư";
-            this.Size = new Size(500, 600);
+            this.Size = new Size(500, 450); // Giảm chiều cao vì bớt 2 trường
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -218,52 +216,11 @@ namespace LibraryManagement.UI
             };
             this.Controls.Add(dtpNgayBatDauLam);
 
-            // Username
-            lblUsername = new Label()
-            {
-                Text = "Tài khoản: *",
-                Location = new Point(20, 340),
-                AutoSize = true,
-                Font = new Font("Segoe UI", 10),
-                ForeColor = mainColor
-            };
-            this.Controls.Add(lblUsername);
-
-            txtUsername = new TextBox()
-            {
-                Location = new Point(150, 337),
-                Width = 150,
-                Font = new Font("Segoe UI", 10),
-                Enabled = !isEditMode
-            };
-            this.Controls.Add(txtUsername);
-
-            // Password
-            lblPassword = new Label()
-            {
-                Text = "Mật khẩu: *",
-                Location = new Point(20, 380),
-                AutoSize = true,
-                Font = new Font("Segoe UI", 10),
-                ForeColor = mainColor
-            };
-            this.Controls.Add(lblPassword);
-
-            txtPassword = new TextBox()
-            {
-                Location = new Point(150, 377),
-                Width = 150,
-                Font = new Font("Segoe UI", 10),
-                PasswordChar = '*',
-                Enabled = !isEditMode
-            };
-            this.Controls.Add(txtPassword);
-
             // Trạng thái
             chkTrangThai = new CheckBox()
             {
                 Text = "Hoạt động",
-                Location = new Point(150, 420),
+                Location = new Point(150, 340),
                 AutoSize = true,
                 Font = new Font("Segoe UI", 10),
                 ForeColor = mainColor,
@@ -277,7 +234,7 @@ namespace LibraryManagement.UI
                 Text = "Lưu",
                 BackColor = mainColor,
                 ForeColor = Color.White,
-                Location = new Point(150, 470),
+                Location = new Point(150, 380),
                 Size = new Size(80, 35),
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10)
@@ -291,7 +248,7 @@ namespace LibraryManagement.UI
                 Text = "Hủy",
                 BackColor = Color.Gray,
                 ForeColor = Color.White,
-                Location = new Point(250, 470),
+                Location = new Point(250, 380),
                 Size = new Size(80, 35),
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10)
@@ -313,7 +270,6 @@ namespace LibraryManagement.UI
                 dtpNgayBatDauLam.Value = thuThuToEdit.NgayBatDauLam;
                 cboGioiTinh.Text = thuThuToEdit.GioiTinh;
                 chkTrangThai.Checked = thuThuToEdit.TrangThai;
-                txtUsername.Text = thuThuToEdit.Username;
             }
         }
 
@@ -344,7 +300,7 @@ namespace LibraryManagement.UI
                 }
                 else
                 {
-                    success = thuThuDAO.InsertThuThu(thuThu, txtUsername.Text.Trim(), txtPassword.Text);
+                    success = thuThuDAO.InsertThuThu(thuThu);
                 }
 
                 if (success)
@@ -376,27 +332,50 @@ namespace LibraryManagement.UI
                 return false;
             }
 
-            if (!isEditMode)
+            // Validation cho email nếu có nhập
+            if (!string.IsNullOrWhiteSpace(txtEmail.Text))
             {
-                if (string.IsNullOrWhiteSpace(txtUsername.Text))
+                if (!IsValidEmail(txtEmail.Text))
                 {
-                    MessageBox.Show("Vui lòng nhập tài khoản!", "Thông báo",
+                    MessageBox.Show("Email không hợp lệ!", "Thông báo",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtUsername.Focus();
+                    txtEmail.Focus();
                     return false;
                 }
+            }
 
-                if (string.IsNullOrWhiteSpace(txtPassword.Text))
+            // Validation cho số điện thoại nếu có nhập
+            if (!string.IsNullOrWhiteSpace(txtSoDienThoai.Text))
+            {
+                if (!IsValidPhoneNumber(txtSoDienThoai.Text))
                 {
-                    MessageBox.Show("Vui lòng nhập mật khẩu!", "Thông báo",
+                    MessageBox.Show("Số điện thoại không hợp lệ!", "Thông báo",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtPassword.Focus();
+                    txtSoDienThoai.Focus();
                     return false;
                 }
             }
 
             return true;
         }
+
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool IsValidPhoneNumber(string phoneNumber)
+        {
+            // Kiểm tra số điện thoại Việt Nam (10-11 số, bắt đầu bằng 0)
+            return System.Text.RegularExpressions.Regex.IsMatch(phoneNumber, @"^0\d{9,10}$");
+        }
     }
 }
-
