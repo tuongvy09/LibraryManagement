@@ -105,11 +105,14 @@ namespace LibraryManagement.Repositories
         public void DeleteCuonSach(int maCuonSach)
         {
             string query = "DELETE FROM CuonSach WHERE MaCuonSach = @MaCuonSach";
-            SqlCommand cmd = new SqlCommand(query, GetConnection());
-            cmd.Parameters.AddWithValue("@MaCuonSach", maCuonSach);
-            GetConnection().Open();
-            cmd.ExecuteNonQuery();
-            GetConnection().Close();
+
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@MaCuonSach", maCuonSach);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public List<CuonSachDetailModel> GetAllCuonSachDetails()

@@ -52,7 +52,7 @@ namespace LibraryManagement
             {
                 MessageBox.Show("Đăng nhập thành công! Quyền: " + role);
                 this.Hide();
-                new Home().Show(); // Có thể thay đổi theo role
+                new Home(role).Show();
             }
             else
             {

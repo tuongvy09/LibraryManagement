@@ -1,6 +1,7 @@
 ﻿using LibraryManagement.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -25,26 +26,58 @@ namespace LibraryManagement.Repositories
             }
         }
 
-
         public void UpdateNXB(int maNXB, string tenNXB)
         {
-            string query = "UPDATE NXB SET TenNSB = @TenNSB WHERE MaNXB = @MaNXB";
-            SqlCommand cmd = new SqlCommand(query, GetConnection());
-            cmd.Parameters.AddWithValue("@MaNXB", maNXB);
-            cmd.Parameters.AddWithValue("@TenNSB", tenNXB);
-            GetConnection().Open();
-            cmd.ExecuteNonQuery();
-            GetConnection().Close();
+            string query = "UPDATE NXB SET TenNSB = @TenNXB WHERE MaNXB = @MaNXB";
+
+            using (SqlConnection conn = GetConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaNXB", maNXB);
+                    cmd.Parameters.AddWithValue("@TenNSB", tenNXB);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public void DeleteNXB(int maNXB)
         {
             string query = "DELETE FROM NXB WHERE MaNXB = @MaNXB";
-            SqlCommand cmd = new SqlCommand(query, GetConnection());
-            cmd.Parameters.AddWithValue("@MaNXB", maNXB);
-            GetConnection().Open();
-            cmd.ExecuteNonQuery();
-            GetConnection().Close();
+
+            using (SqlConnection conn = GetConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaNXB", maNXB);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // Hàm tìm kiếm NXB theo tên (partial match)
+        public DataTable SearchNXB(string tenNXB)
+        {
+            string query = "SELECT * FROM NXB WHERE TenNSB LIKE @TenNSB";
+
+            DataTable dt = new DataTable();
+            using (SqlConnection conn = GetConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@TenNSB", "%" + tenNXB + "%");
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dt);
+                    }
+                }
+            }
+            return dt;
         }
 
         public List<NhaXuatBan> GetAllNXB()
