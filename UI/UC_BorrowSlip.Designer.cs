@@ -31,13 +31,16 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvBorrowSlips = new System.Windows.Forms.DataGridView();
-            this.dgvBorrowDetails = new System.Windows.Forms.DataGridView();
             this.btnAdd = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnViewDetails = new System.Windows.Forms.Button();
             this.lblTitle = new System.Windows.Forms.Label();
             this.lblDetailsTitle = new System.Windows.Forms.Label();
+            this.dgvBorrowDetails = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBorrowSlips)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBorrowDetails)).BeginInit();
             this.SuspendLayout();
@@ -71,14 +74,7 @@
             this.dgvBorrowSlips.Name = "dgvBorrowSlips";
             this.dgvBorrowSlips.Size = new System.Drawing.Size(525, 194);
             this.dgvBorrowSlips.TabIndex = 0;
-            // 
-            // dgvBorrowDetails
-            // 
-            this.dgvBorrowDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvBorrowDetails.Location = new System.Drawing.Point(15, 319);
-            this.dgvBorrowDetails.Name = "dgvBorrowDetails";
-            this.dgvBorrowDetails.Size = new System.Drawing.Size(525, 125);
-            this.dgvBorrowDetails.TabIndex = 1;
+            this.dgvBorrowSlips.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvBorrowSlips_CellClick);
             // 
             // btnAdd
             // 
@@ -138,22 +134,52 @@
             this.lblDetailsTitle.AutoSize = true;
             this.lblDetailsTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDetailsTitle.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblDetailsTitle.Location = new System.Drawing.Point(180, 295);
+            this.lblDetailsTitle.Location = new System.Drawing.Point(180, 288);
             this.lblDetailsTitle.Name = "lblDetailsTitle";
             this.lblDetailsTitle.Size = new System.Drawing.Size(194, 21);
             this.lblDetailsTitle.TabIndex = 7;
             this.lblDetailsTitle.Text = "Chi Tiết Sách Trong Phiếu";
             // 
+            // dgvBorrowDetails
+            // 
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.LightGray;
+            this.dgvBorrowDetails.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            this.dgvBorrowDetails.BackgroundColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.DodgerBlue;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvBorrowDetails.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            this.dgvBorrowDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.LightBlue;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvBorrowDetails.DefaultCellStyle = dataGridViewCellStyle6;
+            this.dgvBorrowDetails.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
+            this.dgvBorrowDetails.EnableHeadersVisualStyles = false;
+            this.dgvBorrowDetails.GridColor = System.Drawing.Color.LightGray;
+            this.dgvBorrowDetails.Location = new System.Drawing.Point(15, 317);
+            this.dgvBorrowDetails.Name = "dgvBorrowDetails";
+            this.dgvBorrowDetails.Size = new System.Drawing.Size(525, 137);
+            this.dgvBorrowDetails.TabIndex = 8;
+            // 
             // UC_BorrowSlip
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.dgvBorrowDetails);
             this.Controls.Add(this.lblDetailsTitle);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btnViewDetails);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnAdd);
-            this.Controls.Add(this.dgvBorrowDetails);
             this.Controls.Add(this.dgvBorrowSlips);
             this.Name = "UC_BorrowSlip";
             this.Size = new System.Drawing.Size(555, 464);
@@ -167,11 +193,11 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dgvBorrowSlips;
-        private System.Windows.Forms.DataGridView dgvBorrowDetails;
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnViewDetails;
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Label lblDetailsTitle;
+        private System.Windows.Forms.DataGridView dgvBorrowDetails;
     }
 }

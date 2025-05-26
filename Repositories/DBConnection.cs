@@ -16,13 +16,25 @@ namespace LibraryManagement.Repositories
         {
             try
             {
-                conn = new SqlConnection(@"Data Source=DESKTOP-6LGUMNF;Initial Catalog=FinalProjectLtWins;Integrated Security=True");
+                // Thay đổi lại Data Source bên dưới nếu tên server bạn khác
+                string connectionString = @"Data Source=LAPTOP-S0F5B0E7;Initial Catalog=FinalProjectLtWins;Integrated Security=True";
 
+                conn = new SqlConnection(connectionString);
+                conn.Open(); // Mở kết nối ngay khi khởi tạo (nếu muốn)
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Login failed");
+                MessageBox.Show("Kết nối đến cơ sở dữ liệu thất bại: " + ex.Message, "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        public void CloseConnection()
+        {
+            if (conn != null && conn.State == System.Data.ConnectionState.Open)
+            {
+                conn.Close();
+            }
+        }
+
     }
 }
