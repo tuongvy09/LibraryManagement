@@ -61,58 +61,27 @@ namespace LibraryManagement.Repositories
             return thuThus;
         }
 
-        public bool InsertThuThu(ThuThu thuThu, string username, string password)
+        public bool InsertThuThu(ThuThu thuThu)
         {
-            using (SqlConnection conn = dbConnection.GetConnection())
+            using (SqlConnection connection = dbConnection.GetConnection())
             {
-                conn.Open();
-                SqlTransaction transaction = conn.BeginTransaction();
+                string query = @"INSERT INTO ThuThu (TenThuThu, Email, SoDienThoai, DiaChi, NgaySinh, NgayBatDauLam, GioiTinh, TrangThai) 
+                       VALUES (@TenThuThu, @Email, @SoDienThoai, @DiaChi, @NgaySinh, @NgayBatDauLam, @GioiTinh, @TrangThai)";
 
-                try
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    // Tạo user trước
-                    string userQuery = @"
-                        INSERT INTO Users (Username, Password, Role) 
-                        VALUES (@Username, @Password, @Role);
-                        SELECT SCOPE_IDENTITY();";
+                    command.Parameters.AddWithValue("@TenThuThu", thuThu.TenThuThu);
+                    command.Parameters.AddWithValue("@Email", (object)thuThu.Email ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@SoDienThoai", (object)thuThu.SoDienThoai ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@DiaChi", (object)thuThu.DiaChi ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@NgaySinh", thuThu.NgaySinh);
+                    command.Parameters.AddWithValue("@NgayBatDauLam", thuThu.NgayBatDauLam);
+                    command.Parameters.AddWithValue("@GioiTinh", (object)thuThu.GioiTinh ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@TrangThai", thuThu.TrangThai);
 
-                    SqlCommand userCmd = new SqlCommand(userQuery, conn, transaction);
-                    userCmd.Parameters.AddWithValue("@Username", username);
-                    userCmd.Parameters.AddWithValue("@Password", password); // Nên hash password
-                    userCmd.Parameters.AddWithValue("@Role", "ThuThu");
-
-                    int userID = Convert.ToInt32(userCmd.ExecuteScalar());
-
-                    // Tạo thủ thư
-                    string thuThuQuery = @"
-                        INSERT INTO ThuThu (TenThuThu, Email, SoDienThoai, DiaChi, 
-                                          NgayBatDauLam, NgaySinh, GioiTinh, TrangThai, 
-                                          NgayTao, UserID) 
-                        VALUES (@TenThuThu, @Email, @SoDienThoai, @DiaChi, 
-                                @NgayBatDauLam, @NgaySinh, @GioiTinh, @TrangThai, 
-                                @NgayTao, @UserID)";
-
-                    SqlCommand thuThuCmd = new SqlCommand(thuThuQuery, conn, transaction);
-                    thuThuCmd.Parameters.AddWithValue("@TenThuThu", thuThu.TenThuThu);
-                    thuThuCmd.Parameters.AddWithValue("@Email", thuThu.Email ?? (object)DBNull.Value);
-                    thuThuCmd.Parameters.AddWithValue("@SoDienThoai", thuThu.SoDienThoai ?? (object)DBNull.Value);
-                    thuThuCmd.Parameters.AddWithValue("@DiaChi", thuThu.DiaChi ?? (object)DBNull.Value);
-                    thuThuCmd.Parameters.AddWithValue("@NgayBatDauLam", thuThu.NgayBatDauLam);
-                    thuThuCmd.Parameters.AddWithValue("@NgaySinh", thuThu.NgaySinh);
-                    thuThuCmd.Parameters.AddWithValue("@GioiTinh", thuThu.GioiTinh ?? (object)DBNull.Value);
-                    thuThuCmd.Parameters.AddWithValue("@TrangThai", thuThu.TrangThai);
-                    thuThuCmd.Parameters.AddWithValue("@NgayTao", DateTime.Now);
-                    thuThuCmd.Parameters.AddWithValue("@UserID", userID);
-
-                    int result = thuThuCmd.ExecuteNonQuery();
-
-                    transaction.Commit();
+                    connection.Open();
+                    int result = command.ExecuteNonQuery();
                     return result > 0;
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
                 }
             }
         }

@@ -3,11 +3,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Collections.Generic;
 using LibraryManagement.UserControls;
-<<<<<<< HEAD
-using LibraryManagement.UI;
-=======
 using System.Linq;
->>>>>>> 3efa06028b32de362b0d3ea48f4e50e39ddbc7b9
+using LibraryManagement.UI;
 
 namespace LibraryManagement
 {
@@ -33,120 +30,128 @@ namespace LibraryManagement
         private void InitializeComponent()
         {
             this.sidebarPanel = new System.Windows.Forms.Panel();
-            this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.menuPanel = new System.Windows.Forms.FlowLayoutPanel();
-
+            this.logoPictureBox = new System.Windows.Forms.PictureBox();
+            this.contentPanel = new System.Windows.Forms.Panel();
+            this.sidebarPanel.SuspendLayout();
+            this.menuPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.SuspendLayout();
-
-            // 
-            // contentPanel (main content)
-            // 
-            this.contentPanel = new System.Windows.Forms.Panel();
-            this.contentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.contentPanel.BackColor = Color.White;
-
             // 
             // sidebarPanel
             // 
-            this.sidebarPanel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.sidebarPanel.Width = 330;
-            this.sidebarPanel.Paint += new PaintEventHandler(this.sidebarPanel_Paint);
             this.sidebarPanel.Controls.Add(this.menuPanel);
-
-            // 
-            // logoPictureBox
-            // 
-            this.logoPictureBox.Size = new System.Drawing.Size(220, 120);
-            this.logoPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-            this.logoPictureBox.Image = Properties.Resources.home_logo__2_;
-            this.logoPictureBox.Margin = new Padding(25, 20, 25, 10);
-
+            this.sidebarPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.sidebarPanel.Location = new System.Drawing.Point(0, 0);
+            this.sidebarPanel.Name = "sidebarPanel";
+            this.sidebarPanel.Size = new System.Drawing.Size(330, 800);
+            this.sidebarPanel.TabIndex = 1;
+            this.sidebarPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.sidebarPanel_Paint);
             // 
             // menuPanel
             // 
-            this.menuPanel.Dock = DockStyle.Fill;
-            this.menuPanel.FlowDirection = FlowDirection.TopDown;
-            this.menuPanel.WrapContents = false;
-            this.menuPanel.Padding = new Padding(10, 10, 10, 10);
             this.menuPanel.AutoScroll = true;
-            this.menuPanel.BackColor = Color.Transparent;
+            this.menuPanel.BackColor = System.Drawing.Color.Transparent;
             this.menuPanel.Controls.Add(this.logoPictureBox);
-
+            this.menuPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.menuPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.menuPanel.Location = new System.Drawing.Point(0, 0);
+            this.menuPanel.Name = "menuPanel";
+            this.menuPanel.Padding = new System.Windows.Forms.Padding(10);
+            this.menuPanel.Size = new System.Drawing.Size(330, 800);
+            this.menuPanel.TabIndex = 0;
+            this.menuPanel.WrapContents = false;
             // 
-            // Home Form
+            // logoPictureBox
+            // 
+            this.logoPictureBox.Image = global::LibraryManagement.Properties.Resources.home_logo__2_;
+            this.logoPictureBox.Location = new System.Drawing.Point(35, 30);
+            this.logoPictureBox.Margin = new System.Windows.Forms.Padding(25, 20, 25, 10);
+            this.logoPictureBox.Name = "logoPictureBox";
+            this.logoPictureBox.Size = new System.Drawing.Size(220, 120);
+            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.logoPictureBox.TabIndex = 0;
+            this.logoPictureBox.TabStop = false;
+            // 
+            // contentPanel
+            // 
+            this.contentPanel.BackColor = System.Drawing.Color.White;
+            this.contentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.contentPanel.Location = new System.Drawing.Point(330, 0);
+            this.contentPanel.Name = "contentPanel";
+            this.contentPanel.Size = new System.Drawing.Size(1551, 800);
+            this.contentPanel.TabIndex = 0;
+            // 
+            // Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1600, 800);
+            this.ClientSize = new System.Drawing.Size(1881, 800);
             this.Controls.Add(this.contentPanel);
             this.Controls.Add(this.sidebarPanel);
             this.Name = "Home";
             this.Text = "Hệ thống Quản lý Thư viện";
-            this.WindowState = FormWindowState.Maximized;
-
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.sidebarPanel.ResumeLayout(false);
+            this.menuPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
             this.ResumeLayout(false);
-        }
-<<<<<<< HEAD
 
+        }
+
+        // Method overload - có thể gọi với hoặc không có role
         private void InitializeMenuButtons()
         {
-            // Cập nhật menu items để bao gồm chức năng của AT
-            string[] menuItems = {
-                //"Trang chủ",
-                //"--- QUẢN LÝ NHÂN SỰ ---",
-                "Quản lý Thủ thư",
-                //"--- QUẢN LÝ ĐỘC GIẢ ---",
-                "Quản lý Độc giả",
-                "Quản lý Thẻ thư viện",
-                //"--- QUẢN LÝ SÁCH ---",
-                "Sách",
-                //"--- QUẢN LỚ MƯỢN TRẢ ---",
-                "Mượn sách",
-                "Phiếu phạt",
-                "Biên lai",
-                //"--- THỐNG KÊ - BÁO CÁO ---",
-                "Thống kê Độc giả",
-                //"--- QUẢN TRỊ HỆ THỐNG ---",
-                "Người dùng"
-            };
+            InitializeMenuButtons("user"); // Default role
+        }
 
-            Dictionary<string, Image> menuIcons = new Dictionary<string, Image>()
-            {
-                //{ "Trang chủ", Properties.Resources.home ?? CreateDefaultIcon() },
-                { "Quản lý Thủ thư", Properties.Resources.librarian ?? CreateDefaultIcon() },
-                { "Quản lý Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
-                { "Quản lý Thẻ thư viện", Properties.Resources.library_card ?? CreateDefaultIcon() },
-                { "Sách", Properties.Resources.books ?? CreateDefaultIcon() },
-                { "Mượn sách", Properties.Resources.book__1_ ?? CreateDefaultIcon() },
-                { "Phiếu phạt", Properties.Resources.voucher ?? CreateDefaultIcon() },
-                { "Biên lai", Properties.Resources.reciept ?? CreateDefaultIcon() },
-                { "Thống kê Độc giả", Properties.Resources.statistics ?? CreateDefaultIcon() },
-                { "Người dùng", Properties.Resources.teamwork ?? CreateDefaultIcon() }
-            };
-=======
         private void InitializeMenuButtons(string role)
         {
             currentUserRole = role;
->>>>>>> 3efa06028b32de362b0d3ea48f4e50e39ddbc7b9
 
-            string[] menuItems = { "Sách", "Độc giả", "Mượn sách", "Phiếu phạt", "Biên lai" };
+            // Giữ nguyên cấu trúc của incoming main + thêm phần AT
+            List<string> menuItems = new List<string>();
+
+            // Thêm phần của AT - Quản lý nhân sự
+            menuItems.Add("--- QUẢN LÝ NHÂN SỰ ---");
+            menuItems.Add("Quản lý Thủ thư");
+
+            // Thêm phần của AT - Quản lý độc giả (tách riêng)
+            menuItems.Add("--- QUẢN LÝ ĐỘC GIẢ ---");
+            menuItems.Add("Quản lý Độc giả");
+            menuItems.Add("Quản lý Thẻ thư viện");
+
+            // Giữ nguyên cấu trúc của incoming main
+            menuItems.AddRange(new[] { "Sách", "Độc giả", "Mượn sách", "Phiếu phạt", "Biên lai" });
+
+            // Thêm phần thống kê của AT
+            menuItems.Add("--- THỐNG KÊ - BÁO CÁO ---");
+            menuItems.Add("Thống kê Độc giả");
+
+            // Giữ nguyên logic admin của incoming main
             if (role == "admin")
             {
-                menuItems = menuItems.Concat(new[] { "Người dùng", "Lịch sử thao tác" }).ToArray();
+                menuItems = menuItems.Concat(new[] { "Người dùng", "Lịch sử thao tác" }).ToArray().ToList();
             }
 
             Dictionary<string, Image> menuIcons = new Dictionary<string, Image>()
             {
-                { "Sách", Properties.Resources.books },
-                { "Độc giả", Properties.Resources.readers },
-                { "Mượn sách", Properties.Resources.book__1_ },
-                { "Phiếu phạt", Properties.Resources.voucher },
-                { "Biên lai", Properties.Resources.reciept },
-                { "Người dùng", Properties.Resources.teamwork },
-                { "Lịch sử thao tác", Properties.Resources.history_book }
+                // Icons cho phần AT
+                { "Quản lý Thủ thư", Properties.Resources.librarian ?? CreateDefaultIcon() },
+                { "Quản lý Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
+                { "Quản lý Thẻ thư viện", Properties.Resources.library_card ?? CreateDefaultIcon() },
+                { "Thống kê Độc giả", Properties.Resources.statistics ?? CreateDefaultIcon() },
+                
+                // Giữ nguyên icons của incoming main
+                { "Sách", Properties.Resources.books ?? CreateDefaultIcon() },
+                { "Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
+                { "Mượn sách", Properties.Resources.book__1_ ?? CreateDefaultIcon() },
+                { "Phiếu phạt", Properties.Resources.voucher ?? CreateDefaultIcon() },
+                { "Biên lai", Properties.Resources.reciept ?? CreateDefaultIcon() },
+                { "Người dùng", Properties.Resources.teamwork ?? CreateDefaultIcon() },
+                { "Lịch sử thao tác", Properties.Resources.history_book ?? CreateDefaultIcon() }
             };
+
             foreach (var item in menuItems)
             {
                 // Tạo separator cho các mục bắt đầu bằng "---"
@@ -211,24 +216,12 @@ namespace LibraryManagement
 
             switch (item)
             {
-<<<<<<< HEAD
-                //case "Trang chủ":
-                //    newContent = new DashboardControl();
-                //    break;
-
+                // Phần của AT - Quản lý nhân sự (tách riêng)
                 case "Quản lý Thủ thư":
                     newForm = new FormThuThuManagement();
-=======
-                case "Sách":
-                    newContent = new SachControl();
-                    newContent.Dock = DockStyle.Fill;
-                    break;
-                case "Người dùng":
-                    newContent = new NguoiDungControl();
-                    newContent.Dock = DockStyle.Fill;
->>>>>>> 3efa06028b32de362b0d3ea48f4e50e39ddbc7b9
                     break;
 
+                // Phần của AT - Quản lý độc giả (tách riêng)
                 case "Quản lý Độc giả":
                     newForm = new FormDocGiaManagement();
                     break;
@@ -237,19 +230,55 @@ namespace LibraryManagement
                 //    newForm = new FormTheThuVienManagement();
                 //    break;
 
-                case "Sách":
-                    newContent = new BookControl();
-                    break;
-
+                // Phần của AT - Thống kê
                 case "Thống kê Độc giả":
                     newForm = new FormThongKe();
                     break;
 
-                //case "Người dùng":
-                //    newForm = new FormUserManagement();
-                //    break;
+                // Giữ nguyên cấu trúc của incoming main
+                case "Sách":
+                    newContent = new SachControl();
+                    newContent.Dock = DockStyle.Fill;
+                    break;
 
-                    // Thêm các case khác cho phần của Ngân và TVy
+                case "Độc giả":
+                    newContent = new NguoiDungControl();
+                    newContent.Dock = DockStyle.Fill;
+                    break;
+
+                case "Mượn sách":
+                    // Giữ nguyên - chưa implement trong incoming main
+                    break;
+
+                case "Phiếu phạt":
+                    // Giữ nguyên - chưa implement trong incoming main
+                    break;
+
+                case "Biên lai":
+                    // Giữ nguyên - chưa implement trong incoming main
+                    break;
+
+                case "Người dùng":
+                    newContent = new NguoiDungControl();
+                    newContent.Dock = DockStyle.Fill;
+                    break;
+
+                case "Lịch sử thao tác":
+                    // Giữ nguyên - chưa implement trong incoming main
+                    break;
+
+                default:
+                    // Hiển thị thông báo cho các chức năng chưa implement
+                    Label lblNotImplemented = new Label()
+                    {
+                        Text = $"Chức năng '{item}' đang được phát triển...",
+                        Font = new Font("Segoe UI", 14F),
+                        ForeColor = Color.Gray,
+                        TextAlign = ContentAlignment.MiddleCenter,
+                        Dock = DockStyle.Fill
+                    };
+                    contentPanel.Controls.Add(lblNotImplemented);
+                    return;
             }
 
             if (newContent != null)
@@ -259,22 +288,31 @@ namespace LibraryManagement
             }
             else if (newForm != null)
             {
-                // Hiển thị form trong panel hoặc mở form mới
+                // Hiển thị form trong panel
                 ShowFormInPanel(newForm);
             }
         }
 
         private void ShowFormInPanel(Form form)
         {
-            // Option 1: Embed form trong panel
-            form.TopLevel = false;
-            form.FormBorderStyle = FormBorderStyle.None;
-            form.Dock = DockStyle.Fill;
-            contentPanel.Controls.Add(form);
-            form.Show();
+            try
+            {
+                // Option 1: Embed form trong panel
+                form.TopLevel = false;
+                form.FormBorderStyle = FormBorderStyle.None;
+                form.Dock = DockStyle.Fill;
+                form.WindowState = FormWindowState.Normal;
+                contentPanel.Controls.Add(form);
+                form.Show();
 
-            // Option 2: Mở form riêng biệt (comment dòng trên và uncomment dòng dưới)
-            // form.ShowDialog();
+                // Option 2: Mở form riêng biệt (uncomment nếu muốn dùng)
+                // form.ShowDialog();
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở form: {ex.Message}", "Lỗi",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // Tạo icon mặc định nếu không có icon
@@ -284,6 +322,7 @@ namespace LibraryManagement
             using (Graphics g = Graphics.FromImage(bmp))
             {
                 g.FillRectangle(Brushes.Gray, 0, 0, 24, 24);
+                g.DrawRectangle(Pens.White, 1, 1, 22, 22);
             }
             return bmp;
         }
@@ -308,6 +347,21 @@ namespace LibraryManagement
                     e.Graphics.FillRectangle(brush, sidebarPanel.ClientRectangle);
                 }
             }
+        }
+
+        // Phương thức public để set role từ bên ngoài
+        public void SetUserRole(string role)
+        {
+            currentUserRole = role;
+            menuPanel.Controls.Clear();
+            menuPanel.Controls.Add(logoPictureBox);
+            InitializeMenuButtons(role);
+        }
+
+        // Property để lấy current role
+        public string CurrentUserRole
+        {
+            get { return currentUserRole; }
         }
     }
 

@@ -1,335 +1,309 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D78C02DC-1C25-4C8C-BB31-E80AA37AF23E}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>LibraryManagement</RootNamespace>
-    <AssemblyName>LibraryManagement</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="EPPlus, Version=8.0.5.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>packages\EPPlus.8.0.5\lib\net462\EPPlus.dll</HintPath>
-    </Reference>
-    <Reference Include="EPPlus.Interfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
-      <HintPath>packages\EPPlus.Interfaces.8.0.0\lib\net462\EPPlus.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.IO.RecyclableMemoryStream.3.0.1\lib\netstandard2.0\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security" />
-    <Reference Include="System.Security.Cryptography.Xml, Version=8.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Security.Cryptography.Xml.8.0.2\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\BorrowSlip.cs" />
-    <Compile Include="Models\BorrowSlipDetail.cs" />
-    <Compile Include="Models\CuonSach.cs" />
-    <Compile Include="Models\CuonSachDetailModel.cs" />
-    <Compile Include="Models\DauSach.cs" />
-    <Compile Include="Models\DocGia.cs" />
-    <Compile Include="Models\LoaiDocGia.cs" />
-    <Compile Include="Models\NhaXuatBan.cs" />
-    <Compile Include="Models\TacGia.cs" />
-    <Compile Include="Models\TheLoai.cs" />
-    <Compile Include="Models\TheThuVien.cs" />
-    <Compile Include="Models\ThongKe.cs" />
-    <Compile Include="Models\ThuThu.cs" />
-    <Compile Include="Repositories\BorrowSlipDetailRepository.cs" />
-    <Compile Include="Repositories\BorrowSlipRepository.cs" />
-    <Compile Include="Repositories\CuonSachRepository.cs" />
-    <Compile Include="Repositories\DauSachRepository.cs" />
-    <Compile Include="Repositories\DauSachTacGiaRepository.cs" />
-    <Compile Include="Repositories\DocGiaDAO.cs" />
-    <Compile Include="Repositories\LoaiDocGiaDAO.cs" />
-    <Compile Include="Repositories\NXBRepository.cs" />
-    <Compile Include="Repositories\TacGiaRepository.cs" />
-    <Compile Include="Repositories\TheLoaiRepository.cs" />
-    <Compile Include="Repositories\ThuThuDAO.cs" />
-    <Compile Include="Services\BorrowService.cs" />
-    <Compile Include="Services\ImportExcelToDatabase.cs" />
-    <Compile Include="UI\AuthorModal.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\AuthorModal.Designer.cs">
-      <DependentUpon>AuthorModal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FormAddTheLoai.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormAddTheLoai.Designer.cs">
-      <DependentUpon>FormAddTheLoai.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\DocGiaManagement.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\DocGiaManagement.Designer.cs">
-      <DependentUpon>DocGiaManagement.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FormAddCuonSach.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormAddCuonSach.Designer.cs">
-      <DependentUpon>FormAddCuonSach.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FormAddDauSach.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormAddDauSach.Designer.cs">
-      <DependentUpon>FormAddDauSach.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FormAddEditDocGia.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormAddEditThuThu.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormAddNXB.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormAddNXB.Designer.cs">
-      <DependentUpon>FormAddNXB.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FormAddTG.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormAddTG.Designer.cs">
-      <DependentUpon>FormAddTG.cs</DependentUpon>
-    </Compile>
-<<<<<<< HEAD
-    <Compile Include="UI\FormDocGiaManagement.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormThongKe.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormThuThuManagement.cs">
-      <SubType>Form</SubType>
-    </Compile>
-=======
-    <Compile Include="UI\FormManageDauSach.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormManageDauSach.Designer.cs">
-      <DependentUpon>FormManageDauSach.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FormManageNXB.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormManageNXB.Designer.cs">
-      <DependentUpon>FormManageNXB.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FormManageTG.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormManageTG.Designer.cs">
-      <DependentUpon>FormManageTG.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FormManageTheLoai.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormManageTheLoai.Designer.cs">
-      <DependentUpon>FormManageTheLoai.cs</DependentUpon>
-    </Compile>
->>>>>>> 3efa06028b32de362b0d3ea48f4e50e39ddbc7b9
-    <Compile Include="UI\FormUpdateCuonSach.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormUpdateCuonSach.Designer.cs">
-      <DependentUpon>FormUpdateCuonSach.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Home.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\Home.Designer.cs">
-      <DependentUpon>Home.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Models\User.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\DBConnection.cs" />
-    <Compile Include="Repositories\UserRepository.cs" />
-    <Compile Include="Services\AuthService.cs" />
-    <Compile Include="UI\Login.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\Login.Designer.cs" />
-    <Compile Include="UI\UC_BorrowSlip.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\UC_BorrowSlip.Designer.cs">
-      <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\SachControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\SachControl.Designer.cs">
-      <DependentUpon>SachControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\LichSuControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\LichSuControl.Designer.cs">
-      <DependentUpon>LichSuControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\NguoiDungControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\NguoiDungControl.Designer.cs">
-      <DependentUpon>NguoiDungControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\DocGiaManagement.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\DocGiaManagement.Designer.cs">
-      <DependentUpon>DocGiaManagement.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\ThuThuManagement.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\ThuThuManagement.Designer.cs">
-      <DependentUpon>ThuThuManagement.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\ThuThuUC.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <EmbeddedResource Include="UI\FormAddCuonSach.resx">
-      <DependentUpon>FormAddCuonSach.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\FormAddDauSach.resx">
-      <DependentUpon>FormAddDauSach.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\FormAddEditThuThu.resx">
-      <DependentUpon>FormAddEditThuThu.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\FormAddNXB.resx">
-      <DependentUpon>FormAddNXB.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\FormAddTG.resx">
-      <DependentUpon>FormAddTG.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Home.resx">
-      <DependentUpon>Home.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <EmbeddedResource Include="UI\Login.resx" />
-    <EmbeddedResource Include="UI\UC_BorrowSlip.resx">
-      <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\SachControl.resx">
-      <DependentUpon>SachControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-<<<<<<< HEAD
-    <None Include="Resources\statistics.png" />
-=======
-    <None Include="Resources\mau_import.xlsx" />
->>>>>>> 984580b12fb654705e5844b041c9bc8fcfd9c340
-    <None Include="Resources\teamwork.png" />
-    <None Include="Resources\voucher.png" />
-    <None Include="Resources\reciept.png" />
-    <None Include="Resources\readers.png" />
-    <None Include="Resources\user.png" />
-    <None Include="Resources\receipt %281%29.png" />
-    <None Include="Resources\receipt.png" />
-    <None Include="Resources\pupil.png" />
-    <None Include="Resources\bg_home_left.bmp" />
-    <None Include="Resources\bg_home_left.jpg" />
-    <None Include="Resources\bg_home_r.png" />
-    <None Include="Resources\home_logo %282%29.png" />
-    <None Include="Resources\book.png" />
-    <None Include="Resources\borrow.png" />
-    <None Include="Resources\book %281%29.png" />
-    <None Include="Resources\books.png" />
-    <None Include="Resources\history-book.png" />
-    <Content Include="Resources\home_logo.png" />
-    <None Include="Resources\library_card.png" />
-    <None Include="Resources\librarian.png" />
-    <Content Include="Resources\login.jpg" />
-    <Content Include="Resources\logo.png" />
-    <Content Include="Resources\logoo.jpg" />
-    <Content Include="Resources\nền home.jpg" />
-    <Content Include="Resources\Nền Login.jpg" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+	<Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<ProjectGuid>{D78C02DC-1C25-4C8C-BB31-E80AA37AF23E}</ProjectGuid>
+		<OutputType>WinExe</OutputType>
+		<RootNamespace>LibraryManagement</RootNamespace>
+		<AssemblyName>LibraryManagement</AssemblyName>
+		<TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+		<FileAlignment>512</FileAlignment>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<Deterministic>true</Deterministic>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<OutputPath>bin\Debug\</OutputPath>
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<DebugType>pdbonly</DebugType>
+		<Optimize>true</Optimize>
+		<OutputPath>bin\Release\</OutputPath>
+		<DefineConstants>TRACE</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+	</PropertyGroup>
+	<ItemGroup>
+		<Reference Include="System" />
+		<Reference Include="System.Core" />
+		<Reference Include="System.Xml.Linq" />
+		<Reference Include="System.Data.DataSetExtensions" />
+		<Reference Include="Microsoft.CSharp" />
+		<Reference Include="System.Data" />
+		<Reference Include="System.Deployment" />
+		<Reference Include="System.Drawing" />
+		<Reference Include="System.Net.Http" />
+		<Reference Include="System.Windows.Forms" />
+		<Reference Include="System.Xml" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="Models\BorrowSlip.cs" />
+		<Compile Include="Models\BorrowSlipDetail.cs" />
+		<Compile Include="Models\CuonSach.cs" />
+		<Compile Include="Models\CuonSachDetailModel.cs" />
+		<Compile Include="Models\DauSach.cs" />
+		<Compile Include="Models\DocGia.cs" />
+		<Compile Include="Models\LoaiDocGia.cs" />
+		<Compile Include="Models\NhaXuatBan.cs" />
+		<Compile Include="Models\TacGia.cs" />
+		<Compile Include="Models\TheLoai.cs" />
+		<Compile Include="Models\TheThuVien.cs" />
+		<Compile Include="Models\ThongKe.cs" />
+		<Compile Include="Models\ThuThu.cs" />
+		<Compile Include="Repositories\BorrowSlipDetailRepository.cs" />
+		<Compile Include="Repositories\BorrowSlipRepository.cs" />
+		<Compile Include="Repositories\CuonSachRepository.cs" />
+		<Compile Include="Repositories\DauSachRepository.cs" />
+		<Compile Include="Repositories\DauSachTacGiaRepository.cs" />
+		<Compile Include="Repositories\DocGiaDAO.cs" />
+		<Compile Include="Repositories\LoaiDocGiaDAO.cs" />
+		<Compile Include="Repositories\NXBRepository.cs" />
+		<Compile Include="Repositories\TacGiaRepository.cs" />
+		<Compile Include="Repositories\TheLoaiRepository.cs" />
+		<Compile Include="Repositories\ThuThuDAO.cs" />
+		<Compile Include="Services\BorrowService.cs" />
+		<Compile Include="UI\AuthorModal.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\AuthorModal.Designer.cs">
+			<DependentUpon>AuthorModal.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\CategoryModal.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\CategoryModal.Designer.cs">
+			<DependentUpon>CategoryModal.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\DocGiaManagement.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\DocGiaManagement.Designer.cs">
+			<DependentUpon>DocGiaManagement.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\FormAddTheLoai.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormAddTheLoai.Designer.cs">
+			<DependentUpon>FormAddTheLoai.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\FormAddCuonSach.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormAddCuonSach.Designer.cs">
+			<DependentUpon>FormAddCuonSach.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\FormAddDauSach.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormAddDauSach.Designer.cs">
+			<DependentUpon>FormAddDauSach.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\FormAddEditDocGia.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormAddEditThuThu.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormAddNXB.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormAddNXB.Designer.cs">
+			<DependentUpon>FormAddNXB.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\FormAddTG.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormAddTG.Designer.cs">
+			<DependentUpon>FormAddTG.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\FormDocGiaManagement.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormManageDauSach.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormManageDauSach.Designer.cs">
+			<DependentUpon>FormManageDauSach.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\FormManageNXB.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormManageNXB.Designer.cs">
+			<DependentUpon>FormManageNXB.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\FormManageTG.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormManageTG.Designer.cs">
+			<DependentUpon>FormManageTG.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\FormManageTheLoai.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormManageTheLoai.Designer.cs">
+			<DependentUpon>FormManageTheLoai.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\FormThongKe.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormThuThuManagement.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormUpdateCuonSach.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\FormUpdateCuonSach.Designer.cs">
+			<DependentUpon>FormUpdateCuonSach.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UI\Home.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\Home.Designer.cs">
+			<DependentUpon>Home.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Models\User.cs" />
+		<Compile Include="Program.cs" />
+		<Compile Include="Properties\AssemblyInfo.cs" />
+		<Compile Include="Repositories\DBConnection.cs" />
+		<Compile Include="Repositories\UserRepository.cs" />
+		<Compile Include="Services\AuthService.cs" />
+		<Compile Include="UI\Login.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="UI\Login.Designer.cs" />
+		<Compile Include="UI\UC_BorrowSlip.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="UI\UC_BorrowSlip.Designer.cs">
+			<DependentUpon>UC_BorrowSlip.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UserControls\Books\BookControl.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="UserControls\Books\BookControl.Designer.cs">
+			<DependentUpon>BookControl.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UserControls\DocGiaManagement.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="UserControls\DocGiaManagement.Designer.cs">
+			<DependentUpon>DocGiaManagement.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UserControls\SachControl.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="UserControls\SachControl.Designer.cs">
+			<DependentUpon>SachControl.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UserControls\LichSuControl.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="UserControls\LichSuControl.Designer.cs">
+			<DependentUpon>LichSuControl.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UserControls\NguoiDungControl.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="UserControls\NguoiDungControl.Designer.cs">
+			<DependentUpon>NguoiDungControl.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UserControls\ThuThuManagement.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="UserControls\ThuThuManagement.Designer.cs">
+			<DependentUpon>ThuThuManagement.cs</DependentUpon>
+		</Compile>
+		<Compile Include="UserControls\ThuThuUC.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<EmbeddedResource Include="UI\FormAddCuonSach.resx">
+			<DependentUpon>FormAddCuonSach.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="UI\FormAddDauSach.resx">
+			<DependentUpon>FormAddDauSach.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="UI\FormAddEditThuThu.resx">
+			<DependentUpon>FormAddEditThuThu.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="UI\FormAddNXB.resx">
+			<DependentUpon>FormAddNXB.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="UI\FormAddTG.resx">
+			<DependentUpon>FormAddTG.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="UI\Home.resx">
+			<DependentUpon>Home.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+			<SubType>Designer</SubType>
+		</EmbeddedResource>
+		<Compile Include="Properties\Resources.Designer.cs">
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+		</Compile>
+		<EmbeddedResource Include="UI\Login.resx" />
+		<EmbeddedResource Include="UI\UC_BorrowSlip.resx">
+			<DependentUpon>UC_BorrowSlip.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="UserControls\Books\BookControl.resx">
+			<DependentUpon>BookControl.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="UserControls\SachControl.resx">
+			<DependentUpon>SachControl.cs</DependentUpon>
+		</EmbeddedResource>
+		<None Include="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+		<Compile Include="Properties\Settings.Designer.cs">
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="App.config" />
+	</ItemGroup>
+	<ItemGroup />
+	<ItemGroup>
+		<None Include="Resources\statistics.png" />
+		<None Include="Resources\teamwork.png" />
+		<None Include="Resources\voucher.png" />
+		<None Include="Resources\reciept.png" />
+		<None Include="Resources\readers.png" />
+		<None Include="Resources\user.png" />
+		<None Include="Resources\receipt %281%29.png" />
+		<None Include="Resources\receipt.png" />
+		<None Include="Resources\pupil.png" />
+		<None Include="Resources\bg_home_left.bmp" />
+		<None Include="Resources\bg_home_left.jpg" />
+		<None Include="Resources\bg_home_r.png" />
+		<None Include="Resources\home_logo %282%29.png" />
+		<None Include="Resources\book.png" />
+		<None Include="Resources\borrow.png" />
+		<None Include="Resources\book %281%29.png" />
+		<None Include="Resources\books.png" />
+		<None Include="Resources\history-book.png" />
+		<Content Include="Resources\home_logo.png" />
+		<None Include="Resources\library_card.png" />
+		<None Include="Resources\librarian.png" />
+		<Content Include="Resources\login.jpg" />
+		<Content Include="Resources\logo.png" />
+		<Content Include="Resources\logoo.jpg" />
+		<Content Include="Resources\nền home.jpg" />
+		<Content Include="Resources\Nền Login.jpg" />
+	</ItemGroup>
+	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
