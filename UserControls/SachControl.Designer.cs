@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace LibraryManagement.UserControls
@@ -127,6 +129,29 @@ namespace LibraryManagement.UserControls
             this.btnManageTitles.TabIndex = 9;
             this.btnManageTitles.Text = "Quản lý Đầu sách";
             this.btnManageTitles.Click += new System.EventHandler(this.BtnManageTitles_Click);
+            // btnDownloadTemplate
+            this.btnDownloadTemplate = new System.Windows.Forms.Button();
+            this.btnDownloadTemplate.Location = new System.Drawing.Point(20, 420);
+            this.btnDownloadTemplate.Name = "btnDownloadTemplate";
+            this.btnDownloadTemplate.Size = new System.Drawing.Size(160, 30);
+            this.btnDownloadTemplate.TabIndex = 10;
+            this.btnDownloadTemplate.Text = "Tải file mẫu Excel";
+            this.btnDownloadTemplate.BackColor = System.Drawing.Color.FromArgb(115, 154, 79);
+            this.btnDownloadTemplate.ForeColor = System.Drawing.Color.White;
+            this.btnDownloadTemplate.Click += new System.EventHandler(this.BtnDownloadTemplate_Click);
+            this.Controls.Add(this.btnDownloadTemplate);
+            // btnUploadFile
+            this.btnUploadFile = new System.Windows.Forms.Button();
+            this.btnUploadFile.Location = new System.Drawing.Point(190, 420);
+            this.btnUploadFile.Name = "btnUploadFile";
+            this.btnUploadFile.Size = new System.Drawing.Size(160, 30);
+            this.btnUploadFile.TabIndex = 11;
+            this.btnUploadFile.Text = "Tải file Excel lên";
+            this.btnUploadFile.BackColor = System.Drawing.Color.FromArgb(91, 155, 213);
+            this.btnUploadFile.ForeColor = System.Drawing.Color.White;
+            this.btnUploadFile.Click += new System.EventHandler(this.BtnUploadFile_Click);
+            this.Controls.Add(this.btnUploadFile);
+
             // 
             // BookControl
             // 
@@ -142,10 +167,23 @@ namespace LibraryManagement.UserControls
             this.Controls.Add(this.btnManagePublishers);
             this.Controls.Add(this.btnManageCategories);
             this.Controls.Add(this.btnManageTitles);
+            this.Controls.Add(this.btnDownloadTemplate);
+            this.Controls.Add(this.btnUploadFile);
             this.Name = "BookControl";
             ((System.ComponentModel.ISupportInitialize)(this.dgvBooks)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
+            SetButtonStyle(this.btnAdd);
+            SetButtonStyle(this.btnEdit);
+            SetButtonStyle(this.btnDelete);
+            SetButtonStyle(this.btnManageAuthors);
+            SetButtonStyle(this.btnManagePublishers);
+            SetButtonStyle(this.btnManageCategories);
+            SetButtonStyle(this.btnManageTitles);
+            SetButtonStyle(this.btnSearch);
+            SetButtonStyle(this.btnDownloadTemplate);
+            SetButtonStyle(this.btnUploadFile);
 
         }
 
@@ -159,5 +197,15 @@ namespace LibraryManagement.UserControls
         private System.Windows.Forms.Button btnManagePublishers;
         private System.Windows.Forms.Button btnManageCategories;
         private System.Windows.Forms.Button btnManageTitles;
+        private System.Windows.Forms.Button btnDownloadTemplate;
+        private System.Windows.Forms.Button btnUploadFile;
+
+        private void SetButtonStyle(Button btn)
+        {
+            btn.BackColor = System.Drawing.Color.FromArgb(115, 154, 79);
+            btn.ForeColor = System.Drawing.Color.White;
+        }
+
     }
+
 }
