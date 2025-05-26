@@ -1,6 +1,7 @@
 ﻿using LibraryManagement.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -11,35 +12,82 @@ namespace LibraryManagement.Repositories
 {
     public class TheLoaiRepository : DBConnection
     {
-        public void AddTheLoai(int qdSoTuoi)
+        public void AddTheLoai(int qdSoTuoi, string tenTheLoai)
         {
-            string query = "INSERT INTO TheLoai (QDSoTuoi) VALUES (@QDSoTuoi)";
-            SqlCommand cmd = new SqlCommand(query, GetConnection());
-            cmd.Parameters.AddWithValue("@QDSoTuoi", qdSoTuoi);
-            GetConnection().Open();
-            cmd.ExecuteNonQuery();
-            GetConnection().Close();
+            string query = "INSERT INTO TheLoai (QDSoTuoi, TenTheLoai) VALUES (@QDSoTuoi, @TenTheLoai)";
+
+            using (SqlConnection conn = new DBConnection().GetConnection())
+            {
+                try
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@QDSoTuoi", qdSoTuoi);
+                        cmd.Parameters.AddWithValue("@TenTheLoai", tenTheLoai ?? (object)DBNull.Value); // tránh lỗi nếu null
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Không thể thêm thể loại.\nChi tiết: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         public void UpdateTheLoai(int maTheLoai, int qdSoTuoi)
         {
             string query = "UPDATE TheLoai SET QDSoTuoi = @QDSoTuoi WHERE MaTheLoai = @MaTheLoai";
-            SqlCommand cmd = new SqlCommand(query, GetConnection());
-            cmd.Parameters.AddWithValue("@MaTheLoai", maTheLoai);
-            cmd.Parameters.AddWithValue("@QDSoTuoi", qdSoTuoi);
-            GetConnection().Open();
-            cmd.ExecuteNonQuery();
-            GetConnection().Close();
+
+            using (SqlConnection conn = GetConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaTheLoai", maTheLoai);
+                    cmd.Parameters.AddWithValue("@QDSoTuoi", qdSoTuoi);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public void DeleteTheLoai(int maTheLoai)
         {
             string query = "DELETE FROM TheLoai WHERE MaTheLoai = @MaTheLoai";
-            SqlCommand cmd = new SqlCommand(query, GetConnection());
-            cmd.Parameters.AddWithValue("@MaTheLoai", maTheLoai);
-            GetConnection().Open();
-            cmd.ExecuteNonQuery();
-            GetConnection().Close();
+
+            using (SqlConnection conn = GetConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaTheLoai", maTheLoai);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public DataTable SearchTheLoai(string keyword)
+        {
+            DataTable dataTable = new DataTable();
+            string query = "SELECT * FROM TheLoai WHERE TenTheLoai LIKE @Keyword";
+
+            using (SqlConnection conn = GetConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Keyword", "%" + keyword + "%");
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            return dataTable;
         }
 
         public List<TheLoai> GetAllTheLoai()

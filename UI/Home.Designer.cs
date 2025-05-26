@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Collections.Generic;
 using LibraryManagement.UserControls;
+using System.Linq;
 
 namespace LibraryManagement
 {
@@ -14,6 +15,7 @@ namespace LibraryManagement
         private System.Windows.Forms.PictureBox logoPictureBox;
         private System.Windows.Forms.FlowLayoutPanel menuPanel;
         private System.Windows.Forms.Panel contentPanel;
+        private string currentUserRole;
 
         protected override void Dispose(bool disposing)
         {
@@ -81,19 +83,26 @@ namespace LibraryManagement
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
             this.ResumeLayout(false);
         }
-        private void InitializeMenuButtons()
+        private void InitializeMenuButtons(string role)
         {
-            string[] menuItems = { "Sách", "Độc giả", "Mượn sách", "Phiếu phạt", "Biên lai", "Người dùng" };
-            Dictionary<string, Image> menuIcons = new Dictionary<string, Image>()
-    {
-        { "Sách", Properties.Resources.books },
-        { "Độc giả", Properties.Resources.readers },
-        { "Mượn sách", Properties.Resources.book__1_ },
-        { "Phiếu phạt", Properties.Resources.voucher },
-        { "Biên lai", Properties.Resources.reciept },
-        { "Người dùng", Properties.Resources.teamwork }
-    };
+            currentUserRole = role;
 
+            string[] menuItems = { "Sách", "Độc giả", "Mượn sách", "Phiếu phạt", "Biên lai" };
+            if (role == "admin")
+            {
+                menuItems = menuItems.Concat(new[] { "Người dùng", "Lịch sử thao tác" }).ToArray();
+            }
+
+            Dictionary<string, Image> menuIcons = new Dictionary<string, Image>()
+            {
+                { "Sách", Properties.Resources.books },
+                { "Độc giả", Properties.Resources.readers },
+                { "Mượn sách", Properties.Resources.book__1_ },
+                { "Phiếu phạt", Properties.Resources.voucher },
+                { "Biên lai", Properties.Resources.reciept },
+                { "Người dùng", Properties.Resources.teamwork },
+                { "Lịch sử thao tác", Properties.Resources.history_book }
+            };
             foreach (var item in menuItems)
             {
                 RoundedButton btn = new RoundedButton()
@@ -136,7 +145,11 @@ namespace LibraryManagement
             switch (item)
             {
                 case "Sách":
-                    newContent = new BookControl();
+                    newContent = new SachControl();
+                    newContent.Dock = DockStyle.Fill;
+                    break;
+                case "Người dùng":
+                    newContent = new NguoiDungControl();
                     newContent.Dock = DockStyle.Fill;
                     break;
 

@@ -1,5 +1,6 @@
 ﻿using LibraryManagement.Models;
 using LibraryManagement.Repositories;
+using LibraryManagement.Repositories.LibraryManagement.Repositories;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,22 +20,26 @@ namespace LibraryManagement.UI
         private TextBox txtTenDauSach;
         private ComboBox cboTheLoai, cboNXB;
         private Button btnSave, btnCancel;
+        private CheckedListBox clbTacGia;
+        private Label lblTacGia;
 
         private DauSachRepository repo = new DauSachRepository();
         private TheLoaiRepository theLoaiRepository = new TheLoaiRepository();
         private NXBRepository theXBRepository = new NXBRepository();
-
+        private TacGiaRepository tacGiaRepository = new TacGiaRepository();
+        private DauSachTacGiaRepository dstgRepository = new DauSachTacGiaRepository();
         public FormAddDauSach()
         {
             InitializeComponentForm();
             InitializeCustomStyle();
             LoadComboBoxData();
+            LoadTacGia();
         }
 
         private void InitializeComponentForm()
         {
             this.Text = "Thêm Đầu Sách";
-            this.Size = new Size(400, 280);
+            this.Size = new Size(400, 350);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -91,6 +96,26 @@ namespace LibraryManagement.UI
             };
             this.Controls.Add(cboTheLoai);
 
+            // Nút thêm Thể loại
+            Button btnAddTheLoai = new Button()
+            {
+                Text = "+",
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Size = new Size(30, cboTheLoai.Height),
+                Location = new Point(cboTheLoai.Right + 5, cboTheLoai.Top),
+                BackColor = Color.LightGreen,
+                FlatStyle = FlatStyle.Flat,
+            };
+            btnAddTheLoai.FlatAppearance.BorderSize = 0;
+            btnAddTheLoai.Click += (s, e) =>
+            {
+                FormAddTheLoai form = new FormAddTheLoai();
+                form.ShowDialog();
+                LoadTheLoaiList();
+            };
+            this.Controls.Add(btnAddTheLoai);
+
+
             lblNXB = new Label()
             {
                 Text = "Nhà xuất bản:",
@@ -123,13 +148,49 @@ namespace LibraryManagement.UI
             btnAddNXB.Click += BtnAddNXB_Click;
             this.Controls.Add(btnAddNXB);
 
+            lblTacGia = new Label()
+            {
+                Text = "Tác giả:",
+                Location = new Point(20, 180),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10),
+                ForeColor = mainColor
+            };
+            this.Controls.Add(lblTacGia);
+
+            clbTacGia = new CheckedListBox()
+            {
+                Location = new Point(130, 180),
+                Size = new Size(220, 80),
+                Font = new Font("Segoe UI", 10)
+            };
+            this.Controls.Add(clbTacGia);
+
+            // Nút thêm Tác giả
+            Button btnAddTacGia = new Button()
+            {
+                Text = "+",
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Size = new Size(30, clbTacGia.ItemHeight),
+                Location = new Point(clbTacGia.Right + 5, clbTacGia.Top),
+                BackColor = Color.LightGreen,
+                FlatStyle = FlatStyle.Flat,
+            };
+            btnAddTacGia.FlatAppearance.BorderSize = 0;
+            btnAddTacGia.Click += (s, e) =>
+            {
+                FormAddTG form = new FormAddTG();
+                form.ShowDialog();
+                LoadTacGia();
+            };
+            this.Controls.Add(btnAddTacGia);
 
             btnSave = new Button()
             {
                 Text = "Lưu",
                 BackColor = mainColor,
                 ForeColor = Color.White,
-                Location = new Point(100, 190),
+                Location = new Point(100, 250),
                 Size = new Size(80, 30),
                 FlatStyle = FlatStyle.Flat,
             };
@@ -142,13 +203,35 @@ namespace LibraryManagement.UI
                 Text = "Hủy",
                 BackColor = Color.Gray,
                 ForeColor = Color.White,
-                Location = new Point(220, 190),
+                Location = new Point(220, 250),
                 Size = new Size(80, 30),
                 FlatStyle = FlatStyle.Flat,
             };
             btnCancel.FlatAppearance.BorderSize = 0;
             btnCancel.Click += (s, e) => this.Close();
             this.Controls.Add(btnCancel);
+        }
+
+        private void LoadTacGia()
+        {
+            List<TacGia> danhSachTacGia = tacGiaRepository.GetAllTacGia(); // <-- Lấy đúng danh sách tác giả
+            clbTacGia.DataSource = danhSachTacGia;
+            clbTacGia.DisplayMember = "TenTG";
+            clbTacGia.ValueMember = "MaTacGia";
+        }
+
+        private void LoadTheLoaiList()
+        {
+            TheLoaiRepository repo = new TheLoaiRepository();
+            List<TheLoai> theLoais = repo.GetAllTheLoai();
+
+            cboTheLoai.DataSource = null;
+            cboTheLoai.DataSource = theLoais;
+            cboTheLoai.DisplayMember = "TenTheLoai"; 
+            cboTheLoai.ValueMember = "MaTheLoai"; 
+
+            if (cboTheLoai.Items.Count > 0)
+                cboTheLoai.SelectedIndex = 0;
         }
 
         private void LoadComboBoxData()
@@ -192,7 +275,14 @@ namespace LibraryManagement.UI
 
             try
             {
-                repo.AddDauSach(tenDauSach, maTheLoai, maNXB);
+                int maDauSach = repo.AddDauSach(tenDauSach, maTheLoai, maNXB);
+
+                foreach (var item in clbTacGia.CheckedItems)
+                {
+                    int maTacGia = ((TacGia)item).MaTacGia;
+                    dstgRepository.AddTacGiaChoDauSach(maDauSach, maTacGia);
+                }
+
                 MessageBox.Show("Thêm đầu sách thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;
                 this.Close();

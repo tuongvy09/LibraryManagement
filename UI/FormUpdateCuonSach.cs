@@ -236,7 +236,7 @@ namespace LibraryManagement.UI
             cboTheLoai.ValueMember = "MaTheLoai";
 
             // Load TacGia
-            List<(int MaTacGia, string TenTG)> tgList = tacGiaRepository.GetAllTacGia();
+            List<TacGia> tgList = tacGiaRepository.GetAllTacGia();
             lstTacGia.Items.Clear();
             foreach (var tg in tgList)
             {
