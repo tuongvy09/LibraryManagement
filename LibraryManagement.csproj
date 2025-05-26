@@ -83,17 +83,25 @@
     <Compile Include="Models\CuonSach.cs" />
     <Compile Include="Models\CuonSachDetailModel.cs" />
     <Compile Include="Models\DauSach.cs" />
+    <Compile Include="Models\DocGia.cs" />
+    <Compile Include="Models\LoaiDocGia.cs" />
     <Compile Include="Models\NhaXuatBan.cs" />
     <Compile Include="Models\TacGia.cs" />
     <Compile Include="Models\TheLoai.cs" />
+    <Compile Include="Models\TheThuVien.cs" />
+    <Compile Include="Models\ThongKe.cs" />
+    <Compile Include="Models\ThuThu.cs" />
     <Compile Include="Repositories\BorrowSlipDetailRepository.cs" />
     <Compile Include="Repositories\BorrowSlipRepository.cs" />
     <Compile Include="Repositories\CuonSachRepository.cs" />
     <Compile Include="Repositories\DauSachRepository.cs" />
     <Compile Include="Repositories\DauSachTacGiaRepository.cs" />
+    <Compile Include="Repositories\DocGiaDAO.cs" />
+    <Compile Include="Repositories\LoaiDocGiaDAO.cs" />
     <Compile Include="Repositories\NXBRepository.cs" />
     <Compile Include="Repositories\TacGiaRepository.cs" />
     <Compile Include="Repositories\TheLoaiRepository.cs" />
+    <Compile Include="Repositories\ThuThuDAO.cs" />
     <Compile Include="Services\BorrowService.cs" />
     <Compile Include="Services\ImportExcelToDatabase.cs" />
     <Compile Include="UI\AuthorModal.cs">
@@ -108,6 +116,12 @@
     <Compile Include="UI\FormAddTheLoai.Designer.cs">
       <DependentUpon>FormAddTheLoai.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\DocGiaManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\DocGiaManagement.Designer.cs">
+      <DependentUpon>DocGiaManagement.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\FormAddCuonSach.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,6 +133,12 @@
     </Compile>
     <Compile Include="UI\FormAddDauSach.Designer.cs">
       <DependentUpon>FormAddDauSach.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddEditDocGia.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddEditThuThu.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\FormAddNXB.cs">
       <SubType>Form</SubType>
@@ -132,6 +152,17 @@
     <Compile Include="UI\FormAddTG.Designer.cs">
       <DependentUpon>FormAddTG.cs</DependentUpon>
     </Compile>
+<<<<<<< HEAD
+    <Compile Include="UI\FormDocGiaManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormThongKe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormThuThuManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+=======
     <Compile Include="UI\FormManageDauSach.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,6 +187,7 @@
     <Compile Include="UI\FormManageTheLoai.Designer.cs">
       <DependentUpon>FormManageTheLoai.cs</DependentUpon>
     </Compile>
+>>>>>>> 3efa06028b32de362b0d3ea48f4e50e39ddbc7b9
     <Compile Include="UI\FormUpdateCuonSach.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -202,11 +234,29 @@
     <Compile Include="UserControls\NguoiDungControl.Designer.cs">
       <DependentUpon>NguoiDungControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\DocGiaManagement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\DocGiaManagement.Designer.cs">
+      <DependentUpon>DocGiaManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ThuThuManagement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ThuThuManagement.Designer.cs">
+      <DependentUpon>ThuThuManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ThuThuUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <EmbeddedResource Include="UI\FormAddCuonSach.resx">
       <DependentUpon>FormAddCuonSach.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\FormAddDauSach.resx">
       <DependentUpon>FormAddDauSach.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormAddEditThuThu.resx">
+      <DependentUpon>FormAddEditThuThu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\FormAddNXB.resx">
       <DependentUpon>FormAddNXB.cs</DependentUpon>
@@ -250,7 +300,11 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+<<<<<<< HEAD
+    <None Include="Resources\statistics.png" />
+=======
     <None Include="Resources\mau_import.xlsx" />
+>>>>>>> 984580b12fb654705e5844b041c9bc8fcfd9c340
     <None Include="Resources\teamwork.png" />
     <None Include="Resources\voucher.png" />
     <None Include="Resources\reciept.png" />
@@ -269,6 +323,8 @@
     <None Include="Resources\books.png" />
     <None Include="Resources\history-book.png" />
     <Content Include="Resources\home_logo.png" />
+    <None Include="Resources\library_card.png" />
+    <None Include="Resources\librarian.png" />
     <Content Include="Resources\login.jpg" />
     <Content Include="Resources\logo.png" />
     <Content Include="Resources\logoo.jpg" />
