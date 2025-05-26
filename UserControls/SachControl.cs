@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -161,6 +162,61 @@ namespace LibraryManagement.UserControls
             formManageDauSach.ShowDialog();
         }
 
+
+        private void BtnDownloadTemplate_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Title = "Chọn nơi lưu file mẫu";
+                saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx";
+                saveFileDialog.FileName = "mau_import.xlsx";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        // Đọc file mẫu từ resource (dưới dạng byte[])
+                        byte[] templateBytes = Properties.Resources.mau_import;
+
+                        // Ghi file ra đĩa theo đường dẫn người dùng chọn
+                        File.WriteAllBytes(saveFileDialog.FileName, templateBytes);
+
+                        MessageBox.Show("Tải file mẫu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi khi tải file mẫu: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void BtnUploadFile_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Excel Files|*.xlsx;*.xls";
+                openFileDialog.Title = "Chọn file Excel để nhập dữ liệu";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+
+                    try
+                    {
+                        var importer = new LibraryManagement.Services.ExcelImporter();
+                        importer.ImportExcelToDatabase(filePath);
+
+                        MessageBox.Show("Nhập dữ liệu từ Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadCuonSachData();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi khi nhập Excel: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
         private void dgvBooks_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
