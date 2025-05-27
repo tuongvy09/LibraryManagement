@@ -285,6 +285,18 @@ namespace LibraryManagement.UI
             }
         }
 
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // FormDocGiaManagement
+            // 
+            this.ClientSize = new System.Drawing.Size(933, 531);
+            this.Name = "FormDocGiaManagement";
+            this.ResumeLayout(false);
+
+        }
+
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             txtSearch.Clear();
