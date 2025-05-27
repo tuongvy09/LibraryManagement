@@ -18,17 +18,14 @@ namespace LibraryManagement.UserControls
         private readonly ThongKeDAO thongKeDAO = new ThongKeDAO();
         private bool dataLoaded = false;
         private bool isLoading = false;
-        private bool columnsInitialized = false; // ✅ Thêm flag để track columns
+        private bool columnsInitialized = false;
 
         public ThongKeManagement()
         {
             InitializeComponent();
             this.Load += ThongKeManagement_Load;
 
-            // ✅ LOẠI BỎ DataBindingComplete event - không cần nữa
-            // dgvThongKe.DataBindingComplete += DgvThongKe_DataBindingComplete;
-
-            // ✅ Khởi tạo columns ngay từ đầu
+            // Khởi tạo columns ngay từ đầu
             KhoiTaoDataGridViewColumns();
 
             // Khởi tạo giá trị mặc định cho ComboBox
@@ -38,7 +35,6 @@ namespace LibraryManagement.UserControls
             SetupChartStyles();
         }
 
-        // ✅ Method khởi tạo columns manual - CHẮC CHẮN NHẤT
         private void KhoiTaoDataGridViewColumns()
         {
             try
@@ -48,7 +44,7 @@ namespace LibraryManagement.UserControls
                 dgvThongKe.AutoGenerateColumns = false;
                 dgvThongKe.Columns.Clear();
 
-                // ✅ Tạo từng column một cách manual
+                // Tạo từng column một cách manual
                 DataGridViewTextBoxColumn colSTT = new DataGridViewTextBoxColumn
                 {
                     Name = "STT",
@@ -134,7 +130,7 @@ namespace LibraryManagement.UserControls
                 };
                 dgvThongKe.Columns.Add(colLanMuonGanNhat);
 
-                // ✅ Áp dụng style ngay
+                // Áp dụng style ngay
                 StyleDataGridView();
 
                 columnsInitialized = true;
@@ -195,7 +191,7 @@ namespace LibraryManagement.UserControls
             chartDocGia.ChartAreas[0].AxisX.LabelStyle.Font = new Font("Segoe UI", 9F);
             chartDocGia.ChartAreas[0].AxisY.LabelStyle.Font = new Font("Segoe UI", 9F);
 
-            // Style cho chartTien
+            // Style cho chartTien (doanh thu)
             chartTien.BackColor = Color.Transparent;
             chartTien.ChartAreas[0].BackColor = Color.White;
             chartTien.ChartAreas[0].BorderColor = Color.LightGray;
@@ -256,7 +252,7 @@ namespace LibraryManagement.UserControls
                 }
 
                 LoadThongKeDocGiaChart(nam);
-                LoadThongKeTienChart(nam);
+                LoadThongKeDoanhThuChart(nam); // ✅ Đổi tên method và gọi doanh thu
                 LoadThongKeTienMuonTable(thang, nam);
 
                 dataLoaded = true;
@@ -323,62 +319,120 @@ namespace LibraryManagement.UserControls
             }
         }
 
-        private void LoadThongKeTienChart(int nam)
+        // ✅ NEW - Method thống kê doanh thu từ bảng BienLai
+        private void LoadThongKeDoanhThuChart(int nam)
         {
             try
             {
-                var data = thongKeDAO.GetThongKeTienTheoThang(nam);
+                System.Diagnostics.Debug.WriteLine($"🔍 Bắt đầu load doanh thu cho năm {nam}");
+
+                var data = thongKeDAO.GetThongKeDoanhThuTheoThang(nam);
+
+                System.Diagnostics.Debug.WriteLine($"📊 Nhận được {data?.Count ?? 0} records từ DAO");
+
+                if (data != null)
+                {
+                    foreach (var item in data)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"📈 Data: Tháng {item.Thang}, Doanh thu: {item.TongDoanhThu:N0}, Giao dịch: {item.SoGiaoDich}");
+                    }
+                }
 
                 chartTien.Series.Clear();
+                chartTien.ChartAreas[0].AxisY2.Enabled = AxisEnabled.True;
 
-                Series seriesMuon = new Series("Tiền mượn");
-                seriesMuon.ChartType = SeriesChartType.Column;
-                seriesMuon.Color = Color.FromArgb(40, 167, 69);
-                seriesMuon.BorderWidth = 2;
-                seriesMuon.ShadowOffset = 2;
+                // Series cho doanh thu (cột) - CHÍNH
+                Series seriesDoanhThu = new Series("Doanh thu");
+                seriesDoanhThu.ChartType = SeriesChartType.Column;
+                seriesDoanhThu.Color = Color.FromArgb(40, 167, 69);
+                seriesDoanhThu.BorderWidth = 0;
+                seriesDoanhThu.IsValueShownAsLabel = true;
 
-                Series seriesPhat = new Series("Tiền phạt");
-                seriesPhat.ChartType = SeriesChartType.Column;
-                seriesPhat.Color = Color.FromArgb(220, 53, 69);
-                seriesPhat.BorderWidth = 2;
-                seriesPhat.ShadowOffset = 2;
+                // Series cho số giao dịch (đường) - PHỤ
+                Series seriesGiaoDich = new Series("Số giao dịch");
+                seriesGiaoDich.ChartType = SeriesChartType.Line;
+                seriesGiaoDich.Color = Color.FromArgb(255, 193, 7);
+                seriesGiaoDich.BorderWidth = 3;
+                seriesGiaoDich.MarkerStyle = MarkerStyle.Circle;
+                seriesGiaoDich.MarkerSize = 8;
+                seriesGiaoDich.YAxisType = AxisType.Secondary;
+                seriesGiaoDich.IsValueShownAsLabel = true;
+
+                decimal maxDoanhThu = 0;
+                int maxGiaoDich = 0;
 
                 // Add data for all 12 months
                 for (int i = 1; i <= 12; i++)
                 {
-                    var monthData = data.FirstOrDefault(d => d.Thang == i);
-                    decimal tienMuon = monthData?.TongTienMuon ?? 0;
-                    decimal tienPhat = monthData?.TongTienPhat ?? 0;
+                    var monthData = data?.FirstOrDefault(d => d.Thang == i);
+                    decimal doanhThu = monthData?.TongDoanhThu ?? 0;
+                    int soGiaoDich = monthData?.SoGiaoDich ?? 0;
 
-                    seriesMuon.Points.AddXY($"T{i}", (double)tienMuon);
-                    seriesPhat.Points.AddXY($"T{i}", (double)tienPhat);
+                    System.Diagnostics.Debug.WriteLine($"📊 Tháng {i}: Doanh thu = {doanhThu:N0}, Giao dịch = {soGiaoDich}");
+
+                    // Track max values
+                    if (doanhThu > maxDoanhThu) maxDoanhThu = doanhThu;
+                    if (soGiaoDich > maxGiaoDich) maxGiaoDich = soGiaoDich;
+
+                    // Thêm điểm doanh thu
+                    seriesDoanhThu.Points.AddXY($"T{i}", (double)doanhThu);
+
+                    // Thêm điểm số giao dịch
+                    seriesGiaoDich.Points.AddXY($"T{i}", soGiaoDich);
                 }
 
-                chartTien.Series.Add(seriesMuon);
-                chartTien.Series.Add(seriesPhat);
+                System.Diagnostics.Debug.WriteLine($"📊 Max Doanh thu: {maxDoanhThu:N0}, Max Giao dịch: {maxGiaoDich}");
 
+                chartTien.Series.Add(seriesDoanhThu);
+                chartTien.Series.Add(seriesGiaoDich);
+
+                // Thiết lập trục
                 chartTien.ChartAreas[0].AxisX.Title = "Tháng";
-                chartTien.ChartAreas[0].AxisY.Title = "Số tiền (VNĐ)";
+                chartTien.ChartAreas[0].AxisY.Title = "Doanh thu (VNĐ)";
+                chartTien.ChartAreas[0].AxisY2.Title = "Số giao dịch";
                 chartTien.ChartAreas[0].AxisX.TitleFont = new Font("Segoe UI", 10F, FontStyle.Bold);
                 chartTien.ChartAreas[0].AxisY.TitleFont = new Font("Segoe UI", 10F, FontStyle.Bold);
+                chartTien.ChartAreas[0].AxisY2.TitleFont = new Font("Segoe UI", 10F, FontStyle.Bold);
 
-                // Format Y-axis to show currency
+                // Format Y-axis
                 chartTien.ChartAreas[0].AxisY.LabelStyle.Format = "N0";
 
+                // Set axis ranges để đảm bảo hiển thị
+                if (maxDoanhThu > 0)
+                {
+                    chartTien.ChartAreas[0].AxisY.Minimum = 0;
+                    chartTien.ChartAreas[0].AxisY.Maximum = (double)(maxDoanhThu * 1.2m);
+                }
+
+                if (maxGiaoDich > 0)
+                {
+                    chartTien.ChartAreas[0].AxisY2.Minimum = 0;
+                    chartTien.ChartAreas[0].AxisY2.Maximum = maxGiaoDich * 1.2;
+                }
+
+                // Thiết lập tiêu đề
                 chartTien.Titles.Clear();
                 var title = chartTien.Titles.Add($"Thống kê doanh thu năm {nam}");
                 title.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
                 title.ForeColor = Color.FromArgb(115, 154, 79);
 
-                // Add legend
+                // Thêm legend
                 chartTien.Legends.Clear();
                 Legend legend = new Legend();
                 legend.Font = new Font("Segoe UI", 9F);
                 legend.Docking = Docking.Top;
                 chartTien.Legends.Add(legend);
+
+                // Force refresh
+                chartTien.Invalidate();
+                chartTien.Update();
+
+                System.Diagnostics.Debug.WriteLine("✅ Hoàn thành load chart doanh thu");
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"❌ Lỗi LoadThongKeDoanhThuChart: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"❌ Stack trace: {ex.StackTrace}");
                 MessageBox.Show($"Lỗi khi tải biểu đồ doanh thu: {ex.Message}", "Lỗi");
             }
         }
@@ -387,7 +441,7 @@ namespace LibraryManagement.UserControls
         {
             try
             {
-                // ✅ Đảm bảo columns đã được khởi tạo
+                // Đảm bảo columns đã được khởi tạo
                 if (!columnsInitialized)
                 {
                     KhoiTaoDataGridViewColumns();
@@ -395,7 +449,7 @@ namespace LibraryManagement.UserControls
 
                 var data = thongKeDAO.GetThongKeTienMuonDocGia(thang, nam);
 
-                // ✅ Tạo DataTable đơn giản
+                // Tạo DataTable đơn giản
                 DataTable dt = new DataTable();
                 dt.Columns.Add("STT", typeof(int));
                 dt.Columns.Add("MaDocGia", typeof(string));
@@ -408,18 +462,18 @@ namespace LibraryManagement.UserControls
 
                 if (data == null || data.Count == 0)
                 {
-                    // ✅ Thêm dòng dữ liệu rỗng
+                    // Thêm dòng dữ liệu rỗng
                     dt.Rows.Add(1, "N/A", "Không có dữ liệu cho tháng này", "0 VNĐ", "0 VNĐ", "0 VNĐ", 0, "N/A");
                 }
                 else
                 {
-                    // ✅ Thêm dữ liệu thực - Fix convert MaDocGia
+                    // Thêm dữ liệu thực
                     int index = 1;
                     foreach (var x in data.Take(20))
                     {
                         dt.Rows.Add(
                             index++,
-                            x.MaDocGia.ToString(), // ✅ Convert int to string
+                            x.MaDocGia.ToString(),
                             x.HoTen,
                             x.TongTienMuon.ToString("N0") + " VNĐ",
                             x.TongTienPhat.ToString("N0") + " VNĐ",
@@ -430,7 +484,7 @@ namespace LibraryManagement.UserControls
                     }
                 }
 
-                // ✅ Binding dữ liệu - KHÔNG CẦN setup headers nữa
+                // Binding dữ liệu
                 dgvThongKe.DataSource = dt;
 
                 // Cập nhật label
@@ -439,8 +493,6 @@ namespace LibraryManagement.UserControls
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi khi tải bảng thống kê: {ex.Message}", "Lỗi");
-
-                // ✅ Set DataSource null khi có lỗi để tránh hiển thị dữ liệu cũ
                 dgvThongKe.DataSource = null;
             }
         }

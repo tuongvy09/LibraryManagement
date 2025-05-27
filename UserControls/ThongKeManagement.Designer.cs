@@ -241,7 +241,7 @@ namespace LibraryManagement.UserControls
             this.tabChitiet.Padding = new System.Windows.Forms.Padding(4);
             this.tabChitiet.Size = new System.Drawing.Size(1525, 455);
             this.tabChitiet.TabIndex = 2;
-            this.tabChitiet.Text = "📊 Chi tiết tiền mượn + phạt";
+            //this.tabChitiet.Text = "📊 Chi tiết tiền mượn + phạt";
             this.tabChitiet.UseVisualStyleBackColor = true;
             // 
             // dgvThongKe

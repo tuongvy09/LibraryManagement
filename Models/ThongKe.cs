@@ -30,4 +30,14 @@ namespace LibraryManagement.Models
         public decimal TongCong => TongTienMuon + TongTienPhat;
         public string ThangNam => $"{Thang:00}/{Nam}";
     }
+
+    public class ThongKeDoanhThuTheoThangDTO
+    {
+        public int Thang { get; set; }
+        public int Nam { get; set; }
+        public decimal TongDoanhThu { get; set; }
+        public int SoGiaoDich { get; set; }
+        public string ThangNam => $"{Thang:00}/{Nam}";
+        public string DoanhThuDisplay => TongDoanhThu.ToString("N0") + " VNĐ";
+    }
 }
