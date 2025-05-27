@@ -245,5 +245,65 @@ namespace LibraryManagement.Repositories
 
             return null;
         }
+
+        // ✅ NEW - Thống kê doanh thu theo tháng
+        public List<ThongKeDoanhThuTheoThangDTO> GetThongKeDoanhThuTheoThang(int nam)
+        {
+            List<ThongKeDoanhThuTheoThangDTO> result = new List<ThongKeDoanhThuTheoThangDTO>();
+
+            try
+            {
+                using (SqlConnection conn = dbConnection.GetConnection())
+                {
+                    string query = @"
+                SELECT 
+                    MONTH(NgayTraTT) as Thang,
+                    YEAR(NgayTraTT) as Nam,
+                    SUM(TienTra) as TongDoanhThu,
+                    COUNT(*) as SoGiaoDich
+                FROM BienLai 
+                WHERE YEAR(NgayTraTT) = @Nam
+                    AND NgayTraTT IS NOT NULL
+                    AND TienTra > 0
+                GROUP BY YEAR(NgayTraTT), MONTH(NgayTraTT)
+                ORDER BY MONTH(NgayTraTT)";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Nam", nam);
+
+                        System.Diagnostics.Debug.WriteLine($"🔍 Executing query với @Nam = {nam}");
+
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ThongKeDoanhThuTheoThangDTO item = new ThongKeDoanhThuTheoThangDTO()
+                                {
+                                    Thang = Convert.ToInt32(reader["Thang"]),
+                                    Nam = Convert.ToInt32(reader["Nam"]),
+                                    TongDoanhThu = reader["TongDoanhThu"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["TongDoanhThu"]),
+                                    SoGiaoDich = Convert.ToInt32(reader["SoGiaoDich"])
+                                };
+                                result.Add(item);
+
+                                System.Diagnostics.Debug.WriteLine($"📊 DAO: Tháng {item.Thang}, Doanh thu: {item.TongDoanhThu:N0}, Giao dịch: {item.SoGiaoDich}");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ Lỗi GetThongKeDoanhThuTheoThang: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"❌ Stack trace: {ex.StackTrace}");
+                return new List<ThongKeDoanhThuTheoThangDTO>();
+            }
+
+            System.Diagnostics.Debug.WriteLine($"📈 DAO trả về {result.Count} records cho năm {nam}");
+            return result;
+        }
     }
 }
