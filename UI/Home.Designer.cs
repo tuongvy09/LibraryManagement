@@ -215,7 +215,8 @@ namespace LibraryManagement
                     break;
 
                 case "Quản lý Độc giả":
-                    newForm = new FormDocGiaManagement();
+                    newContent = new DocGiaManagement();
+                    newContent.Dock = DockStyle.Fill;
                     break;
 
                 case "Quản lý Thẻ thư viện":
@@ -252,7 +253,7 @@ namespace LibraryManagement
                     break;
 
                 case "Phiếu Mượn":
-                    newForm = new FormAddPhieuMuon(); // <-- Thêm dòng này
+                    newForm = new FormAddPhieuMuon(); 
                     break;
 
                 case "Lịch sử thao tác":
