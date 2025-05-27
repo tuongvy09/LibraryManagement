@@ -116,7 +116,8 @@ namespace LibraryManagement
             menuItems.Add("Quản lý Độc giả");
             menuItems.Add("Quản lý Thẻ thư viện");
 
-            menuItems.AddRange(new[] { "Sách", "Độc giả", "Mượn sách", "Phiếu phạt", "Biên lai" });
+            // Các mục menu chính
+            menuItems.AddRange(new[] { "Sách", "Độc giả", "Mượn sách", "Phiếu Mượn", "Phiếu phạt", "Biên lai" });
 
             menuItems.Add("Thống kê Độc giả");
 
@@ -126,24 +127,27 @@ namespace LibraryManagement
             }
 
             Dictionary<string, Image> menuIcons = new Dictionary<string, Image>()
-            {
-                { "Quản lý Thủ thư", Properties.Resources.librarian ?? CreateDefaultIcon() },
-                { "Quản lý Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
-                { "Quản lý Thẻ thư viện", Properties.Resources.library_card ?? CreateDefaultIcon() },
-                { "Thống kê Độc giả", Properties.Resources.statistics ?? CreateDefaultIcon() },
-                
-                { "Sách", Properties.Resources.books ?? CreateDefaultIcon() },
-                { "Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
-                { "Mượn sách", Properties.Resources.book__1_ ?? CreateDefaultIcon() },
-                { "Phiếu phạt", Properties.Resources.voucher ?? CreateDefaultIcon() },
-                { "Biên lai", Properties.Resources.reciept ?? CreateDefaultIcon() },
-                { "Người dùng", Properties.Resources.teamwork ?? CreateDefaultIcon() },
-                { "Lịch sử thao tác", Properties.Resources.history_book ?? CreateDefaultIcon() }
-            };
+    {
+        { "Quản lý Thủ thư", Properties.Resources.librarian ?? CreateDefaultIcon() },
+        { "Quản lý Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
+        { "Quản lý Thẻ thư viện", Properties.Resources.library_card ?? CreateDefaultIcon() },
+        { "Thống kê Độc giả", Properties.Resources.statistics ?? CreateDefaultIcon() },
+
+        { "Sách", Properties.Resources.books ?? CreateDefaultIcon() },
+        { "Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
+        { "Mượn sách", Properties.Resources.book__1_ ?? CreateDefaultIcon() },
+
+        // Thêm icon cho "Phiếu Mượn" (bạn nhớ thêm ảnh này vào resources nếu chưa có)
+        { "Phiếu Mượn", Properties.Resources.reciept ?? CreateDefaultIcon() },
+
+        { "Phiếu phạt", Properties.Resources.voucher ?? CreateDefaultIcon() },
+        { "Biên lai", Properties.Resources.reciept ?? CreateDefaultIcon() },
+        { "Người dùng", Properties.Resources.teamwork ?? CreateDefaultIcon() },
+        { "Lịch sử thao tác", Properties.Resources.history_book ?? CreateDefaultIcon() }
+    };
 
             foreach (var item in menuItems)
             {
-                // Tạo separator cho các mục bắt đầu bằng "---"
                 if (item.StartsWith("---"))
                 {
                     Label separator = new Label()
@@ -245,6 +249,10 @@ namespace LibraryManagement
                 case "Người dùng":
                     newContent = new NguoiDungControl();
                     newContent.Dock = DockStyle.Fill;
+                    break;
+
+                case "Phiếu Mượn":
+                    newForm = new FormAddPhieuMuon(); // <-- Thêm dòng này
                     break;
 
                 case "Lịch sử thao tác":
