@@ -35,7 +35,7 @@ namespace LibraryManagement.UserControls
             var bindingList = list.Select(x => new
             {
                 x.MaCuonSach,
-                x.TenDauSach, 
+                x.TenDauSach,
                 x.TenCuonSach,
                 x.TrangThaiSach,
                 x.TenTheLoai,
@@ -191,32 +191,32 @@ namespace LibraryManagement.UserControls
             }
         }
 
-        private void BtnUploadFile_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Filter = "Excel Files|*.xlsx;*.xls";
-                openFileDialog.Title = "Chọn file Excel để nhập dữ liệu";
+        //private void BtnUploadFile_Click(object sender, EventArgs e)
+        //{
+        //    using (OpenFileDialog openFileDialog = new OpenFileDialog())
+        //    {
+        //        openFileDialog.Filter = "Excel Files|*.xlsx;*.xls";
+        //        openFileDialog.Title = "Chọn file Excel để nhập dữ liệu";
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string filePath = openFileDialog.FileName;
+        //        if (openFileDialog.ShowDialog() == DialogResult.OK)
+        //        {
+        //            string filePath = openFileDialog.FileName;
 
-                    try
-                    {
-                        var importer = new LibraryManagement.Services.ExcelImporter();
-                        importer.ImportExcelToDatabase(filePath);
+        //            try
+        //            {
+        //                var importer = new LibraryManagement.Services.ExcelImporter();
+        //                importer.ImportExcelToDatabase(filePath);
 
-                        MessageBox.Show("Nhập dữ liệu từ Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadCuonSachData();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Lỗi khi nhập Excel: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-        }
+        //                MessageBox.Show("Nhập dữ liệu từ Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //                LoadCuonSachData();
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show("Lỗi khi nhập Excel: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //            }
+        //        }
+        //    }
+        //}
         private void dgvBooks_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 

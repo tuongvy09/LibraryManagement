@@ -37,125 +37,141 @@ namespace LibraryManagement.UserControls
             this.btnManagePublishers = new System.Windows.Forms.Button();
             this.btnManageCategories = new System.Windows.Forms.Button();
             this.btnManageTitles = new System.Windows.Forms.Button();
+            this.btnDownloadTemplate = new System.Windows.Forms.Button();
+            this.btnUploadFile = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBooks)).BeginInit();
             this.SuspendLayout();
             // 
             // dgvBooks
             // 
             this.dgvBooks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvBooks.Location = new System.Drawing.Point(20, 60);
+            this.dgvBooks.Location = new System.Drawing.Point(27, 74);
+            this.dgvBooks.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvBooks.Name = "dgvBooks";
             this.dgvBooks.ReadOnly = true;
+            this.dgvBooks.RowHeadersWidth = 51;
             this.dgvBooks.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvBooks.Size = new System.Drawing.Size(790, 300);
+            this.dgvBooks.Size = new System.Drawing.Size(1053, 369);
             this.dgvBooks.TabIndex = 2;
             this.dgvBooks.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvBooks_CellContentClick);
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(20, 20);
+            this.txtSearch.Location = new System.Drawing.Point(27, 25);
+            this.txtSearch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(200, 20);
+            this.txtSearch.Size = new System.Drawing.Size(265, 22);
             this.txtSearch.TabIndex = 0;
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(230, 20);
+            this.btnSearch.Location = new System.Drawing.Point(307, 25);
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(80, 23);
+            this.btnSearch.Size = new System.Drawing.Size(107, 28);
             this.btnSearch.TabIndex = 1;
             this.btnSearch.Text = "Tìm kiếm";
             this.btnSearch.Click += new System.EventHandler(this.BtnSearch_Click);
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(20, 380);
+            this.btnAdd.Location = new System.Drawing.Point(27, 468);
+            this.btnAdd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(80, 30);
+            this.btnAdd.Size = new System.Drawing.Size(107, 37);
             this.btnAdd.TabIndex = 3;
             this.btnAdd.Text = "Thêm";
             this.btnAdd.Click += new System.EventHandler(this.BtnAdd_Click);
             // 
             // btnEdit
             // 
-            this.btnEdit.Location = new System.Drawing.Point(110, 380);
+            this.btnEdit.Location = new System.Drawing.Point(147, 468);
+            this.btnEdit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(80, 30);
+            this.btnEdit.Size = new System.Drawing.Size(107, 37);
             this.btnEdit.TabIndex = 4;
             this.btnEdit.Text = "Sửa";
             this.btnEdit.Click += new System.EventHandler(this.BtnEdit_Click);
             // 
             // btnDelete
             // 
-            this.btnDelete.Location = new System.Drawing.Point(200, 380);
+            this.btnDelete.Location = new System.Drawing.Point(267, 468);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(80, 30);
+            this.btnDelete.Size = new System.Drawing.Size(107, 37);
             this.btnDelete.TabIndex = 5;
             this.btnDelete.Text = "Xóa";
             this.btnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
             // 
             // btnManageAuthors
             // 
-            this.btnManageAuthors.Location = new System.Drawing.Point(300, 380);
+            this.btnManageAuthors.Location = new System.Drawing.Point(400, 468);
+            this.btnManageAuthors.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnManageAuthors.Name = "btnManageAuthors";
-            this.btnManageAuthors.Size = new System.Drawing.Size(120, 30);
+            this.btnManageAuthors.Size = new System.Drawing.Size(160, 37);
             this.btnManageAuthors.TabIndex = 6;
             this.btnManageAuthors.Text = "Quản lý Tác giả";
             this.btnManageAuthors.Click += new System.EventHandler(this.BtnManageAuthors_Click);
             // 
             // btnManagePublishers
             // 
-            this.btnManagePublishers.Location = new System.Drawing.Point(430, 380);
+            this.btnManagePublishers.Location = new System.Drawing.Point(573, 468);
+            this.btnManagePublishers.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnManagePublishers.Name = "btnManagePublishers";
-            this.btnManagePublishers.Size = new System.Drawing.Size(120, 30);
+            this.btnManagePublishers.Size = new System.Drawing.Size(160, 37);
             this.btnManagePublishers.TabIndex = 7;
             this.btnManagePublishers.Text = "Quản lý NXB";
             this.btnManagePublishers.Click += new System.EventHandler(this.BtnManagePublishers_Click);
             // 
             // btnManageCategories
             // 
-            this.btnManageCategories.Location = new System.Drawing.Point(560, 380);
+            this.btnManageCategories.Location = new System.Drawing.Point(747, 468);
+            this.btnManageCategories.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnManageCategories.Name = "btnManageCategories";
-            this.btnManageCategories.Size = new System.Drawing.Size(120, 30);
+            this.btnManageCategories.Size = new System.Drawing.Size(160, 37);
             this.btnManageCategories.TabIndex = 8;
             this.btnManageCategories.Text = "Quản lý Thể loại";
             this.btnManageCategories.Click += new System.EventHandler(this.BtnManageCategories_Click);
             // 
             // btnManageTitles
             // 
-            this.btnManageTitles.Location = new System.Drawing.Point(690, 380);
+            this.btnManageTitles.Location = new System.Drawing.Point(920, 468);
+            this.btnManageTitles.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnManageTitles.Name = "btnManageTitles";
-            this.btnManageTitles.Size = new System.Drawing.Size(120, 30);
+            this.btnManageTitles.Size = new System.Drawing.Size(160, 37);
             this.btnManageTitles.TabIndex = 9;
             this.btnManageTitles.Text = "Quản lý Đầu sách";
             this.btnManageTitles.Click += new System.EventHandler(this.BtnManageTitles_Click);
+            // 
             // btnDownloadTemplate
-            this.btnDownloadTemplate = new System.Windows.Forms.Button();
-            this.btnDownloadTemplate.Location = new System.Drawing.Point(20, 420);
+            // 
+            this.btnDownloadTemplate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(115)))), ((int)(((byte)(154)))), ((int)(((byte)(79)))));
+            this.btnDownloadTemplate.ForeColor = System.Drawing.Color.White;
+            this.btnDownloadTemplate.Location = new System.Drawing.Point(27, 517);
+            this.btnDownloadTemplate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnDownloadTemplate.Name = "btnDownloadTemplate";
-            this.btnDownloadTemplate.Size = new System.Drawing.Size(160, 30);
+            this.btnDownloadTemplate.Size = new System.Drawing.Size(213, 37);
             this.btnDownloadTemplate.TabIndex = 10;
             this.btnDownloadTemplate.Text = "Tải file mẫu Excel";
-            this.btnDownloadTemplate.BackColor = System.Drawing.Color.FromArgb(115, 154, 79);
-            this.btnDownloadTemplate.ForeColor = System.Drawing.Color.White;
+            this.btnDownloadTemplate.UseVisualStyleBackColor = false;
             this.btnDownloadTemplate.Click += new System.EventHandler(this.BtnDownloadTemplate_Click);
-            this.Controls.Add(this.btnDownloadTemplate);
+            // 
             // btnUploadFile
-            this.btnUploadFile = new System.Windows.Forms.Button();
-            this.btnUploadFile.Location = new System.Drawing.Point(190, 420);
+            // 
+            this.btnUploadFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(91)))), ((int)(((byte)(155)))), ((int)(((byte)(213)))));
+            this.btnUploadFile.ForeColor = System.Drawing.Color.White;
+            this.btnUploadFile.Location = new System.Drawing.Point(253, 517);
+            this.btnUploadFile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnUploadFile.Name = "btnUploadFile";
-            this.btnUploadFile.Size = new System.Drawing.Size(160, 30);
+            this.btnUploadFile.Size = new System.Drawing.Size(213, 37);
             this.btnUploadFile.TabIndex = 11;
             this.btnUploadFile.Text = "Tải file Excel lên";
-            this.btnUploadFile.BackColor = System.Drawing.Color.FromArgb(91, 155, 213);
-            this.btnUploadFile.ForeColor = System.Drawing.Color.White;
-            this.btnUploadFile.Click += new System.EventHandler(this.BtnUploadFile_Click);
-            this.Controls.Add(this.btnUploadFile);
-
+            this.btnUploadFile.UseVisualStyleBackColor = false;
+            //this.btnUploadFile.Click += new System.EventHandler(this.BtnUploadFile_Click);
             // 
-            // BookControl
+            // SachControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.btnSearch);
@@ -169,21 +185,12 @@ namespace LibraryManagement.UserControls
             this.Controls.Add(this.btnManageTitles);
             this.Controls.Add(this.btnDownloadTemplate);
             this.Controls.Add(this.btnUploadFile);
-            this.Name = "BookControl";
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Name = "SachControl";
+            this.Size = new System.Drawing.Size(1117, 550);
             ((System.ComponentModel.ISupportInitialize)(this.dgvBooks)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
-            SetButtonStyle(this.btnAdd);
-            SetButtonStyle(this.btnEdit);
-            SetButtonStyle(this.btnDelete);
-            SetButtonStyle(this.btnManageAuthors);
-            SetButtonStyle(this.btnManagePublishers);
-            SetButtonStyle(this.btnManageCategories);
-            SetButtonStyle(this.btnManageTitles);
-            SetButtonStyle(this.btnSearch);
-            SetButtonStyle(this.btnDownloadTemplate);
-            SetButtonStyle(this.btnUploadFile);
 
         }
 

@@ -63,6 +63,56 @@ namespace LibraryManagement.Repositories
             return docGias;
         }
 
+        // Method cho độc giả chưa có thẻ
+        public List<DocGiaDTO> GetDocGiaChuaCoThe()
+        {
+            List<DocGiaDTO> docGias = new List<DocGiaDTO>();
+
+            using (SqlConnection conn = dbConnection.GetConnection())
+            {
+                string query = @"
+            SELECT dg.MaDocGia, dg.MaLoaiDG, dg.HoTen, dg.Tuoi, dg.SoDT, 
+                   dg.CCCD, dg.GioiTinh, dg.Email, dg.DiaChi, dg.NgayDangKy,
+                   dg.TienNo, dg.TrangThai, dg.NgayTao, dg.NgayCapNhat, dg.MaThe,
+                   ldg.TenLoaiDG,
+                   ttv.MaThe as TheThuVien_MaThe
+            FROM DocGia dg
+            LEFT JOIN LoaiDocGia ldg ON dg.MaLoaiDG = ldg.MaLoaiDG
+            LEFT JOIN TheThuVien ttv ON dg.MaDocGia = ttv.MaDG
+            WHERE ttv.MaDG IS NULL
+            ORDER BY dg.HoTen";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    DocGiaDTO docGia = new DocGiaDTO()
+                    {
+                        MaDocGia = Convert.ToInt32(reader["MaDocGia"]),
+                        MaLoaiDG = reader["MaLoaiDG"] == DBNull.Value ? null : (int?)reader["MaLoaiDG"],
+                        HoTen = reader["HoTen"].ToString(),
+                        Tuoi = Convert.ToInt32(reader["Tuoi"]),
+                        SoDT = reader["SoDT"].ToString(),
+                        CCCD = reader["CCCD"]?.ToString(),
+                        GioiTinh = reader["GioiTinh"]?.ToString(),
+                        Email = reader["Email"]?.ToString(),
+                        DiaChi = reader["DiaChi"]?.ToString(),
+                        NgayDangKy = reader["NgayDangKy"] == DBNull.Value ? DateTime.Now : Convert.ToDateTime(reader["NgayDangKy"]),
+                        TienNo = reader["TienNo"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["TienNo"]),
+                        TrangThai = reader["TrangThai"] == DBNull.Value ? true : Convert.ToBoolean(reader["TrangThai"]),
+                        NgayTao = reader["NgayTao"] == DBNull.Value ? DateTime.Now : Convert.ToDateTime(reader["NgayTao"]),
+                        NgayCapNhat = reader["NgayCapNhat"] == DBNull.Value ? null : (DateTime?)reader["NgayCapNhat"],
+                        MaThe = reader["MaThe"] == DBNull.Value ? null : (int?)reader["MaThe"],
+                        TenLoaiDG = reader["TenLoaiDG"]?.ToString()
+                    };
+                    docGias.Add(docGia);
+                }
+            }
+            return docGias;
+        }
+
         public bool InsertDocGia(DocGiaDTO docGia)
         {
             using (SqlConnection conn = dbConnection.GetConnection())

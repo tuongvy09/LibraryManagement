@@ -109,26 +109,17 @@ namespace LibraryManagement
         {
             currentUserRole = role;
 
-            // Giữ nguyên cấu trúc của incoming main + thêm phần AT
             List<string> menuItems = new List<string>();
 
-            // Thêm phần của AT - Quản lý nhân sự
-            menuItems.Add("--- QUẢN LÝ NHÂN SỰ ---");
             menuItems.Add("Quản lý Thủ thư");
 
-            // Thêm phần của AT - Quản lý độc giả (tách riêng)
-            menuItems.Add("--- QUẢN LÝ ĐỘC GIẢ ---");
             menuItems.Add("Quản lý Độc giả");
             menuItems.Add("Quản lý Thẻ thư viện");
 
-            // Giữ nguyên cấu trúc của incoming main
             menuItems.AddRange(new[] { "Sách", "Độc giả", "Mượn sách", "Phiếu phạt", "Biên lai" });
 
-            // Thêm phần thống kê của AT
-            menuItems.Add("--- THỐNG KÊ - BÁO CÁO ---");
             menuItems.Add("Thống kê Độc giả");
 
-            // Giữ nguyên logic admin của incoming main
             if (role == "admin")
             {
                 menuItems = menuItems.Concat(new[] { "Người dùng", "Lịch sử thao tác" }).ToArray().ToList();
@@ -136,13 +127,11 @@ namespace LibraryManagement
 
             Dictionary<string, Image> menuIcons = new Dictionary<string, Image>()
             {
-                // Icons cho phần AT
                 { "Quản lý Thủ thư", Properties.Resources.librarian ?? CreateDefaultIcon() },
                 { "Quản lý Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
                 { "Quản lý Thẻ thư viện", Properties.Resources.library_card ?? CreateDefaultIcon() },
                 { "Thống kê Độc giả", Properties.Resources.statistics ?? CreateDefaultIcon() },
                 
-                // Giữ nguyên icons của incoming main
                 { "Sách", Properties.Resources.books ?? CreateDefaultIcon() },
                 { "Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
                 { "Mượn sách", Properties.Resources.book__1_ ?? CreateDefaultIcon() },
@@ -216,26 +205,23 @@ namespace LibraryManagement
 
             switch (item)
             {
-                // Phần của AT - Quản lý nhân sự (tách riêng)
                 case "Quản lý Thủ thư":
                     newForm = new FormThuThuManagement();
                     break;
 
-                // Phần của AT - Quản lý độc giả (tách riêng)
                 case "Quản lý Độc giả":
                     newForm = new FormDocGiaManagement();
                     break;
 
-                //case "Quản lý Thẻ thư viện":
-                //    newForm = new FormTheThuVienManagement();
-                //    break;
+                case "Quản lý Thẻ thư viện":
+                    newContent = new TheThuVienManagement();
+                    newContent.Dock = DockStyle.Fill;
+                    break;
 
-                // Phần của AT - Thống kê
                 case "Thống kê Độc giả":
                     newForm = new FormThongKe();
                     break;
 
-                // Giữ nguyên cấu trúc của incoming main
                 case "Sách":
                     newContent = new SachControl();
                     newContent.Dock = DockStyle.Fill;
@@ -247,15 +233,12 @@ namespace LibraryManagement
                     break;
 
                 case "Mượn sách":
-                    // Giữ nguyên - chưa implement trong incoming main
                     break;
 
                 case "Phiếu phạt":
-                    // Giữ nguyên - chưa implement trong incoming main
                     break;
 
                 case "Biên lai":
-                    // Giữ nguyên - chưa implement trong incoming main
                     break;
 
                 case "Người dùng":
@@ -264,11 +247,9 @@ namespace LibraryManagement
                     break;
 
                 case "Lịch sử thao tác":
-                    // Giữ nguyên - chưa implement trong incoming main
                     break;
 
                 default:
-                    // Hiển thị thông báo cho các chức năng chưa implement
                     Label lblNotImplemented = new Label()
                     {
                         Text = $"Chức năng '{item}' đang được phát triển...",
@@ -297,16 +278,12 @@ namespace LibraryManagement
         {
             try
             {
-                // Option 1: Embed form trong panel
                 form.TopLevel = false;
                 form.FormBorderStyle = FormBorderStyle.None;
                 form.Dock = DockStyle.Fill;
                 form.WindowState = FormWindowState.Normal;
                 contentPanel.Controls.Add(form);
                 form.Show();
-
-                // Option 2: Mở form riêng biệt (uncomment nếu muốn dùng)
-                // form.ShowDialog();
             }
             catch (System.Exception ex)
             {
@@ -315,7 +292,6 @@ namespace LibraryManagement
             }
         }
 
-        // Tạo icon mặc định nếu không có icon
         private Image CreateDefaultIcon()
         {
             Bitmap bmp = new Bitmap(24, 24);
