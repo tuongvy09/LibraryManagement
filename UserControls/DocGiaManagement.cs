@@ -16,6 +16,7 @@ namespace LibraryManagement.UserControls
     public partial class DocGiaManagement : UserControl
     {
         private readonly DocGiaDAO docGiaDAO = new DocGiaDAO();
+        private readonly ThongKeDAO thongKeDAO = new ThongKeDAO();
         private List<DocGiaDTO> currentData;
         private string placeholderText = "Nhập tên, số điện thoại hoặc CCCD...";
         private bool dataLoaded = false;
@@ -183,6 +184,48 @@ namespace LibraryManagement.UserControls
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Lỗi setup column headers: {ex.Message}");
+            }
+        }
+
+        // ===== PHẦN THỐNG KÊ =====
+        private void BtnViewStats_Click(object sender, EventArgs e)
+        {
+            if (dgvDocGia.CurrentRow == null)
+            {
+                MessageBox.Show("Vui lòng chọn một độc giả để xem thống kê chi tiết,\nhoặc vào mục 'Thống kê báo cáo' để xem tổng quan!",
+                    "Hướng dẫn", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                int maDocGia = Convert.ToInt32(dgvDocGia.CurrentRow.Cells["MaDocGia"].Value);
+                string hoTen = dgvDocGia.CurrentRow.Cells["HoTen"].Value.ToString();
+                ShowDocGiaStats(maDocGia, hoTen);
+            }
+        }
+
+        private void ShowDocGiaStats(int maDocGia, string hoTen)
+        {
+            try
+            {
+                var stats = thongKeDAO.GetChiTietTienMuonDocGia(maDocGia);
+
+                if (stats == null)
+                {
+                    MessageBox.Show($"Không có dữ liệu thống kê cho độc giả {hoTen}!", "Thông báo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // Tạo form hiển thị thống kê
+                using (var formStats = new FormDocGiaStatsDetail(stats))
+                {
+                    formStats.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi lấy thống kê: {ex.Message}", "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

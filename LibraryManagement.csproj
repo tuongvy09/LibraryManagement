@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -68,6 +69,7 @@
     <Compile Include="Repositories\TacGiaRepository.cs" />
     <Compile Include="Repositories\TheLoaiRepository.cs" />
     <Compile Include="Repositories\TheThuVienDAO.cs" />
+    <Compile Include="Repositories\ThongKeDAO.cs" />
     <Compile Include="Repositories\ThuThuDAO.cs" />
     <Compile Include="Services\ImportExcelToDatabase.cs" />
     <Compile Include="UI\AuthorModal.cs">
@@ -126,6 +128,12 @@
     </Compile>
     <Compile Include="UI\FormDocGiaManagement.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormDocGiaStatsDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormDocGiaStatsDetail.Designer.cs">
+      <DependentUpon>FormDocGiaStatsDetail.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\FormEditTheThuVien.cs">
       <SubType>Form</SubType>
@@ -215,6 +223,12 @@
     <Compile Include="UserControls\TheThuVienManagement.Designer.cs">
       <DependentUpon>TheThuVienManagement.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ThongKeManagement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ThongKeManagement.Designer.cs">
+      <DependentUpon>ThongKeManagement.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ThuThuManagement.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -259,11 +273,17 @@
     <EmbeddedResource Include="UI\UC_BorrowSlip.resx">
       <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\DocGiaManagement.resx">
+      <DependentUpon>DocGiaManagement.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\SachControl.resx">
       <DependentUpon>SachControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\TheThuVienManagement.resx">
       <DependentUpon>TheThuVienManagement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ThongKeManagement.resx">
+      <DependentUpon>ThongKeManagement.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\ThuThuManagement.resx">
       <DependentUpon>ThuThuManagement.cs</DependentUpon>
