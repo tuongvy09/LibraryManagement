@@ -76,12 +76,6 @@
     <Compile Include="UI\AuthorModal.Designer.cs">
       <DependentUpon>AuthorModal.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\DocGiaManagement.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\DocGiaManagement.Designer.cs">
-      <DependentUpon>DocGiaManagement.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\FormAddPhieuMuon.cs">
       <SubType>Form</SubType>
     </Compile>
