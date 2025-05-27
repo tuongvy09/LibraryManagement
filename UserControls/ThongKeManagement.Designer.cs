@@ -261,7 +261,7 @@ namespace LibraryManagement.UserControls
             this.dgvThongKe.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvThongKe.Size = new System.Drawing.Size(1509, 395);
             this.dgvThongKe.TabIndex = 1;
-            this.dgvThongKe.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DgvThongKe_DataBindingComplete);
+            //this.dgvThongKe.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DgvThongKe_DataBindingComplete);
             // 
             // lblThongKeThang
             // 
