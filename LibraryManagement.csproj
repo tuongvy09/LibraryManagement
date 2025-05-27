@@ -46,11 +46,135 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\BorrowSlip.cs" />
-    <Compile Include="Models\BorrowSlipDetail.cs" />
-    <Compile Include="Repositories\BorrowSlipDetailRepository.cs" />
-    <Compile Include="Repositories\BorrowSlipRepository.cs" />
-    <Compile Include="Services\BorrowService.cs" />
+    <Compile Include="Models\PhieuMuon.cs" />
+    <Compile Include="Models\CuonSach.cs" />
+    <Compile Include="Models\CuonSachDetailModel.cs" />
+    <Compile Include="Models\DauSach.cs" />
+    <Compile Include="Models\DocGia.cs" />
+    <Compile Include="Models\LoaiDocGia.cs" />
+    <Compile Include="Models\NhaXuatBan.cs" />
+    <Compile Include="Models\TacGia.cs" />
+    <Compile Include="Models\TheLoai.cs" />
+    <Compile Include="Models\TheThuVien.cs" />
+    <Compile Include="Models\ThongKe.cs" />
+    <Compile Include="Models\ThuThu.cs" />
+    <Compile Include="Repositories\PhieuMuonDAO.cs" />
+    <Compile Include="Repositories\CuonSachRepository.cs" />
+    <Compile Include="Repositories\DauSachRepository.cs" />
+    <Compile Include="Repositories\DauSachTacGiaRepository.cs" />
+    <Compile Include="Repositories\DocGiaDAO.cs" />
+    <Compile Include="Repositories\LoaiDocGiaDAO.cs" />
+    <Compile Include="Repositories\NXBRepository.cs" />
+    <Compile Include="Repositories\TacGiaRepository.cs" />
+    <Compile Include="Repositories\TheLoaiRepository.cs" />
+    <Compile Include="Repositories\TheThuVienDAO.cs" />
+    <Compile Include="Repositories\ThuThuDAO.cs" />
+    <Compile Include="Services\ImportExcelToDatabase.cs" />
+    <Compile Include="UI\AuthorModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AuthorModal.Designer.cs">
+      <DependentUpon>AuthorModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\DocGiaManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\DocGiaManagement.Designer.cs">
+      <DependentUpon>DocGiaManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddPhieuMuon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddPhieuMuon.Designer.cs">
+      <DependentUpon>FormAddPhieuMuon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddTheLoai.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddTheLoai.Designer.cs">
+      <DependentUpon>FormAddTheLoai.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddCuonSach.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddCuonSach.Designer.cs">
+      <DependentUpon>FormAddCuonSach.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddDauSach.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddDauSach.Designer.cs">
+      <DependentUpon>FormAddDauSach.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddEditDocGia.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddEditThuThu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddNXB.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddNXB.Designer.cs">
+      <DependentUpon>FormAddNXB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddTG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddTG.Designer.cs">
+      <DependentUpon>FormAddTG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddTheThuVien.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddTheThuVien.Designer.cs">
+      <DependentUpon>FormAddTheThuVien.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormDocGiaManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormEditTheThuVien.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormEditTheThuVien.Designer.cs">
+      <DependentUpon>FormEditTheThuVien.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormManageDauSach.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormManageDauSach.Designer.cs">
+      <DependentUpon>FormManageDauSach.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormManageNXB.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormManageNXB.Designer.cs">
+      <DependentUpon>FormManageNXB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormManageTG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormManageTG.Designer.cs">
+      <DependentUpon>FormManageTG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormManageTheLoai.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormManageTheLoai.Designer.cs">
+      <DependentUpon>FormManageTheLoai.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormThongKe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormThuThuManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormUpdateCuonSach.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormUpdateCuonSach.Designer.cs">
+      <DependentUpon>FormUpdateCuonSach.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Home.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -73,6 +197,57 @@
     <Compile Include="UI\UC_BorrowSlip.Designer.cs">
       <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\DocGiaManagement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\DocGiaManagement.Designer.cs">
+      <DependentUpon>DocGiaManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\SachControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\SachControl.Designer.cs">
+      <DependentUpon>SachControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\NguoiDungControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\NguoiDungControl.Designer.cs">
+      <DependentUpon>NguoiDungControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\TheThuVienManagement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\TheThuVienManagement.Designer.cs">
+      <DependentUpon>TheThuVienManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ThuThuManagement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ThuThuManagement.Designer.cs">
+      <DependentUpon>ThuThuManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ThuThuUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <EmbeddedResource Include="UI\FormAddCuonSach.resx">
+      <DependentUpon>FormAddCuonSach.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormAddDauSach.resx">
+      <DependentUpon>FormAddDauSach.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormAddEditThuThu.resx">
+      <DependentUpon>FormAddEditThuThu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormAddNXB.resx">
+      <DependentUpon>FormAddNXB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormAddTG.resx">
+      <DependentUpon>FormAddTG.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormDocGiaManagement.resx">
+      <DependentUpon>FormDocGiaManagement.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Home.resx">
       <DependentUpon>Home.cs</DependentUpon>
     </EmbeddedResource>
@@ -90,6 +265,12 @@
     <EmbeddedResource Include="UI\UC_BorrowSlip.resx">
       <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\SachControl.resx">
+      <DependentUpon>SachControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\TheThuVienManagement.resx">
+      <DependentUpon>TheThuVienManagement.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -105,7 +286,27 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Resources\statistics.png" />
+    <None Include="Resources\teamwork.png" />
+    <None Include="Resources\voucher.png" />
+    <None Include="Resources\reciept.png" />
+    <None Include="Resources\readers.png" />
+    <None Include="Resources\user.png" />
+    <None Include="Resources\receipt %281%29.png" />
+    <None Include="Resources\receipt.png" />
+    <None Include="Resources\pupil.png" />
+    <None Include="Resources\bg_home_left.bmp" />
+    <None Include="Resources\bg_home_left.jpg" />
+    <None Include="Resources\bg_home_r.png" />
+    <None Include="Resources\home_logo %282%29.png" />
+    <None Include="Resources\book.png" />
+    <None Include="Resources\borrow.png" />
+    <None Include="Resources\book %281%29.png" />
+    <None Include="Resources\books.png" />
+    <None Include="Resources\history-book.png" />
     <Content Include="Resources\home_logo.png" />
+    <None Include="Resources\library_card.png" />
+    <None Include="Resources\librarian.png" />
     <Content Include="Resources\login.jpg" />
     <Content Include="Resources\logo.png" />
     <Content Include="Resources\logoo.jpg" />

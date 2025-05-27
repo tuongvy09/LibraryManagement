@@ -15,9 +15,20 @@ namespace LibraryManagement
 
             // Khởi tạo chuỗi kết nối và inject phụ thuộc
             var dbConnection = new DBConnection();
-            dbConnection.conn.Open(); // Mở kết nối DB
-            var userRepository = new UserRepository(dbConnection);
-            authService = new AuthService(userRepository);
+            using (var conn = dbConnection.GetConnection())
+            {
+                if (conn == null)
+                {
+                    MessageBox.Show("Không thể kết nối đến cơ sở dữ liệu.");
+                    return;
+                }
+                conn.Open();
+
+                var userRepository = new UserRepository(dbConnection);
+                authService = new AuthService(userRepository);
+
+            }
+
         }
 
         private void Login_Load(object sender, EventArgs e)
@@ -41,7 +52,7 @@ namespace LibraryManagement
             {
                 MessageBox.Show("Đăng nhập thành công! Quyền: " + role);
                 this.Hide();
-                new Home().Show(); // Có thể thay đổi theo role
+                new Home(role).Show();
             }
             else
             {

@@ -12,9 +12,13 @@ namespace LibraryManagement
 {
     public partial class Home : Form
     {
-        public Home()
+        private string currentRole;
+
+        public Home(string role)
         {
             InitializeComponent();
+            currentRole = role;
+            InitializeMenuButtons(currentRole);
 
         }
 
