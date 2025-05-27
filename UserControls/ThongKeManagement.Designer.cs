@@ -27,27 +27,29 @@ namespace LibraryManagement.UserControls
 
         private void InitializeComponent()
         {
-            ChartArea chartArea1 = new ChartArea();
-            ChartArea chartArea2 = new ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.lblNam = new System.Windows.Forms.Label();
-            this.cboNam = new System.Windows.Forms.ComboBox();
-            this.lblThang = new System.Windows.Forms.Label();
-            this.cboThang = new System.Windows.Forms.ComboBox();
+            this.panelFilters = new System.Windows.Forms.Panel();
             this.btnExport = new System.Windows.Forms.Button();
+            this.cboThang = new System.Windows.Forms.ComboBox();
+            this.lblThang = new System.Windows.Forms.Label();
+            this.cboNam = new System.Windows.Forms.ComboBox();
+            this.lblNam = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabDocGia = new System.Windows.Forms.TabPage();
-            this.chartDocGia = new Chart();
+            this.chartDocGia = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabDoanhthu = new System.Windows.Forms.TabPage();
-            this.chartTien = new Chart();
+            this.chartTien = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabChitiet = new System.Windows.Forms.TabPage();
             this.dgvThongKe = new System.Windows.Forms.DataGridView();
             this.lblThongKeThang = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.chartDocGia)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartTien)).BeginInit();
+            this.panelFilters.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabDocGia.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartDocGia)).BeginInit();
             this.tabDoanhthu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartTien)).BeginInit();
             this.tabChitiet.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvThongKe)).BeginInit();
             this.SuspendLayout();
@@ -55,67 +57,50 @@ namespace LibraryManagement.UserControls
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(115)))), ((int)(((byte)(154)))), ((int)(((byte)(79)))));
-            this.lblTitle.Location = new System.Drawing.Point(27, 25);
+            this.lblTitle.Location = new System.Drawing.Point(27, 20);
             this.lblTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(258, 41);
+            this.lblTitle.Size = new System.Drawing.Size(410, 46);
             this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "THỐNG KÊ BÁO CÁO";
+            this.lblTitle.Text = "📊 THỐNG KÊ BÁO CÁO";
             // 
-            // lblNam
+            // panelFilters
             // 
-            this.lblNam.AutoSize = true;
-            this.lblNam.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNam.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(115)))), ((int)(((byte)(154)))), ((int)(((byte)(79)))));
-            this.lblNam.Location = new System.Drawing.Point(27, 86);
-            this.lblNam.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblNam.Name = "lblNam";
-            this.lblNam.Size = new System.Drawing.Size(46, 23);
-            this.lblNam.TabIndex = 1;
-            this.lblNam.Text = "Năm:";
+            this.panelFilters.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.panelFilters.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelFilters.Controls.Add(this.btnExport);
+            this.panelFilters.Controls.Add(this.cboThang);
+            this.panelFilters.Controls.Add(this.lblThang);
+            this.panelFilters.Controls.Add(this.cboNam);
+            this.panelFilters.Controls.Add(this.lblNam);
+            this.panelFilters.Location = new System.Drawing.Point(27, 75);
+            this.panelFilters.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFilters.Name = "panelFilters";
+            this.panelFilters.Size = new System.Drawing.Size(1533, 60);
+            this.panelFilters.TabIndex = 1;
             // 
-            // cboNam
+            // btnExport
             // 
-            this.cboNam.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboNam.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cboNam.FormattingEnabled = true;
-            this.cboNam.Items.AddRange(new object[] {
-            "2020",
-            "2021",
-            "2022",
-            "2023",
-            "2024",
-            "2025",
-            "2026",
-            "2027",
-            "2028",
-            "2029",
-            "2030"});
-            this.cboNam.Location = new System.Drawing.Point(81, 82);
-            this.cboNam.Margin = new System.Windows.Forms.Padding(4);
-            this.cboNam.Name = "cboNam";
-            this.cboNam.Size = new System.Drawing.Size(100, 31);
-            this.cboNam.TabIndex = 2;
-            this.cboNam.SelectedIndexChanged += new System.EventHandler(this.CboNam_SelectedIndexChanged);
-            // 
-            // lblThang
-            // 
-            this.lblThang.AutoSize = true;
-            this.lblThang.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblThang.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(115)))), ((int)(((byte)(154)))), ((int)(((byte)(79)))));
-            this.lblThang.Location = new System.Drawing.Point(210, 86);
-            this.lblThang.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblThang.Name = "lblThang";
-            this.lblThang.Size = new System.Drawing.Size(58, 23);
-            this.lblThang.TabIndex = 3;
-            this.lblThang.Text = "Tháng:";
+            this.btnExport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
+            this.btnExport.FlatAppearance.BorderSize = 0;
+            this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExport.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExport.ForeColor = System.Drawing.Color.White;
+            this.btnExport.Location = new System.Drawing.Point(400, 12);
+            this.btnExport.Margin = new System.Windows.Forms.Padding(4);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(175, 38);
+            this.btnExport.TabIndex = 4;
+            this.btnExport.Text = "📋 Xuất báo cáo";
+            this.btnExport.UseVisualStyleBackColor = false;
+            this.btnExport.Click += new System.EventHandler(this.BtnExport_Click);
             // 
             // cboThang
             // 
             this.cboThang.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboThang.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cboThang.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboThang.FormattingEnabled = true;
             this.cboThang.Items.AddRange(new object[] {
             "1",
@@ -130,52 +115,84 @@ namespace LibraryManagement.UserControls
             "10",
             "11",
             "12"});
-            this.cboThang.Location = new System.Drawing.Point(276, 82);
+            this.cboThang.Location = new System.Drawing.Point(280, 15);
             this.cboThang.Margin = new System.Windows.Forms.Padding(4);
             this.cboThang.Name = "cboThang";
-            this.cboThang.Size = new System.Drawing.Size(80, 31);
-            this.cboThang.TabIndex = 4;
+            this.cboThang.Size = new System.Drawing.Size(90, 33);
+            this.cboThang.TabIndex = 3;
             this.cboThang.SelectedIndexChanged += new System.EventHandler(this.CboThang_SelectedIndexChanged);
             // 
-            // btnExport
+            // lblThang
             // 
-            this.btnExport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
-            this.btnExport.FlatAppearance.BorderSize = 0;
-            this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExport.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExport.ForeColor = System.Drawing.Color.White;
-            this.btnExport.Location = new System.Drawing.Point(390, 82);
-            this.btnExport.Margin = new System.Windows.Forms.Padding(4);
-            this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(120, 35);
-            this.btnExport.TabIndex = 5;
-            this.btnExport.Text = "Xuất báo cáo";
-            this.btnExport.UseVisualStyleBackColor = false;
-            this.btnExport.Click += new System.EventHandler(this.BtnExport_Click);
+            this.lblThang.AutoSize = true;
+            this.lblThang.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblThang.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(115)))), ((int)(((byte)(154)))), ((int)(((byte)(79)))));
+            this.lblThang.Location = new System.Drawing.Point(200, 18);
+            this.lblThang.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblThang.Name = "lblThang";
+            this.lblThang.Size = new System.Drawing.Size(73, 25);
+            this.lblThang.TabIndex = 2;
+            this.lblThang.Text = "Tháng:";
+            // 
+            // cboNam
+            // 
+            this.cboNam.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboNam.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cboNam.FormattingEnabled = true;
+            this.cboNam.Items.AddRange(new object[] {
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025",
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"});
+            this.cboNam.Location = new System.Drawing.Point(70, 15);
+            this.cboNam.Margin = new System.Windows.Forms.Padding(4);
+            this.cboNam.Name = "cboNam";
+            this.cboNam.Size = new System.Drawing.Size(110, 33);
+            this.cboNam.TabIndex = 1;
+            this.cboNam.SelectedIndexChanged += new System.EventHandler(this.CboNam_SelectedIndexChanged);
+            // 
+            // lblNam
+            // 
+            this.lblNam.AutoSize = true;
+            this.lblNam.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNam.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(115)))), ((int)(((byte)(154)))), ((int)(((byte)(79)))));
+            this.lblNam.Location = new System.Drawing.Point(15, 18);
+            this.lblNam.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblNam.Name = "lblNam";
+            this.lblNam.Size = new System.Drawing.Size(59, 25);
+            this.lblNam.TabIndex = 0;
+            this.lblNam.Text = "Năm:";
             // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tabDocGia);
             this.tabControl.Controls.Add(this.tabDoanhthu);
             this.tabControl.Controls.Add(this.tabChitiet);
-            this.tabControl.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControl.Location = new System.Drawing.Point(27, 135);
+            this.tabControl.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabControl.Location = new System.Drawing.Point(27, 150);
             this.tabControl.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(1533, 493);
-            this.tabControl.TabIndex = 6;
+            this.tabControl.TabIndex = 2;
             // 
             // tabDocGia
             // 
             this.tabDocGia.Controls.Add(this.chartDocGia);
-            this.tabDocGia.Location = new System.Drawing.Point(4, 32);
+            this.tabDocGia.Location = new System.Drawing.Point(4, 34);
             this.tabDocGia.Margin = new System.Windows.Forms.Padding(4);
             this.tabDocGia.Name = "tabDocGia";
             this.tabDocGia.Padding = new System.Windows.Forms.Padding(4);
-            this.tabDocGia.Size = new System.Drawing.Size(1525, 457);
+            this.tabDocGia.Size = new System.Drawing.Size(1525, 455);
             this.tabDocGia.TabIndex = 0;
-            this.tabDocGia.Text = "Độc giả mới theo tháng";
+            this.tabDocGia.Text = "📈 Độc giả mới theo tháng";
             this.tabDocGia.UseVisualStyleBackColor = true;
             // 
             // chartDocGia
@@ -186,20 +203,20 @@ namespace LibraryManagement.UserControls
             this.chartDocGia.Location = new System.Drawing.Point(4, 4);
             this.chartDocGia.Margin = new System.Windows.Forms.Padding(4);
             this.chartDocGia.Name = "chartDocGia";
-            this.chartDocGia.Size = new System.Drawing.Size(1517, 449);
+            this.chartDocGia.Size = new System.Drawing.Size(1517, 447);
             this.chartDocGia.TabIndex = 0;
             this.chartDocGia.Text = "chartDocGia";
             // 
             // tabDoanhthu
             // 
             this.tabDoanhthu.Controls.Add(this.chartTien);
-            this.tabDoanhthu.Location = new System.Drawing.Point(4, 32);
+            this.tabDoanhthu.Location = new System.Drawing.Point(4, 34);
             this.tabDoanhthu.Margin = new System.Windows.Forms.Padding(4);
             this.tabDoanhthu.Name = "tabDoanhthu";
             this.tabDoanhthu.Padding = new System.Windows.Forms.Padding(4);
-            this.tabDoanhthu.Size = new System.Drawing.Size(1525, 457);
+            this.tabDoanhthu.Size = new System.Drawing.Size(1525, 455);
             this.tabDoanhthu.TabIndex = 1;
-            this.tabDoanhthu.Text = "Doanh thu theo tháng";
+            this.tabDoanhthu.Text = "💰 Doanh thu theo tháng";
             this.tabDoanhthu.UseVisualStyleBackColor = true;
             // 
             // chartTien
@@ -210,7 +227,7 @@ namespace LibraryManagement.UserControls
             this.chartTien.Location = new System.Drawing.Point(4, 4);
             this.chartTien.Margin = new System.Windows.Forms.Padding(4);
             this.chartTien.Name = "chartTien";
-            this.chartTien.Size = new System.Drawing.Size(1517, 449);
+            this.chartTien.Size = new System.Drawing.Size(1517, 447);
             this.chartTien.TabIndex = 0;
             this.chartTien.Text = "chartTien";
             // 
@@ -218,13 +235,13 @@ namespace LibraryManagement.UserControls
             // 
             this.tabChitiet.Controls.Add(this.dgvThongKe);
             this.tabChitiet.Controls.Add(this.lblThongKeThang);
-            this.tabChitiet.Location = new System.Drawing.Point(4, 32);
+            this.tabChitiet.Location = new System.Drawing.Point(4, 34);
             this.tabChitiet.Margin = new System.Windows.Forms.Padding(4);
             this.tabChitiet.Name = "tabChitiet";
             this.tabChitiet.Padding = new System.Windows.Forms.Padding(4);
-            this.tabChitiet.Size = new System.Drawing.Size(1525, 457);
+            this.tabChitiet.Size = new System.Drawing.Size(1525, 455);
             this.tabChitiet.TabIndex = 2;
-            this.tabChitiet.Text = "Chi tiết tiền mượn + phạt";
+            this.tabChitiet.Text = "📊 Chi tiết tiền mượn + phạt";
             this.tabChitiet.UseVisualStyleBackColor = true;
             // 
             // dgvThongKe
@@ -233,29 +250,30 @@ namespace LibraryManagement.UserControls
             this.dgvThongKe.AllowUserToDeleteRows = false;
             this.dgvThongKe.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvThongKe.BackgroundColor = System.Drawing.Color.White;
-            this.dgvThongKe.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.dgvThongKe.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvThongKe.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvThongKe.Location = new System.Drawing.Point(8, 40);
+            this.dgvThongKe.Location = new System.Drawing.Point(8, 50);
             this.dgvThongKe.Margin = new System.Windows.Forms.Padding(4);
             this.dgvThongKe.MultiSelect = false;
             this.dgvThongKe.Name = "dgvThongKe";
             this.dgvThongKe.ReadOnly = true;
             this.dgvThongKe.RowHeadersWidth = 51;
             this.dgvThongKe.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvThongKe.Size = new System.Drawing.Size(1509, 409);
+            this.dgvThongKe.Size = new System.Drawing.Size(1509, 395);
             this.dgvThongKe.TabIndex = 1;
+            this.dgvThongKe.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DgvThongKe_DataBindingComplete);
             // 
             // lblThongKeThang
             // 
             this.lblThongKeThang.AutoSize = true;
-            this.lblThongKeThang.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblThongKeThang.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblThongKeThang.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(115)))), ((int)(((byte)(154)))), ((int)(((byte)(79)))));
-            this.lblThongKeThang.Location = new System.Drawing.Point(8, 8);
+            this.lblThongKeThang.Location = new System.Drawing.Point(8, 15);
             this.lblThongKeThang.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblThongKeThang.Name = "lblThongKeThang";
-            this.lblThongKeThang.Size = new System.Drawing.Size(301, 28);
+            this.lblThongKeThang.Size = new System.Drawing.Size(402, 30);
             this.lblThongKeThang.TabIndex = 0;
-            this.lblThongKeThang.Text = "Top độc giả có chi phí cao nhất";
+            this.lblThongKeThang.Text = "🏆 Top 20 độc giả có chi phí cao nhất";
             // 
             // ThongKeManagement
             // 
@@ -263,28 +281,29 @@ namespace LibraryManagement.UserControls
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.tabControl);
-            this.Controls.Add(this.btnExport);
-            this.Controls.Add(this.cboThang);
-            this.Controls.Add(this.lblThang);
-            this.Controls.Add(this.cboNam);
-            this.Controls.Add(this.lblNam);
+            this.Controls.Add(this.panelFilters);
             this.Controls.Add(this.lblTitle);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ThongKeManagement";
-            this.Size = new System.Drawing.Size(1600, 652);
-            ((System.ComponentModel.ISupportInitialize)(this.chartDocGia)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartTien)).EndInit();
+            this.Size = new System.Drawing.Size(1600, 670);
+            this.Load += new System.EventHandler(this.ThongKeManagement_Load);
+            this.panelFilters.ResumeLayout(false);
+            this.panelFilters.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tabDocGia.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chartDocGia)).EndInit();
             this.tabDoanhthu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chartTien)).EndInit();
             this.tabChitiet.ResumeLayout(false);
             this.tabChitiet.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvThongKe)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.Panel panelFilters;
         private System.Windows.Forms.Label lblNam;
         private System.Windows.Forms.ComboBox cboNam;
         private System.Windows.Forms.Label lblThang;
