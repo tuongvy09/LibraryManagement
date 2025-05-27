@@ -271,6 +271,9 @@
     <EmbeddedResource Include="UserControls\TheThuVienManagement.resx">
       <DependentUpon>TheThuVienManagement.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ThuThuManagement.resx">
+      <DependentUpon>ThuThuManagement.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
