@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\BienLai.cs" />
     <Compile Include="Models\PhieuMuon.cs" />
     <Compile Include="Models\CuonSach.cs" />
     <Compile Include="Models\CuonSachDetailModel.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Models\TheThuVien.cs" />
     <Compile Include="Models\ThongKe.cs" />
     <Compile Include="Models\ThuThu.cs" />
+    <Compile Include="Repositories\BienLaiDAO.cs" />
     <Compile Include="Repositories\PhieuMuonDAO.cs" />
     <Compile Include="Repositories\CuonSachRepository.cs" />
     <Compile Include="Repositories\DauSachRepository.cs" />
@@ -77,6 +79,12 @@
     </Compile>
     <Compile Include="UI\AuthorModal.Designer.cs">
       <DependentUpon>AuthorModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddBienLai.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddBienLai.Designer.cs">
+      <DependentUpon>FormAddBienLai.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\FormAddPhieuMuon.cs">
       <SubType>Form</SubType>
@@ -134,6 +142,12 @@
     </Compile>
     <Compile Include="UI\FormDocGiaStatsDetail.Designer.cs">
       <DependentUpon>FormDocGiaStatsDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormEditBienLai.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormEditBienLai.Designer.cs">
+      <DependentUpon>FormEditBienLai.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\FormEditTheThuVien.cs">
       <SubType>Form</SubType>
@@ -198,6 +212,12 @@
     </Compile>
     <Compile Include="UI\UC_BorrowSlip.Designer.cs">
       <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\BienLaiManagement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\BienLaiManagement.Designer.cs">
+      <DependentUpon>BienLaiManagement.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\DocGiaManagement.cs">
       <SubType>UserControl</SubType>
