@@ -6,7 +6,7 @@ namespace LibraryManagement.Repositories
 {
     public class DBConnection
     {
-        private readonly string connectionString = @"Data Source=localhost;Initial Catalog=FinalProjectLtWins;Integrated Security=True";
+        private readonly string connectionString = @"Data Source=LAPTOP-S0F5B0E7;Initial Catalog=FinalProjectLtWins;Integrated Security=True";
 
         public SqlConnection GetConnection()
         {

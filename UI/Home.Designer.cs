@@ -239,6 +239,7 @@ namespace LibraryManagement
                     break;
 
                 case "Phiếu phạt":
+                    newContent = new PhieuPhatManagement();
                     break;
 
                 case "Biên lai":
@@ -252,7 +253,7 @@ namespace LibraryManagement
                     break;
 
                 case "Phiếu Mượn":
-                    //newContent = new PhieuMuonManagement();
+                    newContent = new PhieuMuonManagement();
                     break;
 
                 case "Lịch sử thao tác":

@@ -55,6 +55,8 @@
     <Compile Include="Models\DocGia.cs" />
     <Compile Include="Models\LoaiDocGia.cs" />
     <Compile Include="Models\NhaXuatBan.cs" />
+    <Compile Include="Models\PhieuPhat.cs" />
+    <Compile Include="Models\QDP.cs" />
     <Compile Include="Models\TacGia.cs" />
     <Compile Include="Models\TheLoai.cs" />
     <Compile Include="Models\TheThuVien.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Repositories\DocGiaDAO.cs" />
     <Compile Include="Repositories\LoaiDocGiaDAO.cs" />
     <Compile Include="Repositories\NXBRepository.cs" />
+    <Compile Include="Repositories\PhieuPhatDAO.cs" />
     <Compile Include="Repositories\TacGiaRepository.cs" />
     <Compile Include="Repositories\TheLoaiRepository.cs" />
     <Compile Include="Repositories\TheThuVienDAO.cs" />
@@ -91,6 +94,12 @@
     </Compile>
     <Compile Include="UI\FormAddPhieuMuon.Designer.cs">
       <DependentUpon>FormAddPhieuMuon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormAddPhieuPhat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddPhieuPhat.Designer.cs">
+      <DependentUpon>FormAddPhieuPhat.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\FormAddTheLoai.cs">
       <SubType>Form</SubType>
@@ -134,6 +143,18 @@
     <Compile Include="UI\FormAddTheThuVien.Designer.cs">
       <DependentUpon>FormAddTheThuVien.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\FormChiTietPhieuMuon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormChiTietPhieuMuon.Designer.cs">
+      <DependentUpon>FormChiTietPhieuMuon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormChiTietPhieuPhat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormChiTietPhieuPhat.Designer.cs">
+      <DependentUpon>FormChiTietPhieuPhat.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\FormDocGiaManagement.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,6 +169,18 @@
     </Compile>
     <Compile Include="UI\FormEditBienLai.Designer.cs">
       <DependentUpon>FormEditBienLai.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormEditPhieuMuon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormEditPhieuMuon.Designer.cs">
+      <DependentUpon>FormEditPhieuMuon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormEditPhieuPhat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormEditPhieuPhat.Designer.cs">
+      <DependentUpon>FormEditPhieuPhat.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\FormEditTheThuVien.cs">
       <SubType>Form</SubType>
@@ -225,6 +258,18 @@
     <Compile Include="UserControls\DocGiaManagement.Designer.cs">
       <DependentUpon>DocGiaManagement.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\PhieuMuonManagement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\PhieuMuonManagement.Designer.cs">
+      <DependentUpon>PhieuMuonManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\PhieuPhatManagement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\PhieuPhatManagement.Designer.cs">
+      <DependentUpon>PhieuPhatManagement.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\SachControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -295,6 +340,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\DocGiaManagement.resx">
       <DependentUpon>DocGiaManagement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\PhieuMuonManagement.resx">
+      <DependentUpon>PhieuMuonManagement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\PhieuPhatManagement.resx">
+      <DependentUpon>PhieuPhatManagement.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\SachControl.resx">
       <DependentUpon>SachControl.cs</DependentUpon>
