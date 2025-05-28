@@ -242,6 +242,8 @@ namespace LibraryManagement
                     break;
 
                 case "Biên lai":
+                    newContent = new BienLaiManagement();
+                    newContent.Dock = DockStyle.Fill;
                     break;
 
                 case "Người dùng":
