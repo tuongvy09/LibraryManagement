@@ -137,7 +137,6 @@ namespace LibraryManagement
         { "Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
         { "Mượn sách", Properties.Resources.book__1_ ?? CreateDefaultIcon() },
 
-        // Thêm icon cho "Phiếu Mượn" (bạn nhớ thêm ảnh này vào resources nếu chưa có)
         { "Phiếu Mượn", Properties.Resources.reciept ?? CreateDefaultIcon() },
 
         { "Phiếu phạt", Properties.Resources.voucher ?? CreateDefaultIcon() },
@@ -251,7 +250,7 @@ namespace LibraryManagement
                     break;
 
                 case "Phiếu Mượn":
-                    newForm = new FormAddPhieuMuon(); // <-- Thêm dòng này
+                    newContent = new PhieuMuonManagement(); 
                     break;
 
                 case "Lịch sử thao tác":
