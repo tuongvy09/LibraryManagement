@@ -119,7 +119,7 @@ namespace LibraryManagement
             // Các mục menu chính
             menuItems.AddRange(new[] { "Sách", "Độc giả", "Mượn sách", "Phiếu Mượn", "Phiếu phạt", "Biên lai" });
 
-            menuItems.Add("Thống kê - Báo cáo");
+            menuItems.Add("Thống kê Độc giả");
 
             if (role == "admin")
             {
@@ -131,13 +131,12 @@ namespace LibraryManagement
         { "Quản lý Thủ thư", Properties.Resources.librarian ?? CreateDefaultIcon() },
         { "Quản lý Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
         { "Quản lý Thẻ thư viện", Properties.Resources.library_card ?? CreateDefaultIcon() },
-        { "Thống kê - Báo cáo", Properties.Resources.statistics ?? CreateDefaultIcon() },
+        { "Thống kê Độc giả", Properties.Resources.statistics ?? CreateDefaultIcon() },
 
         { "Sách", Properties.Resources.books ?? CreateDefaultIcon() },
         { "Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
         { "Mượn sách", Properties.Resources.book__1_ ?? CreateDefaultIcon() },
 
-        // Thêm icon cho "Phiếu Mượn" (bạn nhớ thêm ảnh này vào resources nếu chưa có)
         { "Phiếu Mượn", Properties.Resources.reciept ?? CreateDefaultIcon() },
 
         { "Phiếu phạt", Properties.Resources.voucher ?? CreateDefaultIcon() },
@@ -210,13 +209,11 @@ namespace LibraryManagement
             switch (item)
             {
                 case "Quản lý Thủ thư":
-                    newContent = new ThuThuManagement();
-                    newContent.Dock = DockStyle.Fill;
+                    newForm = new FormThuThuManagement();
                     break;
 
                 case "Quản lý Độc giả":
-                    newContent = new DocGiaManagement();
-                    newContent.Dock = DockStyle.Fill;
+                    newForm = new FormDocGiaManagement();
                     break;
 
                 case "Quản lý Thẻ thư viện":
@@ -224,10 +221,8 @@ namespace LibraryManagement
                     newContent.Dock = DockStyle.Fill;
                     break;
 
-                case "Thống kê - Báo cáo":
-                    newContent = new ThongKeManagement();
-                    newContent.Dock = DockStyle.Fill;
-
+                case "Thống kê Độc giả":
+                    newForm = new FormThongKe();
                     break;
 
                 case "Sách":
@@ -247,6 +242,8 @@ namespace LibraryManagement
                     break;
 
                 case "Biên lai":
+                    newContent = new BienLaiManagement();
+                    newContent.Dock = DockStyle.Fill;
                     break;
 
                 case "Người dùng":
@@ -255,7 +252,7 @@ namespace LibraryManagement
                     break;
 
                 case "Phiếu Mượn":
-                    newForm = new FormAddPhieuMuon(); 
+                    //newContent = new PhieuMuonManagement();
                     break;
 
                 case "Lịch sử thao tác":
