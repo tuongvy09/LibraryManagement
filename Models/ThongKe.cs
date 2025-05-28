@@ -1,43 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace LibraryManagement.Models
 {
-    public class ThongKeDocGiaTheoThangDTO
+    public class ThongKeTienMuonDTO
     {
+        public int MaDocGia { get; set; }
+        public string HoTen { get; set; }
+        public decimal TongTienMuon { get; set; }
+        public int SoLanMuon { get; set; }
         public int Thang { get; set; }
         public int Nam { get; set; }
-        public int SoLuongDocGiaMoi { get; set; }
-        public string ThangNam => $"{Thang:00}/{Nam}";
     }
 
-    public class ThongKeTienMuonDocGiaDTO
+    public class ThongKeTienMuonVaPhatDTO
     {
         public int MaDocGia { get; set; }
         public string HoTen { get; set; }
         public decimal TongTienMuon { get; set; }
         public decimal TongTienPhat { get; set; }
-        public decimal TongCong => TongTienMuon + TongTienPhat;
-        public int SoLanMuon { get; set; }
-        public DateTime? LanMuonGanNhat { get; set; }
-    }
-
-    public class ThongKeTienTheoThangDTO
-    {
+        public decimal TongCong { get; set; }
         public int Thang { get; set; }
         public int Nam { get; set; }
-        public decimal TongTienMuon { get; set; }
-        public decimal TongTienPhat { get; set; }
-        public decimal TongCong => TongTienMuon + TongTienPhat;
-        public string ThangNam => $"{Thang:00}/{Nam}";
     }
 
-    public class ThongKeDoanhThuTheoThangDTO
+    public class ThongKeDocGiaMoiDTO
     {
         public int Thang { get; set; }
+        public string TenThang { get; set; }
+        public int SoDocGiaMoi { get; set; }
         public int Nam { get; set; }
-        public decimal TongDoanhThu { get; set; }
-        public int SoGiaoDich { get; set; }
-        public string ThangNam => $"{Thang:00}/{Nam}";
-        public string DoanhThuDisplay => TongDoanhThu.ToString("N0") + " VNĐ";
     }
 }

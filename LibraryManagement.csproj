@@ -35,7 +35,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -69,7 +68,6 @@
     <Compile Include="Repositories\TacGiaRepository.cs" />
     <Compile Include="Repositories\TheLoaiRepository.cs" />
     <Compile Include="Repositories\TheThuVienDAO.cs" />
-    <Compile Include="Repositories\ThongKeDAO.cs" />
     <Compile Include="Repositories\ThuThuDAO.cs" />
     <Compile Include="Services\ImportExcelToDatabase.cs" />
     <Compile Include="UI\AuthorModal.cs">
@@ -83,6 +81,24 @@
     </Compile>
     <Compile Include="UI\FormAddPhieuMuon.Designer.cs">
       <DependentUpon>FormAddPhieuMuon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormChiTietPhieuMuon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormChiTietPhieuMuon.Designer.cs">
+      <DependentUpon>FormChiTietPhieuMuon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\DocGiaManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\DocGiaManagement.Designer.cs">
+      <DependentUpon>DocGiaManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormEditPhieuMuon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormEditPhieuMuon.Designer.cs">
+      <DependentUpon>FormEditPhieuMuon.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\FormAddTheLoai.cs">
       <SubType>Form</SubType>
@@ -128,12 +144,6 @@
     </Compile>
     <Compile Include="UI\FormDocGiaManagement.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormDocGiaStatsDetail.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormDocGiaStatsDetail.Designer.cs">
-      <DependentUpon>FormDocGiaStatsDetail.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\FormEditTheThuVien.cs">
       <SubType>Form</SubType>
@@ -193,17 +203,17 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\Login.Designer.cs" />
-    <Compile Include="UI\UC_BorrowSlip.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\UC_BorrowSlip.Designer.cs">
-      <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\DocGiaManagement.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControls\DocGiaManagement.Designer.cs">
       <DependentUpon>DocGiaManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\PhieuMuonManagement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\PhieuMuonManagement.Designer.cs">
+      <DependentUpon>PhieuMuonManagement.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\SachControl.cs">
       <SubType>UserControl</SubType>
@@ -222,12 +232,6 @@
     </Compile>
     <Compile Include="UserControls\TheThuVienManagement.Designer.cs">
       <DependentUpon>TheThuVienManagement.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\ThongKeManagement.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\ThongKeManagement.Designer.cs">
-      <DependentUpon>ThongKeManagement.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\ThuThuManagement.cs">
       <SubType>UserControl</SubType>
@@ -253,8 +257,14 @@
     <EmbeddedResource Include="UI\FormAddTG.resx">
       <DependentUpon>FormAddTG.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormChiTietPhieuMuon.resx">
+      <DependentUpon>FormChiTietPhieuMuon.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\FormDocGiaManagement.resx">
       <DependentUpon>FormDocGiaManagement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormEditPhieuMuon.resx">
+      <DependentUpon>FormEditPhieuMuon.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Home.resx">
       <DependentUpon>Home.cs</DependentUpon>
@@ -270,23 +280,14 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="UI\Login.resx" />
-    <EmbeddedResource Include="UI\UC_BorrowSlip.resx">
-      <DependentUpon>UC_BorrowSlip.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\DocGiaManagement.resx">
-      <DependentUpon>DocGiaManagement.cs</DependentUpon>
+    <EmbeddedResource Include="UserControls\PhieuMuonManagement.resx">
+      <DependentUpon>PhieuMuonManagement.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\SachControl.resx">
       <DependentUpon>SachControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\TheThuVienManagement.resx">
       <DependentUpon>TheThuVienManagement.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\ThongKeManagement.resx">
-      <DependentUpon>ThongKeManagement.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\ThuThuManagement.resx">
-      <DependentUpon>ThuThuManagement.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

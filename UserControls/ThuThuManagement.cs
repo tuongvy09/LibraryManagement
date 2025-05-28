@@ -15,110 +15,210 @@ namespace LibraryManagement.UserControls
 {
     public partial class ThuThuManagement : UserControl
     {
-        private readonly ThuThuDAO thuThuDAO = new ThuThuDAO();
+        private DataGridView dgvThuThu;
+        private TextBox txtSearch;
+        private Button btnSearch, btnAdd, btnEdit, btnDelete, btnRefresh;
+        private Label lblSearch, lblTitle;
+        private Panel headerPanel, searchPanel, buttonPanel, gridPanel;
+
+        private ThuThuDAO thuThuDAO = new ThuThuDAO();
         private List<ThuThu> currentData;
-        private string placeholderText = "Nhập tên, email hoặc số điện thoại...";
-        private bool dataLoaded = false;
 
         public ThuThuManagement()
         {
-            InitializeComponent();
-
-            // Đăng ký events
-            dgvThuThu.DataBindingComplete += DgvThuThu_DataBindingComplete;
-            this.Load += ThuThuManagement_Load;
-
-            // Setup placeholder text
-            txtSearch.Text = placeholderText;
-            txtSearch.ForeColor = Color.Gray;
-
-            // Gán sự kiện
-            txtSearch.Enter += TxtSearch_Enter;
-            txtSearch.Leave += TxtSearch_Leave;
-            txtSearch.KeyDown += TxtSearch_KeyDown;
+            InitializeControls(); // Đổi tên để tránh trùng với Designer
         }
 
-        // Event handler cho Load
+        private void InitializeControls() // Đổi tên từ InitializeComponent
+        {
+            this.SuspendLayout();
+
+            // 
+            // ThuThuManagement
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
+            this.Name = "ThuThuManagement";
+            this.Size = new System.Drawing.Size(1000, 600);
+            this.Load += new System.EventHandler(this.ThuThuManagement_Load);
+
+            this.ResumeLayout(false);
+        }
+
         private void ThuThuManagement_Load(object sender, EventArgs e)
         {
-            if (!dataLoaded)
-            {
-                LoadData();
-            }
+            InitializeCustomControls();
+            LoadData();
         }
 
-        // Event handler cho DataBindingComplete
-        private void DgvThuThu_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        private void InitializeCustomControls()
         {
-            SetupColumnHeaders();
-        }
+            Color mainColor = ColorTranslator.FromHtml("#739a4f");
 
-        // Override OnVisibleChanged để load data khi UserControl được hiển thị
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            base.OnVisibleChanged(e);
-
-            if (this.Visible && this.IsHandleCreated && !dataLoaded)
+            // Header Panel
+            headerPanel = new Panel()
             {
-                LoadData();
-            }
-        }
+                Dock = DockStyle.Top,
+                Height = 60,
+                BackColor = Color.White
+            };
+            this.Controls.Add(headerPanel);
 
-        // Override SetVisibleCore để load data khi UserControl được hiển thị
-        protected override void SetVisibleCore(bool value)
-        {
-            base.SetVisibleCore(value);
-
-            if (value && this.Created && !dataLoaded)
+            lblTitle = new Label()
             {
-                // Delay load để đảm bảo UserControl đã được khởi tạo hoàn toàn
-                this.BeginInvoke(new Action(() => {
-                    if (!dataLoaded)
-                    {
-                        LoadData();
-                    }
-                }));
-            }
-        }
+                Text = "QUẢN LÝ THỦ THƯ",
+                Font = new Font("Segoe UI", 18, FontStyle.Bold),
+                ForeColor = mainColor,
+                Location = new Point(20, 15),
+                AutoSize = true
+            };
+            headerPanel.Controls.Add(lblTitle);
 
-        // Phương thức công khai để khởi tạo data từ Form cha
-        public void InitializeData()
-        {
-            if (!dataLoaded)
+            // Search Panel
+            searchPanel = new Panel()
             {
-                LoadData();
-            }
-        }
+                Dock = DockStyle.Top,
+                Height = 50,
+                BackColor = Color.WhiteSmoke,
+                Padding = new Padding(20, 10, 20, 10)
+            };
+            this.Controls.Add(searchPanel);
 
-        // Phương thức công khai để refresh dữ liệu từ bên ngoài
-        public void RefreshData()
-        {
-            if (this.IsHandleCreated || this.Created)
+            lblSearch = new Label()
             {
-                LoadData();
-            }
-        }
+                Text = "Tìm kiếm:",
+                Location = new Point(0, 15),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10),
+                ForeColor = mainColor
+            };
+            searchPanel.Controls.Add(lblSearch);
 
-        // Phương thức công khai để tìm kiếm từ bên ngoài
-        public void SearchData(string searchText)
-        {
-            if (this.IsHandleCreated || this.Created)
+            txtSearch = new TextBox()
             {
-                txtSearch.Text = searchText;
-                txtSearch.ForeColor = Color.Black;
-                SearchThuThu();
-            }
-        }
+                Location = new Point(80, 12),
+                Width = 250,
+                Font = new Font("Segoe UI", 10)
+            };
+            txtSearch.KeyDown += TxtSearch_KeyDown;
+            searchPanel.Controls.Add(txtSearch);
 
-        // Phương thức công khai để clear search và reload data
-        public void ClearSearch()
-        {
-            if (this.IsHandleCreated || this.Created)
+            btnSearch = new Button()
             {
-                txtSearch.Text = placeholderText;
-                txtSearch.ForeColor = Color.Gray;
-                LoadData();
-            }
+                Text = "Tìm kiếm",
+                BackColor = mainColor,
+                ForeColor = Color.White,
+                Location = new Point(340, 12),
+                Size = new Size(80, 25),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 9)
+            };
+            btnSearch.FlatAppearance.BorderSize = 0;
+            btnSearch.Click += BtnSearch_Click;
+            searchPanel.Controls.Add(btnSearch);
+
+            // Button Panel
+            buttonPanel = new Panel()
+            {
+                Dock = DockStyle.Top,
+                Height = 60,
+                BackColor = Color.White,
+                Padding = new Padding(20, 10, 20, 10)
+            };
+            this.Controls.Add(buttonPanel);
+
+            btnAdd = new Button()
+            {
+                Text = "Thêm mới",
+                BackColor = ColorTranslator.FromHtml("#28a745"),
+                ForeColor = Color.White,
+                Location = new Point(0, 10),
+                Size = new Size(100, 35),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10)
+            };
+            btnAdd.FlatAppearance.BorderSize = 0;
+            btnAdd.Click += BtnAdd_Click;
+            buttonPanel.Controls.Add(btnAdd);
+
+            btnEdit = new Button()
+            {
+                Text = "Sửa",
+                BackColor = ColorTranslator.FromHtml("#ffc107"),
+                ForeColor = Color.White,
+                Location = new Point(110, 10),
+                Size = new Size(80, 35),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10)
+            };
+            btnEdit.FlatAppearance.BorderSize = 0;
+            btnEdit.Click += BtnEdit_Click;
+            buttonPanel.Controls.Add(btnEdit);
+
+            btnDelete = new Button()
+            {
+                Text = "Xóa",
+                BackColor = ColorTranslator.FromHtml("#dc3545"),
+                ForeColor = Color.White,
+                Location = new Point(200, 10),
+                Size = new Size(80, 35),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10)
+            };
+            btnDelete.FlatAppearance.BorderSize = 0;
+            btnDelete.Click += BtnDelete_Click;
+            buttonPanel.Controls.Add(btnDelete);
+
+            btnRefresh = new Button()
+            {
+                Text = "Làm mới",
+                BackColor = ColorTranslator.FromHtml("#6c757d"),
+                ForeColor = Color.White,
+                Location = new Point(290, 10),
+                Size = new Size(80, 35),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10)
+            };
+            btnRefresh.FlatAppearance.BorderSize = 0;
+            btnRefresh.Click += BtnRefresh_Click;
+            buttonPanel.Controls.Add(btnRefresh);
+
+            // Grid Panel
+            gridPanel = new Panel()
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.White,
+                Padding = new Padding(20, 10, 20, 20)
+            };
+            this.Controls.Add(gridPanel);
+
+            // DataGridView
+            dgvThuThu = new DataGridView()
+            {
+                Dock = DockStyle.Fill,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false,
+                BackgroundColor = Color.White,
+                BorderStyle = BorderStyle.Fixed3D,
+                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle()
+                {
+                    BackColor = ColorTranslator.FromHtml("#739a4f"),
+                    ForeColor = Color.White,
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold)
+                },
+                DefaultCellStyle = new DataGridViewCellStyle()
+                {
+                    Font = new Font("Segoe UI", 9),
+                    SelectionBackColor = ColorTranslator.FromHtml("#a8cc7a"),
+                    SelectionForeColor = Color.Black
+                }
+            };
+            dgvThuThu.DoubleClick += DgvThuThu_DoubleClick;
+            gridPanel.Controls.Add(dgvThuThu);
         }
 
         private void LoadData()
@@ -130,108 +230,64 @@ namespace LibraryManagement.UserControls
                 {
                     MaThuThu = tt.MaThuThu,
                     TenThuThu = tt.TenThuThu,
-                    Email = string.IsNullOrEmpty(tt.Email) ? "Chưa cập nhật" : tt.Email,
-                    SoDienThoai = string.IsNullOrEmpty(tt.SoDienThoai) ? "Chưa cập nhật" : tt.SoDienThoai,
-                    DiaChi = string.IsNullOrEmpty(tt.DiaChi) ? "Chưa cập nhật" : tt.DiaChi,
-                    NgaySinh = tt.NgaySinh.ToString("dd/MM/yyyy"),
+                    Email = tt.Email ?? "",
+                    SoDienThoai = tt.SoDienThoai ?? "",
+                    DiaChi = tt.DiaChi ?? "",
                     NgayBatDauLam = tt.NgayBatDauLam.ToString("dd/MM/yyyy"),
-                    GioiTinh = tt.GioiTinh == "M" ? "Nam" : tt.GioiTinh == "F" ? "Nữ" : "Chưa xác định",
-                    TrangThai = tt.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
+                    TrangThai = tt.TrangThai ? "Hoạt động" : "Ngừng hoạt động",
+                    Username = tt.Username ?? ""
                 }).ToList();
 
                 dgvThuThu.DataSource = displayData;
-                dataLoaded = true;
-                // SetupColumnHeaders sẽ được gọi trong event DataBindingComplete
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
-        private void SetupColumnHeaders()
-        {
-            try
-            {
-                if (dgvThuThu?.Columns == null) return;
-
+                // Thiết lập header
                 if (dgvThuThu.Columns["MaThuThu"] != null)
                 {
                     dgvThuThu.Columns["MaThuThu"].HeaderText = "Mã TT";
-                    dgvThuThu.Columns["MaThuThu"].Width = 70;
+                    dgvThuThu.Columns["MaThuThu"].Width = 80;
                 }
                 if (dgvThuThu.Columns["TenThuThu"] != null)
-                {
                     dgvThuThu.Columns["TenThuThu"].HeaderText = "Tên thủ thư";
-                    dgvThuThu.Columns["TenThuThu"].Width = 150;
-                }
                 if (dgvThuThu.Columns["Email"] != null)
-                {
                     dgvThuThu.Columns["Email"].HeaderText = "Email";
-                    dgvThuThu.Columns["Email"].Width = 200;
-                }
                 if (dgvThuThu.Columns["SoDienThoai"] != null)
                 {
                     dgvThuThu.Columns["SoDienThoai"].HeaderText = "Số điện thoại";
                     dgvThuThu.Columns["SoDienThoai"].Width = 120;
                 }
                 if (dgvThuThu.Columns["DiaChi"] != null)
-                {
                     dgvThuThu.Columns["DiaChi"].HeaderText = "Địa chỉ";
-                    dgvThuThu.Columns["DiaChi"].Width = 180;
-                }
-                if (dgvThuThu.Columns["NgaySinh"] != null)
-                {
-                    dgvThuThu.Columns["NgaySinh"].HeaderText = "Ngày sinh";
-                    dgvThuThu.Columns["NgaySinh"].Width = 100;
-                }
                 if (dgvThuThu.Columns["NgayBatDauLam"] != null)
                 {
                     dgvThuThu.Columns["NgayBatDauLam"].HeaderText = "Ngày bắt đầu làm";
                     dgvThuThu.Columns["NgayBatDauLam"].Width = 130;
                 }
-                if (dgvThuThu.Columns["GioiTinh"] != null)
-                {
-                    dgvThuThu.Columns["GioiTinh"].HeaderText = "Giới tính";
-                    dgvThuThu.Columns["GioiTinh"].Width = 80;
-                }
                 if (dgvThuThu.Columns["TrangThai"] != null)
                 {
                     dgvThuThu.Columns["TrangThai"].HeaderText = "Trạng thái";
-                    dgvThuThu.Columns["TrangThai"].Width = 100;
+                    dgvThuThu.Columns["TrangThai"].Width = 120;
+                }
+                if (dgvThuThu.Columns["Username"] != null)
+                {
+                    dgvThuThu.Columns["Username"].HeaderText = "Tài khoản";
+                    dgvThuThu.Columns["Username"].Width = 100;
+                }
+
+                // Highlight các dòng không hoạt động
+                foreach (DataGridViewRow row in dgvThuThu.Rows)
+                {
+                    if (row.Cells["TrangThai"].Value != null &&
+                        row.Cells["TrangThai"].Value.ToString() == "Ngừng hoạt động")
+                    {
+                        row.DefaultCellStyle.BackColor = Color.LightGray;
+                        row.DefaultCellStyle.ForeColor = Color.DarkGray;
+                    }
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Lỗi setup column headers: {ex.Message}");
-            }
-        }
-
-        // Xử lý placeholder text
-        private void TxtSearch_Enter(object sender, EventArgs e)
-        {
-            if (txtSearch.Text == placeholderText && txtSearch.ForeColor == Color.Gray)
-            {
-                txtSearch.Text = "";
-                txtSearch.ForeColor = Color.Black;
-            }
-        }
-
-        private void TxtSearch_Leave(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtSearch.Text))
-            {
-                txtSearch.Text = placeholderText;
-                txtSearch.ForeColor = Color.Gray;
-            }
-        }
-
-        private void TxtSearch_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                BtnSearch_Click(sender, e);
+                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -242,7 +298,7 @@ namespace LibraryManagement.UserControls
                 if (formAdd.ShowDialog() == DialogResult.OK)
                 {
                     LoadData();
-                    MessageBox.Show("Thêm thủ thư thành công!", "Thông báo",
+                    MessageBox.Show("Thêm thủ thư thành công!", "Thành công",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -267,7 +323,7 @@ namespace LibraryManagement.UserControls
                     if (formEdit.ShowDialog() == DialogResult.OK)
                     {
                         LoadData();
-                        MessageBox.Show("Cập nhật thông tin thủ thư thành công!", "Thông báo",
+                        MessageBox.Show("Cập nhật thủ thư thành công!", "Thành công",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
@@ -283,9 +339,8 @@ namespace LibraryManagement.UserControls
                 return;
             }
 
-            string tenThuThu = dgvThuThu.CurrentRow.Cells["TenThuThu"].Value.ToString();
-            var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa thủ thư '{tenThuThu}'?\n\nLưu ý: Thao tác này không thể hoàn tác!",
-                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var result = MessageBox.Show("Bạn có chắc chắn muốn xóa thủ thư này?\n(Thủ thư sẽ bị đánh dấu là ngừng hoạt động)",
+                "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
@@ -314,7 +369,8 @@ namespace LibraryManagement.UserControls
 
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
-            ClearSearch();
+            txtSearch.Clear();
+            LoadData();
         }
 
         private void BtnSearch_Click(object sender, EventArgs e)
@@ -322,13 +378,20 @@ namespace LibraryManagement.UserControls
             SearchThuThu();
         }
 
+        private void TxtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                SearchThuThu();
+            }
+        }
+
         private void SearchThuThu()
         {
             try
             {
                 string searchText = txtSearch.Text.Trim();
-
-                if (searchText == placeholderText || string.IsNullOrEmpty(searchText))
+                if (string.IsNullOrEmpty(searchText))
                 {
                     LoadData();
                 }
@@ -339,18 +402,22 @@ namespace LibraryManagement.UserControls
                     {
                         MaThuThu = tt.MaThuThu,
                         TenThuThu = tt.TenThuThu,
-                        Email = string.IsNullOrEmpty(tt.Email) ? "Chưa cập nhật" : tt.Email,
-                        SoDienThoai = string.IsNullOrEmpty(tt.SoDienThoai) ? "Chưa cập nhật" : tt.SoDienThoai,
-                        DiaChi = string.IsNullOrEmpty(tt.DiaChi) ? "Chưa cập nhật" : tt.DiaChi,
-                        NgaySinh = tt.NgaySinh.ToString("dd/MM/yyyy"),
+                        Email = tt.Email ?? "",
+                        SoDienThoai = tt.SoDienThoai ?? "",
+                        DiaChi = tt.DiaChi ?? "",
                         NgayBatDauLam = tt.NgayBatDauLam.ToString("dd/MM/yyyy"),
-                        GioiTinh = tt.GioiTinh == "M" ? "Nam" : tt.GioiTinh == "F" ? "Nữ" : "Chưa xác định",
-                        TrangThai = tt.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
+                        TrangThai = tt.TrangThai ? "Hoạt động" : "Ngừng hoạt động",
+                        Username = tt.Username ?? ""
                     }).ToList();
 
                     dgvThuThu.DataSource = displayData;
                     currentData = searchResults;
-                    // SetupColumnHeaders sẽ được gọi trong event DataBindingComplete
+
+                    if (searchResults.Count == 0)
+                    {
+                        MessageBox.Show("Không tìm thấy kết quả nào!", "Thông báo",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
             catch (Exception ex)
@@ -365,9 +432,17 @@ namespace LibraryManagement.UserControls
             BtnEdit_Click(sender, e);
         }
 
-        private void DgvThuThu_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        // Public method để refresh data từ bên ngoài
+        public void RefreshData()
         {
-            // Có thể thêm logic xử lý click vào cell nếu cần
+            LoadData();
+        }
+
+        // Public method để tìm kiếm từ bên ngoài
+        public void SearchData(string searchText)
+        {
+            txtSearch.Text = searchText;
+            SearchThuThu();
         }
     }
 }

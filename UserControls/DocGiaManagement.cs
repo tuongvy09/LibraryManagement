@@ -15,110 +15,224 @@ namespace LibraryManagement.UserControls
 {
     public partial class DocGiaManagement : UserControl
     {
-        private readonly DocGiaDAO docGiaDAO = new DocGiaDAO();
-        private readonly ThongKeDAO thongKeDAO = new ThongKeDAO();
+        private DataGridView dgvDocGia;
+        private TextBox txtSearch;
+        private Button btnSearch, btnAdd, btnEdit, btnDelete, btnRefresh, btnThongKe;
+        private Label lblSearch, lblTitle;
+        private Panel headerPanel, searchPanel, buttonPanel, gridPanel;
+
+        private DocGiaDAO docGiaDAO = new DocGiaDAO();
         private List<DocGiaDTO> currentData;
-        private string placeholderText = "Nhập tên, số điện thoại hoặc CCCD...";
-        private bool dataLoaded = false;
 
         public DocGiaManagement()
         {
-            InitializeComponent();
-
-            // Đăng ký events
-            dgvDocGia.DataBindingComplete += DgvDocGia_DataBindingComplete;
-            this.Load += DocGiaManagement_Load;
-
-            // Setup placeholder text
-            txtSearch.Text = placeholderText;
-            txtSearch.ForeColor = Color.Gray;
-
-            // Gán sự kiện
-            txtSearch.Enter += TxtSearch_Enter;
-            txtSearch.Leave += TxtSearch_Leave;
-            txtSearch.KeyDown += TxtSearch_KeyDown;
+            InitializeControls(); // Đổi tên để tránh trùng với Designer
         }
 
-        // Event handler cho Load
+        private void InitializeControls() // Đổi tên từ InitializeComponent
+        {
+            this.SuspendLayout();
+
+            // 
+            // DocGiaManagement
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
+            this.Name = "DocGiaManagement";
+            this.Size = new System.Drawing.Size(1000, 600);
+            this.Load += new System.EventHandler(this.DocGiaManagement_Load);
+
+            this.ResumeLayout(false);
+        }
+
         private void DocGiaManagement_Load(object sender, EventArgs e)
         {
-            if (!dataLoaded)
-            {
-                LoadData();
-            }
+            InitializeCustomControls();
+            LoadData();
         }
 
-        // Event handler cho DataBindingComplete
-        private void DgvDocGia_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        private void InitializeCustomControls()
         {
-            SetupColumnHeaders();
-        }
+            Color mainColor = ColorTranslator.FromHtml("#739a4f");
 
-        // Override OnVisibleChanged để load data khi UserControl được hiển thị
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            base.OnVisibleChanged(e);
-
-            if (this.Visible && this.IsHandleCreated && !dataLoaded)
+            // Header Panel
+            headerPanel = new Panel()
             {
-                LoadData();
-            }
-        }
+                Dock = DockStyle.Top,
+                Height = 60,
+                BackColor = Color.White
+            };
+            this.Controls.Add(headerPanel);
 
-        // Override SetVisibleCore để load data khi UserControl được hiển thị
-        protected override void SetVisibleCore(bool value)
-        {
-            base.SetVisibleCore(value);
-
-            if (value && this.Created && !dataLoaded)
+            lblTitle = new Label()
             {
-                this.BeginInvoke(new Action(() => {
-                    if (!dataLoaded)
-                    {
-                        LoadData();
-                    }
-                }));
-            }
-        }
+                Text = "QUẢN LÝ ĐỘC GIẢ",
+                Font = new Font("Segoe UI", 18, FontStyle.Bold),
+                ForeColor = mainColor,
+                Location = new Point(20, 15),
+                AutoSize = true
+            };
+            headerPanel.Controls.Add(lblTitle);
 
-        // Phương thức công khai để khởi tạo data từ Form cha
-        public void InitializeData()
-        {
-            if (!dataLoaded)
+            // Search Panel
+            searchPanel = new Panel()
             {
-                LoadData();
-            }
-        }
+                Dock = DockStyle.Top,
+                Height = 50,
+                BackColor = Color.WhiteSmoke,
+                Padding = new Padding(20, 10, 20, 10)
+            };
+            this.Controls.Add(searchPanel);
 
-        // Phương thức công khai để refresh dữ liệu từ bên ngoài
-        public void RefreshData()
-        {
-            if (this.IsHandleCreated || this.Created)
+            lblSearch = new Label()
             {
-                LoadData();
-            }
-        }
+                Text = "Tìm kiếm:",
+                Location = new Point(0, 15),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10),
+                ForeColor = mainColor
+            };
+            searchPanel.Controls.Add(lblSearch);
 
-        // Phương thức công khai để tìm kiếm từ bên ngoài
-        public void SearchData(string searchText)
-        {
-            if (this.IsHandleCreated || this.Created)
+            txtSearch = new TextBox()
             {
-                txtSearch.Text = searchText;
-                txtSearch.ForeColor = Color.Black;
-                SearchDocGia();
-            }
-        }
+                Location = new Point(80, 12),
+                Width = 250,
+                Font = new Font("Segoe UI", 10)
+            };
+            txtSearch.KeyDown += TxtSearch_KeyDown;
+            searchPanel.Controls.Add(txtSearch);
 
-        // Phương thức công khai để clear search và reload data
-        public void ClearSearch()
-        {
-            if (this.IsHandleCreated || this.Created)
+            btnSearch = new Button()
             {
-                txtSearch.Text = placeholderText;
-                txtSearch.ForeColor = Color.Gray;
-                LoadData();
-            }
+                Text = "Tìm kiếm",
+                BackColor = mainColor,
+                ForeColor = Color.White,
+                Location = new Point(340, 12),
+                Size = new Size(80, 25),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 9)
+            };
+            btnSearch.FlatAppearance.BorderSize = 0;
+            btnSearch.Click += BtnSearch_Click;
+            searchPanel.Controls.Add(btnSearch);
+
+            // Button Panel
+            buttonPanel = new Panel()
+            {
+                Dock = DockStyle.Top,
+                Height = 60,
+                BackColor = Color.White,
+                Padding = new Padding(20, 10, 20, 10)
+            };
+            this.Controls.Add(buttonPanel);
+
+            btnAdd = new Button()
+            {
+                Text = "Thêm mới",
+                BackColor = ColorTranslator.FromHtml("#28a745"),
+                ForeColor = Color.White,
+                Location = new Point(0, 10),
+                Size = new Size(100, 35),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10)
+            };
+            btnAdd.FlatAppearance.BorderSize = 0;
+            btnAdd.Click += BtnAdd_Click;
+            buttonPanel.Controls.Add(btnAdd);
+
+            btnEdit = new Button()
+            {
+                Text = "Sửa",
+                BackColor = ColorTranslator.FromHtml("#ffc107"),
+                ForeColor = Color.White,
+                Location = new Point(110, 10),
+                Size = new Size(80, 35),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10)
+            };
+            btnEdit.FlatAppearance.BorderSize = 0;
+            btnEdit.Click += BtnEdit_Click;
+            buttonPanel.Controls.Add(btnEdit);
+
+            btnDelete = new Button()
+            {
+                Text = "Xóa",
+                BackColor = ColorTranslator.FromHtml("#dc3545"),
+                ForeColor = Color.White,
+                Location = new Point(200, 10),
+                Size = new Size(80, 35),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10)
+            };
+            btnDelete.FlatAppearance.BorderSize = 0;
+            btnDelete.Click += BtnDelete_Click;
+            buttonPanel.Controls.Add(btnDelete);
+
+            btnThongKe = new Button()
+            {
+                Text = "Thống kê",
+                BackColor = ColorTranslator.FromHtml("#6f42c1"),
+                ForeColor = Color.White,
+                Location = new Point(290, 10),
+                Size = new Size(90, 35),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10)
+            };
+            btnThongKe.FlatAppearance.BorderSize = 0;
+            btnThongKe.Click += BtnThongKe_Click;
+            buttonPanel.Controls.Add(btnThongKe);
+
+            btnRefresh = new Button()
+            {
+                Text = "Làm mới",
+                BackColor = ColorTranslator.FromHtml("#6c757d"),
+                ForeColor = Color.White,
+                Location = new Point(390, 10),
+                Size = new Size(80, 35),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10)
+            };
+            btnRefresh.FlatAppearance.BorderSize = 0;
+            btnRefresh.Click += BtnRefresh_Click;
+            buttonPanel.Controls.Add(btnRefresh);
+
+            // Grid Panel
+            gridPanel = new Panel()
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.White,
+                Padding = new Padding(20, 10, 20, 20)
+            };
+            this.Controls.Add(gridPanel);
+
+            // DataGridView
+            dgvDocGia = new DataGridView()
+            {
+                Dock = DockStyle.Fill,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false,
+                BackgroundColor = Color.White,
+                BorderStyle = BorderStyle.Fixed3D,
+                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle()
+                {
+                    BackColor = ColorTranslator.FromHtml("#739a4f"),
+                    ForeColor = Color.White,
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold)
+                },
+                DefaultCellStyle = new DataGridViewCellStyle()
+                {
+                    Font = new Font("Segoe UI", 9),
+                    SelectionBackColor = ColorTranslator.FromHtml("#a8cc7a"),
+                    SelectionForeColor = Color.Black
+                }
+            };
+            dgvDocGia.DoubleClick += DgvDocGia_DoubleClick;
+            gridPanel.Controls.Add(dgvDocGia);
         }
 
         private void LoadData()
@@ -132,18 +246,21 @@ namespace LibraryManagement.UserControls
                     HoTen = dg.HoTen,
                     Tuoi = dg.Tuoi,
                     SoDT = dg.SoDT,
-                    CCCD = dg.CCCD,
-                    Email = dg.Email,
-                    DiaChi = dg.DiaChi,
-                    TenLoaiDG = dg.TenLoaiDG,
+                    CCCD = dg.CCCD ?? "",
+                    Email = dg.Email ?? "",
+                    TenLoaiDG = dg.TenLoaiDG ?? "",
                     NgayDangKy = dg.NgayDangKy.ToString("dd/MM/yyyy"),
                     TienNo = dg.TienNo.ToString("N0") + " VNĐ",
                     TrangThai = dg.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
                 }).ToList();
 
                 dgvDocGia.DataSource = displayData;
-                dataLoaded = true;
-                // SetupColumnHeaders sẽ được gọi trong event DataBindingComplete
+
+                // Thiết lập header và width
+                SetupDataGridColumns();
+
+                // Highlight các dòng không hoạt động
+                HighlightInactiveRows();
             }
             catch (Exception ex)
             {
@@ -152,107 +269,78 @@ namespace LibraryManagement.UserControls
             }
         }
 
-        private void SetupColumnHeaders()
+        private void SetupDataGridColumns()
         {
-            try
+            if (dgvDocGia.Columns["MaDocGia"] != null)
             {
-                if (dgvDocGia?.Columns == null) return;
-
-                if (dgvDocGia.Columns["MaDocGia"] != null)
-                    dgvDocGia.Columns["MaDocGia"].HeaderText = "Mã ĐG";
-                if (dgvDocGia.Columns["HoTen"] != null)
-                    dgvDocGia.Columns["HoTen"].HeaderText = "Họ tên";
-                if (dgvDocGia.Columns["Tuoi"] != null)
-                    dgvDocGia.Columns["Tuoi"].HeaderText = "Tuổi";
-                if (dgvDocGia.Columns["SoDT"] != null)
-                    dgvDocGia.Columns["SoDT"].HeaderText = "Số ĐT";
-                if (dgvDocGia.Columns["CCCD"] != null)
-                    dgvDocGia.Columns["CCCD"].HeaderText = "CCCD";
-                if (dgvDocGia.Columns["Email"] != null)
-                    dgvDocGia.Columns["Email"].HeaderText = "Email";
-                if (dgvDocGia.Columns["DiaChi"] != null)
-                    dgvDocGia.Columns["DiaChi"].HeaderText = "Địa chỉ";
-                if (dgvDocGia.Columns["TenLoaiDG"] != null)
-                    dgvDocGia.Columns["TenLoaiDG"].HeaderText = "Loại ĐG";
-                if (dgvDocGia.Columns["NgayDangKy"] != null)
-                    dgvDocGia.Columns["NgayDangKy"].HeaderText = "Ngày đăng ký";
-                if (dgvDocGia.Columns["TienNo"] != null)
-                    dgvDocGia.Columns["TienNo"].HeaderText = "Tiền nợ";
-                if (dgvDocGia.Columns["TrangThai"] != null)
-                    dgvDocGia.Columns["TrangThai"].HeaderText = "Trạng thái";
+                dgvDocGia.Columns["MaDocGia"].HeaderText = "Mã ĐG";
+                dgvDocGia.Columns["MaDocGia"].Width = 70;
             }
-            catch (Exception ex)
+            if (dgvDocGia.Columns["HoTen"] != null)
+                dgvDocGia.Columns["HoTen"].HeaderText = "Họ tên";
+            if (dgvDocGia.Columns["Tuoi"] != null)
             {
-                System.Diagnostics.Debug.WriteLine($"Lỗi setup column headers: {ex.Message}");
+                dgvDocGia.Columns["Tuoi"].HeaderText = "Tuổi";
+                dgvDocGia.Columns["Tuoi"].Width = 60;
+            }
+            if (dgvDocGia.Columns["SoDT"] != null)
+            {
+                dgvDocGia.Columns["SoDT"].HeaderText = "Số ĐT";
+                dgvDocGia.Columns["SoDT"].Width = 100;
+            }
+            if (dgvDocGia.Columns["CCCD"] != null)
+            {
+                dgvDocGia.Columns["CCCD"].HeaderText = "CCCD";
+                dgvDocGia.Columns["CCCD"].Width = 120;
+            }
+            if (dgvDocGia.Columns["Email"] != null)
+                dgvDocGia.Columns["Email"].HeaderText = "Email";
+            if (dgvDocGia.Columns["TenLoaiDG"] != null)
+            {
+                dgvDocGia.Columns["TenLoaiDG"].HeaderText = "Loại ĐG";
+                dgvDocGia.Columns["TenLoaiDG"].Width = 100;
+            }
+            if (dgvDocGia.Columns["NgayDangKy"] != null)
+            {
+                dgvDocGia.Columns["NgayDangKy"].HeaderText = "Ngày đăng ký";
+                dgvDocGia.Columns["NgayDangKy"].Width = 110;
+            }
+            if (dgvDocGia.Columns["TienNo"] != null)
+            {
+                dgvDocGia.Columns["TienNo"].HeaderText = "Tiền nợ";
+                dgvDocGia.Columns["TienNo"].Width = 100;
+            }
+            if (dgvDocGia.Columns["TrangThai"] != null)
+            {
+                dgvDocGia.Columns["TrangThai"].HeaderText = "Trạng thái";
+                dgvDocGia.Columns["TrangThai"].Width = 100;
             }
         }
 
-        // ===== PHẦN THỐNG KÊ =====
-        private void BtnViewStats_Click(object sender, EventArgs e)
+        private void HighlightInactiveRows()
         {
-            if (dgvDocGia.CurrentRow == null)
+            foreach (DataGridViewRow row in dgvDocGia.Rows)
             {
-                MessageBox.Show("Vui lòng chọn một độc giả để xem thống kê chi tiết,\nhoặc vào mục 'Thống kê báo cáo' để xem tổng quan!",
-                    "Hướng dẫn", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                int maDocGia = Convert.ToInt32(dgvDocGia.CurrentRow.Cells["MaDocGia"].Value);
-                string hoTen = dgvDocGia.CurrentRow.Cells["HoTen"].Value.ToString();
-                ShowDocGiaStats(maDocGia, hoTen);
-            }
-        }
-
-        private void ShowDocGiaStats(int maDocGia, string hoTen)
-        {
-            try
-            {
-                var stats = thongKeDAO.GetChiTietTienMuonDocGia(maDocGia);
-
-                if (stats == null)
+                if (row.Cells["TrangThai"].Value != null)
                 {
-                    MessageBox.Show($"Không có dữ liệu thống kê cho độc giả {hoTen}!", "Thông báo",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
+                    string trangThai = row.Cells["TrangThai"].Value.ToString();
+                    if (trangThai == "Ngừng hoạt động")
+                    {
+                        row.DefaultCellStyle.BackColor = Color.LightGray;
+                        row.DefaultCellStyle.ForeColor = Color.DarkGray;
+                    }
+
+                    // Highlight tiền nợ > 0
+                    if (row.Cells["TienNo"].Value != null)
+                    {
+                        string tienNoStr = row.Cells["TienNo"].Value.ToString().Replace(" VNĐ", "").Replace(",", "");
+                        if (decimal.TryParse(tienNoStr, out decimal tienNo) && tienNo > 0)
+                        {
+                            row.Cells["TienNo"].Style.BackColor = Color.LightYellow;
+                            row.Cells["TienNo"].Style.ForeColor = Color.Red;
+                        }
+                    }
                 }
-
-                // Tạo form hiển thị thống kê
-                using (var formStats = new FormDocGiaStatsDetail(stats))
-                {
-                    formStats.ShowDialog();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi lấy thống kê: {ex.Message}", "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        // Xử lý placeholder text
-        private void TxtSearch_Enter(object sender, EventArgs e)
-        {
-            if (txtSearch.Text == placeholderText && txtSearch.ForeColor == Color.Gray)
-            {
-                txtSearch.Text = "";
-                txtSearch.ForeColor = Color.Black;
-            }
-        }
-
-        private void TxtSearch_Leave(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtSearch.Text))
-            {
-                txtSearch.Text = placeholderText;
-                txtSearch.ForeColor = Color.Gray;
-            }
-        }
-
-        private void TxtSearch_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                BtnSearch_Click(sender, e);
             }
         }
 
@@ -263,7 +351,7 @@ namespace LibraryManagement.UserControls
                 if (formAdd.ShowDialog() == DialogResult.OK)
                 {
                     LoadData();
-                    MessageBox.Show("Thêm độc giả thành công!", "Thông báo",
+                    MessageBox.Show("Thêm độc giả thành công!", "Thành công",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -288,7 +376,7 @@ namespace LibraryManagement.UserControls
                     if (formEdit.ShowDialog() == DialogResult.OK)
                     {
                         LoadData();
-                        MessageBox.Show("Cập nhật thông tin độc giả thành công!", "Thông báo",
+                        MessageBox.Show("Cập nhật độc giả thành công!", "Thành công",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
@@ -304,9 +392,8 @@ namespace LibraryManagement.UserControls
                 return;
             }
 
-            string hoTen = dgvDocGia.CurrentRow.Cells["HoTen"].Value.ToString();
-            var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa độc giả '{hoTen}'?\n\nLưu ý: Thao tác này không thể hoàn tác!",
-                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var result = MessageBox.Show("Bạn có chắc chắn muốn xóa độc giả này?\n(Độc giả sẽ bị đánh dấu là ngừng hoạt động)",
+                "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
@@ -333,9 +420,16 @@ namespace LibraryManagement.UserControls
             }
         }
 
+        private void BtnThongKe_Click(object sender, EventArgs e)
+        {
+            var formThongKe = new FormThongKe();
+            formThongKe.Show();
+        }
+
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
-            ClearSearch();
+            txtSearch.Clear();
+            LoadData();
         }
 
         private void BtnSearch_Click(object sender, EventArgs e)
@@ -343,13 +437,20 @@ namespace LibraryManagement.UserControls
             SearchDocGia();
         }
 
+        private void TxtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                SearchDocGia();
+            }
+        }
+
         private void SearchDocGia()
         {
             try
             {
                 string searchText = txtSearch.Text.Trim();
-
-                if (searchText == placeholderText || string.IsNullOrEmpty(searchText))
+                if (string.IsNullOrEmpty(searchText))
                 {
                     LoadData();
                 }
@@ -362,10 +463,9 @@ namespace LibraryManagement.UserControls
                         HoTen = dg.HoTen,
                         Tuoi = dg.Tuoi,
                         SoDT = dg.SoDT,
-                        CCCD = dg.CCCD,
-                        Email = dg.Email,
-                        DiaChi = dg.DiaChi,
-                        TenLoaiDG = dg.TenLoaiDG,
+                        CCCD = dg.CCCD ?? "",
+                        Email = dg.Email ?? "",
+                        TenLoaiDG = dg.TenLoaiDG ?? "",
                         NgayDangKy = dg.NgayDangKy.ToString("dd/MM/yyyy"),
                         TienNo = dg.TienNo.ToString("N0") + " VNĐ",
                         TrangThai = dg.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
@@ -373,7 +473,15 @@ namespace LibraryManagement.UserControls
 
                     dgvDocGia.DataSource = displayData;
                     currentData = searchResults;
-                    // SetupColumnHeaders sẽ được gọi trong event DataBindingComplete
+
+                    SetupDataGridColumns();
+                    HighlightInactiveRows();
+
+                    if (searchResults.Count == 0)
+                    {
+                        MessageBox.Show("Không tìm thấy kết quả nào!", "Thông báo",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
             catch (Exception ex)
@@ -388,9 +496,16 @@ namespace LibraryManagement.UserControls
             BtnEdit_Click(sender, e);
         }
 
-        private void DgvDocGia_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        // Public methods
+        public void RefreshData()
         {
-            // Có thể thêm logic xử lý click vào cell nếu cần
+            LoadData();
+        }
+
+        public void SearchData(string searchText)
+        {
+            txtSearch.Text = searchText;
+            SearchDocGia();
         }
     }
 }
