@@ -39,7 +39,7 @@ namespace LibraryManagement.UI
         private void InitializeComponentForm()
         {
             this.Text = "Thêm Đầu Sách";
-            this.Size = new Size(400, 350);
+            this.Size = new Size(400, 600);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -190,7 +190,7 @@ namespace LibraryManagement.UI
                 Text = "Lưu",
                 BackColor = mainColor,
                 ForeColor = Color.White,
-                Location = new Point(100, 250),
+                Location = new Point(100, 460),
                 Size = new Size(80, 30),
                 FlatStyle = FlatStyle.Flat,
             };
@@ -203,13 +203,113 @@ namespace LibraryManagement.UI
                 Text = "Hủy",
                 BackColor = Color.Gray,
                 ForeColor = Color.White,
-                Location = new Point(220, 250),
+                Location = new Point(220, 460),
                 Size = new Size(80, 30),
                 FlatStyle = FlatStyle.Flat,
             };
             btnCancel.FlatAppearance.BorderSize = 0;
             btnCancel.Click += (s, e) => this.Close();
             this.Controls.Add(btnCancel);
+            // Năm xuất bản
+            Label lblNamXB = new Label()
+            {
+                Text = "Năm XB:",
+                Location = new Point(20, 270),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10),
+                ForeColor = mainColor
+            };
+            this.Controls.Add(lblNamXB);
+
+            TextBox txtNamXB = new TextBox()
+            {
+                Location = new Point(130, 267),
+                Width = 220,
+                Font = new Font("Segoe UI", 10),
+                Name = "txtNamXB"
+            };
+            this.Controls.Add(txtNamXB);
+
+            // Giá tiền
+            Label lblGiaTien = new Label()
+            {
+                Text = "Giá tiền:",
+                Location = new Point(20, 310),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10),
+                ForeColor = mainColor
+            };
+            this.Controls.Add(lblGiaTien);
+
+            TextBox txtGiaTien = new TextBox()
+            {
+                Location = new Point(130, 307),
+                Width = 220,
+                Font = new Font("Segoe UI", 10),
+                Name = "txtGiaTien"
+            };
+            this.Controls.Add(txtGiaTien);
+
+            // Số trang
+            Label lblSoTrang = new Label()
+            {
+                Text = "Số trang:",
+                Location = new Point(20, 350),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10),
+                ForeColor = mainColor
+            };
+            this.Controls.Add(lblSoTrang);
+
+            TextBox txtSoTrang = new TextBox()
+            {
+                Location = new Point(130, 347),
+                Width = 220,
+                Font = new Font("Segoe UI", 10),
+                Name = "txtSoTrang"
+            };
+            this.Controls.Add(txtSoTrang);
+
+            // Ngôn ngữ
+            Label lblNgonNgu = new Label()
+            {
+                Text = "Ngôn ngữ:",
+                Location = new Point(20, 390),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10),
+                ForeColor = mainColor
+            };
+            this.Controls.Add(lblNgonNgu);
+
+            TextBox txtNgonNgu = new TextBox()
+            {
+                Location = new Point(130, 387),
+                Width = 220,
+                Font = new Font("Segoe UI", 10),
+                Name = "txtNgonNgu"
+            };
+            this.Controls.Add(txtNgonNgu);
+
+            // Ngôn ngữ
+            Label lblMoTa = new Label()
+            {
+                Text = "Mô tả:",
+                Location = new Point(20, 420),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10),
+                ForeColor = mainColor
+            };
+            this.Controls.Add(lblMoTa);
+
+            TextBox txtMoTa = new TextBox()
+            {
+                Location = new Point(130, 427),
+                Width = 220,
+                Font = new Font("Segoe UI", 10),
+                Name = "txtMoTa"
+            };
+            this.Controls.Add(txtMoTa);
+
         }
 
         private void LoadTacGia()
@@ -227,8 +327,8 @@ namespace LibraryManagement.UI
 
             cboTheLoai.DataSource = null;
             cboTheLoai.DataSource = theLoais;
-            cboTheLoai.DisplayMember = "TenTheLoai"; 
-            cboTheLoai.ValueMember = "MaTheLoai"; 
+            cboTheLoai.DisplayMember = "TenTheLoai";
+            cboTheLoai.ValueMember = "MaTheLoai";
 
             if (cboTheLoai.Items.Count > 0)
                 cboTheLoai.SelectedIndex = 0;
@@ -272,10 +372,28 @@ namespace LibraryManagement.UI
 
             int maTheLoai = (int)cboTheLoai.SelectedValue;
             int maNXB = (int)cboNXB.SelectedValue;
+            // Lấy thông tin mới từ form
+            int? namXB = null;
+            decimal? giaTien = null;
+            int? soTrang = null;
+            string ngonNgu = "";
+            string mota = "";
 
+            if (int.TryParse(this.Controls["txtNamXB"].Text, out int parsedNam))
+                namXB = parsedNam;
+
+            if (decimal.TryParse(this.Controls["txtGiaTien"].Text, out decimal parsedGia))
+                giaTien = parsedGia;
+
+            if (int.TryParse(this.Controls["txtSoTrang"].Text, out int parsedTrang))
+                soTrang = parsedTrang;
+
+            ngonNgu = this.Controls["txtNgonNgu"].Text.Trim();
+
+            mota = this.Controls["txtMoTa"].Text.Trim();
             try
             {
-                int maDauSach = repo.AddDauSach(tenDauSach, maTheLoai, maNXB);
+                int maDauSach = repo.AddDauSach(tenDauSach, maTheLoai, maNXB, namXB, giaTien, soTrang, ngonNgu, mota);
 
                 foreach (var item in clbTacGia.CheckedItems)
                 {
