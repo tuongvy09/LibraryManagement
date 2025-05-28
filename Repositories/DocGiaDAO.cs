@@ -24,13 +24,22 @@ namespace LibraryManagement.Repositories
             using (SqlConnection conn = dbConnection.GetConnection())
             {
                 string query = @"
-                    SELECT dg.MaDocGia, dg.MaLoaiDG, dg.HoTen, dg.Tuoi, dg.SoDT, 
-                           dg.CCCD, dg.GioiTinh, dg.Email, dg.DiaChi, dg.NgayDangKy,
-                           dg.TienNo, dg.TrangThai, dg.NgayTao, dg.NgayCapNhat, dg.MaThe,
-                           ldg.TenLoaiDG
-                    FROM DocGia dg
-                    LEFT JOIN LoaiDocGia ldg ON dg.MaLoaiDG = ldg.MaLoaiDG
-                    ORDER BY dg.HoTen";
+                    SELECT 
+                        dg.MaDocGia, dg.MaLoaiDG, dg.HoTen, dg.Tuoi, dg.SoDT, 
+                        dg.CCCD, dg.GioiTinh, dg.Email, dg.DiaChi, dg.NgayDangKy,
+                        ISNULL(SUM(CASE WHEN pp.TrangThai = N'Chưa thanh toán' THEN qdp.TienPhat ELSE 0 END), 0) AS TienNo,
+                        dg.TrangThai, dg.NgayTao, dg.NgayCapNhat, dg.MaThe,
+                        ldg.TenLoaiDG
+                        FROM DocGia dg
+                        LEFT JOIN LoaiDocGia ldg ON dg.MaLoaiDG = ldg.MaLoaiDG
+                        LEFT JOIN PhieuPhat pp ON dg.MaDocGia = pp.MaDG
+                        LEFT JOIN PhieuPhat_QDP ppqdp ON pp.MaPhieuPhat = ppqdp.MaPhieuPhat
+                        LEFT JOIN QDP qdp ON ppqdp.MaQDP = qdp.MaQDP
+                        GROUP BY dg.MaDocGia, dg.MaLoaiDG, dg.HoTen, dg.Tuoi, dg.SoDT, 
+                        dg.CCCD, dg.GioiTinh, dg.Email, dg.DiaChi, dg.NgayDangKy,
+                        dg.TrangThai, dg.NgayTao, dg.NgayCapNhat, dg.MaThe,
+                        ldg.TenLoaiDG
+                        ORDER BY dg.HoTen;";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 conn.Open();

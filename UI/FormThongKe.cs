@@ -14,9 +14,10 @@ namespace LibraryManagement.UI
     {
         private Label lblTitle;
         private TabControl tabControl;
-        private TabPage tabTienMuon, tabTienMuonVaPhat, tabDocGiaMoi;
+        private TabPage tabTienMuon, tabTienMuonVaPhat, tabDocGiaMoi, tabTop10BestSeller;
 
         private DocGiaDAO docGiaDAO = new DocGiaDAO();
+        private CuonSachRepository CuonSachRepository = new CuonSachRepository();
 
         public FormThongKe()
         {
@@ -51,7 +52,7 @@ namespace LibraryManagement.UI
             tabControl = new TabControl()
             {
                 Location = new Point(20, 70),
-                Size = new Size(950, 550),
+                Size = new Size(950, 800),
                 Font = new Font("Segoe UI", 10)
             };
 
@@ -70,8 +71,56 @@ namespace LibraryManagement.UI
             InitializeTabDocGiaMoi();
             tabControl.TabPages.Add(tabDocGiaMoi);
 
+            // Tab 4: Top 10 Best Seller
+            tabTop10BestSeller = new TabPage("Top 10 sách mượn nhiều nhất");
+            CreateTop10BestSellerTab();
+            tabControl.TabPages.Add(tabTop10BestSeller);
+
+
             this.Controls.Add(tabControl);
         }
+
+        private TabPage CreateTop10BestSellerTab()
+        {
+            Color mainColor = ColorTranslator.FromHtml("#739a4f");
+
+            TabPage tabTop10BetSeller = new TabPage("Top 10 Best Seller")
+            {
+                BackColor = mainColor
+            };
+
+            DataGridView dgvBestSeller = new DataGridView
+            {
+                Dock = DockStyle.Fill,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                ReadOnly = true,
+                BackgroundColor = Color.White,
+                EnableHeadersVisualStyles = false,
+                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
+                {
+                    BackColor = mainColor,
+                    ForeColor = Color.White,
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold)
+                }
+            };
+
+            dgvBestSeller.Columns.Add("STT", "STT");
+            dgvBestSeller.Columns.Add("TenSach", "Tên Sách");
+            dgvBestSeller.Columns.Add("SoLuong", "Số Lượng Đã Mượn");
+
+            // Gọi hàm lấy dữ liệu top 10
+            List<SachHot> danhSachHot = CuonSachRepository.GetTop10CuonSachHot();
+
+            int stt = 1;
+            foreach (var sach in danhSachHot)
+            {
+                dgvBestSeller.Rows.Add(stt++, $"{sach.TenCuonSach} ({sach.TenDauSach})", sach.SoLuongMuon);
+            }
+
+            tabTop10BetSeller.Controls.Add(dgvBestSeller);
+            return tabTop10BetSeller;
+        }
+
 
         private void InitializeTabTienMuon()
         {

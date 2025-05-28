@@ -300,5 +300,42 @@ namespace LibraryManagement.Repositories
             return result;
         }
 
+
+        public List<SachHot> GetTop10CuonSachHot()
+        {
+            List<SachHot> danhSachHot = new List<SachHot>();
+
+            string query = @"
+        SELECT TOP 10 
+            cs.TenCuonSach,
+            ds.TenDauSach,
+            COUNT(*) AS SoLuongMuon
+        FROM PhieuMuonSach_CuonSach pmcs
+        JOIN CuonSach cs ON pmcs.MaSach = cs.MaCuonSach
+        JOIN DauSach ds ON cs.MaDauSach = ds.MaDauSach
+        GROUP BY cs.TenCuonSach, ds.TenDauSach
+        ORDER BY SoLuongMuon DESC
+    ";
+
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    SachHot sach = new SachHot
+                    {
+                        TenCuonSach = reader["TenCuonSach"].ToString(),
+                        TenDauSach = reader["TenDauSach"].ToString(),
+                        SoLuongMuon = Convert.ToInt32(reader["SoLuongMuon"])
+                    };
+                    danhSachHot.Add(sach);
+                }
+            }
+
+            return danhSachHot;
+        }
+
     }
 }

@@ -19,6 +19,8 @@ namespace LibraryManagement.UserControls
         private bool dataLoaded = false;
         private bool isLoading = false;
         private bool columnsInitialized = false;
+        private CuonSachRepository CuonSachRepository = new CuonSachRepository();
+
 
         public ThongKeManagement()
         {
@@ -33,6 +35,7 @@ namespace LibraryManagement.UserControls
 
             // Thiết lập style cho charts
             SetupChartStyles();
+            LoadTop10BestSellerData();
         }
 
         private void KhoiTaoDataGridViewColumns()
@@ -562,5 +565,23 @@ namespace LibraryManagement.UserControls
                 MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private void LoadTop10BestSellerData()
+        {
+            dgvBestSeller.Rows.Clear();
+            if (dgvBestSeller.Columns.Count == 0)
+            {
+                dgvBestSeller.Columns.Add("STT", "STT");
+                dgvBestSeller.Columns.Add("TenSach", "Tên Sách");
+                dgvBestSeller.Columns.Add("SoLuong", "Số Lượng Đã Mượn");
+            }
+
+            List<SachHot> danhSachHot = CuonSachRepository.GetTop10CuonSachHot();
+            int stt = 1;
+            foreach (var sach in danhSachHot)
+            {
+                dgvBestSeller.Rows.Add(stt++, $"{sach.TenCuonSach} ({sach.TenDauSach})", sach.SoLuongMuon);
+            }
+        }
+
     }
 }
