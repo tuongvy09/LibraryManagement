@@ -40,4 +40,31 @@ namespace LibraryManagement.Models
         public string ThangNam => $"{Thang:00}/{Nam}";
         public string DoanhThuDisplay => TongDoanhThu.ToString("N0") + " VNĐ";
     }
+
+    public class ThongKeSachMuonTheoTheLoaiDTO
+    {
+        public string TenTheLoai { get; set; }
+        public int SoLuongMuon { get; set; }
+    }
+
+    public class ThongKeSachMuonTheoDocGiaDTO
+    {
+        public string TenDocGia { get; set; }
+        public int SoLuongMuon { get; set; }
+    }
+
+    public class ThongKeSachMuonTheoThangDTO
+    {
+        public string TenDauSach { get; set; }
+        public int SoLuongMuon { get; set; }
+    }
+
+    public class SachMuonDTO
+    {
+        public string MaSach { get; set; }
+        public string TenSach { get; set; }
+        public string TenDocGia { get; set; }
+        public DateTime NgayMuon { get; set; }
+        public DateTime NgayTraDuKien { get; set; }
+    }
 }

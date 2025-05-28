@@ -305,5 +305,189 @@ namespace LibraryManagement.Repositories
             System.Diagnostics.Debug.WriteLine($"📈 DAO trả về {result.Count} records cho năm {nam}");
             return result;
         }
+
+        public List<ThongKeSachMuonTheoTheLoaiDTO> GetThongKeSachMuonTheoTheLoai()
+        {
+            List<ThongKeSachMuonTheoTheLoaiDTO> result = new List<ThongKeSachMuonTheoTheLoaiDTO>();
+
+            try
+            {
+                using (SqlConnection conn = dbConnection.GetConnection())
+                {
+                    string query = @"
+                SELECT tl.TenTheLoai, COUNT(*) AS SoLuongMuon
+                FROM PhieuMuonSach_CuonSach pmcs
+                JOIN CuonSach cs ON pmcs.MaSach = cs.MaCuonSach
+                JOIN DauSach ds ON cs.MaDauSach = ds.MaDauSach
+                JOIN TheLoai tl ON ds.MaTheLoai = tl.MaTheLoai
+                GROUP BY tl.TenTheLoai
+                ORDER BY SoLuongMuon DESC";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ThongKeSachMuonTheoTheLoaiDTO item = new ThongKeSachMuonTheoTheLoaiDTO()
+                                {
+                                    TenTheLoai = reader["TenTheLoai"].ToString(),
+                                    SoLuongMuon = Convert.ToInt32(reader["SoLuongMuon"])
+                                };
+                                result.Add(item);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Lỗi GetThongKeSachMuonTheoTheLoai: {ex.Message}");
+                return new List<ThongKeSachMuonTheoTheLoaiDTO>();
+            }
+
+            return result;
+        }
+
+        public List<ThongKeSachMuonTheoDocGiaDTO> GetThongKeSachMuonTheoDocGia()
+        {
+            List<ThongKeSachMuonTheoDocGiaDTO> result = new List<ThongKeSachMuonTheoDocGiaDTO>();
+
+            try
+            {
+                using (SqlConnection conn = dbConnection.GetConnection())
+                {
+                    string query = @"
+                SELECT dg.HoTen AS TenDocGia, COUNT(*) AS SoLuongMuon
+                FROM PhieuMuonSach pms
+                JOIN DocGia dg ON pms.MaDocGia = dg.MaDocGia
+                JOIN PhieuMuonSach_CuonSach pmcs ON pms.MaPhieu = pmcs.MaPhieu
+                GROUP BY dg.HoTen
+                ORDER BY SoLuongMuon DESC";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ThongKeSachMuonTheoDocGiaDTO item = new ThongKeSachMuonTheoDocGiaDTO()
+                                {
+                                    TenDocGia = reader["TenDocGia"].ToString(),
+                                    SoLuongMuon = Convert.ToInt32(reader["SoLuongMuon"])
+                                };
+                                result.Add(item);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Lỗi GetThongKeSachMuonTheoDocGia: {ex.Message}");
+                return new List<ThongKeSachMuonTheoDocGiaDTO>();
+            }
+
+            return result;
+        }
+
+        public List<ThongKeSachMuonTheoThangDTO> GetThongKeSachMuonTheoThang(int nam, int thang)
+        {
+            List<ThongKeSachMuonTheoThangDTO> result = new List<ThongKeSachMuonTheoThangDTO>();
+
+            try
+            {
+                using (SqlConnection conn = dbConnection.GetConnection())
+                {
+                    string query = @"
+                SELECT ds.TenDauSach, COUNT(*) AS SoLuongMuon
+                FROM MuonSach ms
+                JOIN PhieuMuonSach_CuonSach pmcs ON ms.MaPhieu = pmcs.MaPhieu
+                JOIN CuonSach cs ON pmcs.MaSach = cs.MaCuonSach
+                JOIN DauSach ds ON cs.MaDauSach = ds.MaDauSach
+                WHERE YEAR(ms.NgayMuon) = @Nam AND MONTH(ms.NgayMuon) = @Thang
+                GROUP BY ds.TenDauSach
+                ORDER BY SoLuongMuon DESC";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Nam", nam);
+                        cmd.Parameters.AddWithValue("@Thang", thang);
+
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ThongKeSachMuonTheoThangDTO item = new ThongKeSachMuonTheoThangDTO()
+                                {
+                                    TenDauSach = reader["TenDauSach"].ToString(),
+                                    SoLuongMuon = Convert.ToInt32(reader["SoLuongMuon"])
+                                };
+                                result.Add(item);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Lỗi GetThongKeSachMuonTheoThang: {ex.Message}");
+                return new List<ThongKeSachMuonTheoThangDTO>();
+            }
+
+            return result;
+        }
+
+        public List<SachMuonDTO> GetTatCaSachDangMuon()
+        {
+            List<SachMuonDTO> list = new List<SachMuonDTO>();
+
+            using (SqlConnection conn = dbConnection.GetConnection())
+            {
+                conn.Open();
+
+                string query = @"
+            SELECT 
+                cs.MaCuonSach,
+                cs.TenCuonSach,
+                ds.TenDauSach,
+                dg.HoTen AS TenDocGia,
+                ms.NgayMuon,
+                ms.NgayTra AS NgayTraDuKien
+            FROM MuonSach ms
+            JOIN PhieuMuonSach pms ON ms.MaPhieu = pms.MaPhieu
+            JOIN DocGia dg ON pms.MaDocGia = dg.MaDocGia
+            JOIN PhieuMuonSach_CuonSach pmcs ON pms.MaPhieu = pmcs.MaPhieu
+            JOIN CuonSach cs ON pmcs.MaSach = cs.MaCuonSach
+            JOIN DauSach ds ON cs.MaDauSach = ds.MaDauSach
+            WHERE ms.TrangThaiM = N'Đang mượn'";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var dto = new SachMuonDTO
+                        {
+                            MaSach = reader["MaCuonSach"].ToString(),
+                            TenSach = reader["TenDauSach"].ToString(),
+                            TenDocGia = reader["TenDocGia"].ToString(),
+                            NgayMuon = Convert.ToDateTime(reader["NgayMuon"]),
+                            NgayTraDuKien = Convert.ToDateTime(reader["NgayTraDuKien"])
+                        };
+                        list.Add(dto);
+                    }
+                }
+            }
+
+            return list;
+        }
+
     }
 }

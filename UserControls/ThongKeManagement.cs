@@ -21,6 +21,11 @@ namespace LibraryManagement.UserControls
         private bool columnsInitialized = false;
         private CuonSachRepository CuonSachRepository = new CuonSachRepository();
 
+        private ComboBox cboThongKeLoai;
+        private Button btnThongKeTheoLoai;
+        private Button btnThongKeDangMuon;
+        private DataGridView dgvThongKePhu;
+
 
         public ThongKeManagement()
         {
