@@ -52,6 +52,8 @@ namespace LibraryManagement.UserControls
             ((System.ComponentModel.ISupportInitialize)(this.chartTien)).BeginInit();
             this.tabChitiet.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvThongKe)).BeginInit();
+            this.dgvBestSeller = new System.Windows.Forms.DataGridView();
+            this.tabTop10SachMuonNhieuNhat = new System.Windows.Forms.TabPage();
             this.SuspendLayout();
             // 
             // lblTitle
@@ -175,6 +177,7 @@ namespace LibraryManagement.UserControls
             this.tabControl.Controls.Add(this.tabDocGia);
             this.tabControl.Controls.Add(this.tabDoanhthu);
             this.tabControl.Controls.Add(this.tabChitiet);
+            this.tabControl.Controls.Add(this.tabTop10SachMuonNhieuNhat);
             this.tabControl.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl.Location = new System.Drawing.Point(27, 150);
             this.tabControl.Margin = new System.Windows.Forms.Padding(4);
@@ -243,6 +246,36 @@ namespace LibraryManagement.UserControls
             this.tabChitiet.TabIndex = 2;
             //this.tabChitiet.Text = "📊 Chi tiết tiền mượn + phạt";
             this.tabChitiet.UseVisualStyleBackColor = true;
+            // tabTop10Sach
+            // 
+            //
+            this.tabTop10SachMuonNhieuNhat.Controls.Add(this.dgvBestSeller);
+            this.tabTop10SachMuonNhieuNhat.Location = new System.Drawing.Point(4, 34);
+            this.tabTop10SachMuonNhieuNhat.Margin = new System.Windows.Forms.Padding(4);
+            this.tabTop10SachMuonNhieuNhat.Name = "tabTop10Sach";
+            this.tabTop10SachMuonNhieuNhat.Padding = new System.Windows.Forms.Padding(4);
+            this.tabTop10SachMuonNhieuNhat.Size = new System.Drawing.Size(1525, 455);
+            this.tabTop10SachMuonNhieuNhat.TabIndex = 0;
+            this.tabTop10SachMuonNhieuNhat.Text = "📚 Top 10 sách mượn nhiều";
+            this.tabTop10SachMuonNhieuNhat.UseVisualStyleBackColor = true;
+            // 
+            // dgvBestSeller
+            // 
+            this.dgvBestSeller.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvBestSeller.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvBestSeller.ReadOnly = true;
+            this.dgvBestSeller.BackgroundColor = System.Drawing.Color.White;
+            this.dgvBestSeller.EnableHeadersVisualStyles = false;
+
+            // Header style
+            System.Windows.Forms.DataGridViewCellStyle dgvHeaderStyle = new System.Windows.Forms.DataGridViewCellStyle();
+            dgvHeaderStyle.BackColor = System.Drawing.ColorTranslator.FromHtml("#739a4f");
+            dgvHeaderStyle.ForeColor = System.Drawing.Color.White;
+            dgvHeaderStyle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.dgvBestSeller.ColumnHeadersDefaultCellStyle = dgvHeaderStyle;
+
+            // Add to tab
+            this.tabTop10SachMuonNhieuNhat.Controls.Add(this.dgvBestSeller);
             // 
             // dgvThongKe
             // 
@@ -317,5 +350,7 @@ namespace LibraryManagement.UserControls
         private System.Windows.Forms.TabPage tabChitiet;
         private System.Windows.Forms.DataGridView dgvThongKe;
         private System.Windows.Forms.Label lblThongKeThang;
+        private System.Windows.Forms.TabPage tabTop10SachMuonNhieuNhat;
+        private System.Windows.Forms.DataGridView dgvBestSeller;
     }
 }

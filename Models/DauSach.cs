@@ -12,7 +12,15 @@ namespace LibraryManagement.Models
         public string TenDauSach { get; set; }
         public int MaNXB { get; set; }
         public int MaTheLoai { get; set; }
+        public int? NamXuatBan { get; set; }
+        public decimal? GiaTien { get; set; }
+        public int? SoTrang { get; set; }
+        public string NgonNgu { get; set; }
+        public string MoTa { get; set; }
+
+
     }
+
 
     public class DauSachDTO
     {
@@ -23,6 +31,12 @@ namespace LibraryManagement.Models
         public int? MaNXB { get; set; }
         public string TenNXB { get; set; }
         public string TacGia { get; set; }
+
+        public int? NamXuatBan { get; set; }
+        public decimal? GiaTien { get; set; }
+        public int? SoTrang { get; set; }
+        public string NgonNgu { get; set; }
+        public string MoTa { get; set; }
     }
 
 }
