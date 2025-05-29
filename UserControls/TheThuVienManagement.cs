@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using LibraryManagement.Models;
 using LibraryManagement.Repositories;
 using LibraryManagement.UI;
+using LibraryManagement.Utilities;  // NEW: For QR Code
 
 namespace LibraryManagement.UserControls
 {
@@ -213,6 +214,59 @@ namespace LibraryManagement.UserControls
             txtSearch.Text = "Nhập mã thẻ, tên độc giả hoặc số điện thoại...";
             txtSearch.ForeColor = Color.Gray;
             LoadTheThuVienData();
+        }
+
+        // NEW: QR Code Generation Button Event Handler
+        private void BtnGenerateQR_Click(object sender, EventArgs e)
+        {
+            if (dgvTheThuVien.CurrentRow == null)
+            {
+                MessageBox.Show("❗ Vui lòng chọn thẻ thư viện cần tạo QR Code!", "Thông báo",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                int maThe = Convert.ToInt32(dgvTheThuVien.CurrentRow.Cells["MaThe"].Value);
+                var theThuVien = _theThuVienDAO.GetTheThuVienById(maThe);
+
+                if (theThuVien != null)
+                {
+                    // Check if card is still valid
+                    if (!theThuVien.TrangThaiThe)
+                    {
+                        var continueResult = MessageBox.Show(
+                            "⚠️ Thẻ này đã hết hạn!\n\nBạn có muốn tiếp tục tạo QR Code không?",
+                            "Thẻ hết hạn",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning);
+
+                        if (continueResult == DialogResult.No)
+                            return;
+                    }
+
+                    // Generate QR Code
+                    string qrText = QRCodeManager.CreateLibraryCardQR(theThuVien);
+                    var qrImage = QRCodeManager.GenerateQRCode(qrText);
+
+                    // Show QR Code Dialog
+                    using (var qrDialog = new FormQRDisplay(qrImage, theThuVien))
+                    {
+                        qrDialog.ShowDialog();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("❌ Không tìm thấy thông tin thẻ thư viện!", "Lỗi",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ Lỗi khi tạo QR Code: {ex.Message}", "Lỗi",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void DgvTheThuVien_CellContentClick(object sender, DataGridViewCellEventArgs e)

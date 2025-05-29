@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LibraryManagement.Models;
 using LibraryManagement.Repositories;
+using LibraryManagement.Utilities;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -192,6 +193,7 @@ namespace LibraryManagement.UI
             };
         }
 
+        // UPDATED: BtnSave_Click với QR Code integration
         private void BtnSave_Click(object sender, EventArgs e)
         {
             if (!ValidateInput())
@@ -206,25 +208,66 @@ namespace LibraryManagement.UI
                     NgayHetHan = dtpNgayHetHan.Value.Date
                 };
 
-                bool success = theThuVienDAO.InsertTheThuVien(theThuVien);
+                // Insert và lấy ID của thẻ vừa tạo
+                int newCardId = theThuVienDAO.InsertTheThuVienAndGetId(theThuVien);
 
-                if (success)
+                if (newCardId > 0)
                 {
-                    MessageBox.Show("Thêm thẻ thư viện thành công!",
-                        "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
+                    // Lấy thông tin đầy đủ của thẻ vừa tạo
+                    var newCard = theThuVienDAO.GetTheThuVienById(newCardId);
+
+                    if (newCard != null)
+                    {
+                        MessageBox.Show("✅ Thêm thẻ thư viện thành công!", "Thành công",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // Hỏi có muốn tạo QR Code không
+                        var result = MessageBox.Show(
+                            "🔄 Bạn có muốn tạo QR Code cho thẻ này không?\n\n" +
+                            "QR Code sẽ giúp quét thẻ nhanh chóng khi ra vào thư viện.",
+                            "Tạo QR Code",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question);
+
+                        if (result == DialogResult.Yes)
+                        {
+                            ShowQRCodeForNewCard(newCard);
+                        }
+
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Thêm thẻ thư viện thất bại!",
-                        "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("❌ Thêm thẻ thư viện thất bại!", "Lỗi",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"❌ Lỗi: {ex.Message}", "Lỗi",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // NEW: Method để hiển thị QR Code cho thẻ mới
+        private void ShowQRCodeForNewCard(TheThuVien newCard)
+        {
+            try
+            {
+                string qrText = QRCodeManager.CreateLibraryCardQR(newCard);
+                var qrImage = QRCodeManager.GenerateQRCode(qrText);
+
+                using (var qrDialog = new FormQRDisplay(qrImage, newCard))
+                {
+                    qrDialog.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ Lỗi khi tạo QR Code: {ex.Message}", "Lỗi",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

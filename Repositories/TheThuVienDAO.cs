@@ -70,6 +70,63 @@ namespace LibraryManagement.Repositories
             }
         }
 
+        // NEW: Insert và return ID của thẻ vừa tạo
+        public int InsertTheThuVienAndGetId(TheThuVien theThuVien)
+        {
+            using (SqlConnection conn = dbConnection.GetConnection())
+            {
+                string query = @"
+                    INSERT INTO TheThuVien (MaDG, NgayCap, NgayHetHan)
+                    OUTPUT INSERTED.MaThe
+                    VALUES (@MaDG, @NgayCap, @NgayHetHan)";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaDG", theThuVien.MaDG ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@NgayCap", theThuVien.NgayCap);
+                cmd.Parameters.AddWithValue("@NgayHetHan", theThuVien.NgayHetHan);
+
+                conn.Open();
+                object result = cmd.ExecuteScalar();
+                return result != null ? Convert.ToInt32(result) : 0;
+            }
+        }
+
+        // NEW: Lấy thẻ mới nhất của độc giả
+        public TheThuVien GetLatestCardByDocGia(int maDG)
+        {
+            TheThuVien theThuVien = null;
+
+            using (SqlConnection conn = dbConnection.GetConnection())
+            {
+                string query = @"
+                    SELECT TOP 1 tt.MaThe, tt.MaDG, tt.NgayCap, tt.NgayHetHan,
+                           dg.HoTen as TenDocGia, dg.SoDT
+                    FROM TheThuVien tt
+                    LEFT JOIN DocGia dg ON tt.MaDG = dg.MaDocGia
+                    WHERE tt.MaDG = @MaDG
+                    ORDER BY tt.MaThe DESC";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaDG", maDG);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    theThuVien = new TheThuVien()
+                    {
+                        MaThe = Convert.ToInt32(reader["MaThe"]),
+                        MaDG = reader["MaDG"] == DBNull.Value ? null : (int?)reader["MaDG"],
+                        NgayCap = Convert.ToDateTime(reader["NgayCap"]),
+                        NgayHetHan = Convert.ToDateTime(reader["NgayHetHan"]),
+                        TenDocGia = reader["TenDocGia"]?.ToString() ?? "",
+                        SoDT = reader["SoDT"]?.ToString() ?? ""
+                    };
+                }
+            }
+            return theThuVien;
+        }
+
         public bool UpdateTheThuVien(TheThuVien theThuVien)
         {
             using (SqlConnection conn = dbConnection.GetConnection())
