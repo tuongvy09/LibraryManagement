@@ -34,6 +34,7 @@ namespace LibraryManagement.UserControls
             this.btnEdit = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
+            this.btnGenerateQR = new System.Windows.Forms.Button();  // NEW: QR Button
             this.dgvTheThuVien = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTheThuVien)).BeginInit();
             this.SuspendLayout();
@@ -151,6 +152,23 @@ namespace LibraryManagement.UserControls
             this.btnRefresh.UseVisualStyleBackColor = false;
             this.btnRefresh.Click += new System.EventHandler(this.BtnRefresh_Click);
             // 
+            // btnGenerateQR - NEW QR CODE BUTTON
+            // 
+            this.btnGenerateQR = new System.Windows.Forms.Button();
+            this.btnGenerateQR.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(156)))), ((int)(((byte)(39)))), ((int)(((byte)(176)))));
+            this.btnGenerateQR.FlatAppearance.BorderSize = 0;
+            this.btnGenerateQR.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGenerateQR.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGenerateQR.ForeColor = System.Drawing.Color.White;
+            this.btnGenerateQR.Location = new System.Drawing.Point(530, 135);
+            this.btnGenerateQR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnGenerateQR.Name = "btnGenerateQR";
+            this.btnGenerateQR.Size = new System.Drawing.Size(120, 43);
+            this.btnGenerateQR.TabIndex = 8;
+            this.btnGenerateQR.Text = "🔄 Tạo QR";
+            this.btnGenerateQR.UseVisualStyleBackColor = false;
+            this.btnGenerateQR.Click += new System.EventHandler(this.BtnGenerateQR_Click);
+            // 
             // dgvTheThuVien
             // 
             this.dgvTheThuVien.AllowUserToAddRows = false;
@@ -167,7 +185,7 @@ namespace LibraryManagement.UserControls
             this.dgvTheThuVien.RowHeadersWidth = 51;
             this.dgvTheThuVien.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvTheThuVien.Size = new System.Drawing.Size(1533, 431);
-            this.dgvTheThuVien.TabIndex = 8;
+            this.dgvTheThuVien.TabIndex = 9;
             this.dgvTheThuVien.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvTheThuVien_CellContentClick);
             this.dgvTheThuVien.DoubleClick += new System.EventHandler(this.DgvTheThuVien_DoubleClick);
             // 
@@ -177,6 +195,7 @@ namespace LibraryManagement.UserControls
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.dgvTheThuVien);
+            this.Controls.Add(this.btnGenerateQR);  // ADD QR BUTTON TO CONTROLS
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnEdit);
@@ -191,7 +210,6 @@ namespace LibraryManagement.UserControls
             ((System.ComponentModel.ISupportInitialize)(this.dgvTheThuVien)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         private System.Windows.Forms.Label lblTitle;
@@ -202,6 +220,7 @@ namespace LibraryManagement.UserControls
         private System.Windows.Forms.Button btnEdit;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.Button btnGenerateQR;  // NEW: QR Button
         private System.Windows.Forms.DataGridView dgvTheThuVien;
 
         private void SetupDataGridViewStyle()

@@ -119,7 +119,7 @@ namespace LibraryManagement
             // Các mục menu chính
             menuItems.AddRange(new[] { "Sách", "Độc giả", "Mượn sách", "Phiếu Mượn", "Phiếu phạt", "Biên lai" });
 
-            menuItems.Add("Thống kê Độc giả");
+            menuItems.Add("Thống kê - Báo cáo");
 
             if (role == "admin")
             {
@@ -131,7 +131,7 @@ namespace LibraryManagement
         { "Quản lý Thủ thư", Properties.Resources.librarian ?? CreateDefaultIcon() },
         { "Quản lý Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
         { "Quản lý Thẻ thư viện", Properties.Resources.library_card ?? CreateDefaultIcon() },
-        { "Thống kê Độc giả", Properties.Resources.statistics ?? CreateDefaultIcon() },
+        { "Thống kê - Báo cáo", Properties.Resources.statistics ?? CreateDefaultIcon() },
 
         { "Sách", Properties.Resources.books ?? CreateDefaultIcon() },
         { "Độc giả", Properties.Resources.readers ?? CreateDefaultIcon() },
@@ -221,8 +221,9 @@ namespace LibraryManagement
                     newContent.Dock = DockStyle.Fill;
                     break;
 
-                case "Thống kê Độc giả":
-                    newForm = new FormThongKe();
+                case "Thống kê - Báo cáo":
+                    newContent = new ThongKeManagement();
+                    newContent.Dock = DockStyle.Fill;
                     break;
 
                 case "Sách":
