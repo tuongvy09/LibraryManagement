@@ -248,33 +248,57 @@ namespace LibraryManagement.UserControls
             LoadData();
         }
 
+        // QR Code Generation - Giữ nguyên như Version 1 cũ
         private void BtnGenerateQR_Click(object sender, EventArgs e)
         {
             var activeGrid = GetActiveDataGridView();
             if (activeGrid.CurrentRow == null)
             {
-                MessageBox.Show("Vui lòng chọn thẻ thư viện để tạo QR Code!", "Thông báo",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("❗ Vui lòng chọn thẻ thư viện cần tạo QR Code!", "Thông báo",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             try
             {
-                string maThe = activeGrid.CurrentRow.Cells[0].Value?.ToString() ?? "";
-                string tenDocGia = activeGrid.CurrentRow.Cells[1].Value?.ToString() ?? "";
+                int maThe = Convert.ToInt32(activeGrid.CurrentRow.Cells[0].Value);
+                var theThuVien = _theThuVienDAO.GetTheThuVienById(maThe);
 
-                MessageBox.Show($"Tính năng tạo QR Code sẽ được triển khai sau!\n\n" +
-                               $"Thông tin thẻ:\n" +
-                               $"• Mã thẻ: {maThe}\n" +
-                               $"• Độc giả: {tenDocGia}",
-                               "QR Code Generator",
-                               MessageBoxButtons.OK,
-                               MessageBoxIcon.Information);
+                if (theThuVien != null)
+                {
+                    // Check if card is still valid
+                    if (!theThuVien.TrangThaiThe)
+                    {
+                        var continueResult = MessageBox.Show(
+                            "⚠️ Thẻ này đã hết hạn!\n\nBạn có muốn tiếp tục tạo QR Code không?",
+                            "Thẻ hết hạn",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning);
+
+                        if (continueResult == DialogResult.No)
+                            return;
+                    }
+
+                    // Generate QR Code
+                    string qrText = QRCodeManager.CreateLibraryCardQR(theThuVien);
+                    var qrImage = QRCodeManager.GenerateQRCode(qrText);
+
+                    // Show QR Code Dialog
+                    using (var qrDialog = new FormQRDisplay(qrImage, theThuVien))
+                    {
+                        qrDialog.ShowDialog();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("❌ Không tìm thấy thông tin thẻ thư viện!", "Lỗi",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"❌ Lỗi khi tạo QR Code: {ex.Message}", "Lỗi",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
