@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Repositories;
+﻿using LibraryManagement.BUS;
+using LibraryManagement.Repositories;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -112,18 +113,18 @@ namespace LibraryManagement.UI
             }
 
             string tenTheLoai = txtTenTheLoai.Text.Trim();
-            if (string.IsNullOrEmpty(tenTheLoai))
-            {
-                MessageBox.Show("Vui lòng nhập tên thể loại!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
 
             try
             {
-                TheLoaiRepository repo = new TheLoaiRepository();
-                repo.AddTheLoai(qdSoTuoi, tenTheLoai);
+                TheLoaiBLL bll = new TheLoaiBLL();
+                bll.ThemTheLoai(qdSoTuoi, tenTheLoai);
+
                 MessageBox.Show("Thêm thể loại thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close();
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
