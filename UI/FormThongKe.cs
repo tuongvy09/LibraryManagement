@@ -83,7 +83,7 @@ namespace LibraryManagement.UI
             CreateTop10BestSellerTab();
             tabControl.TabPages.Add(tabTop10BestSeller);
 
-            // Tab 5: Sách mượn theo thể loại theo tháng
+            // Tab 5: Sách mượn theo thể loại, theo tháng, theo độc giả
             tabTheoTheLoai = new TabPage("Tổng Sách Được Mượn");
             InitializeTabSachMuon();
             tabControl.TabPages.Add(tabTheoTheLoai);

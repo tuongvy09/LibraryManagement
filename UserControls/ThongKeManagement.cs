@@ -21,10 +21,10 @@ namespace LibraryManagement.UserControls
         private bool columnsInitialized = false;
         private CuonSachRepository CuonSachRepository = new CuonSachRepository();
 
-        private ComboBox cboThongKeLoai;
-        private Button btnThongKeTheoLoai;
-        private Button btnThongKeDangMuon;
-        private DataGridView dgvThongKePhu;
+        private ComboBox cboThongKeTheo;
+        private NumericUpDown numNamThongKe;
+        private NumericUpDown numThangThongKe;
+        private DataGridView dgvThongKeSachMuon;
 
 
         public ThongKeManagement()
@@ -41,6 +41,9 @@ namespace LibraryManagement.UserControls
             // Thiết lập style cho charts
             SetupChartStyles();
             LoadTop10BestSellerData();
+
+            InitializeTabSachMuon();
+
         }
 
         private void KhoiTaoDataGridViewColumns()
@@ -586,6 +589,161 @@ namespace LibraryManagement.UserControls
             {
                 dgvBestSeller.Rows.Add(stt++, $"{sach.TenCuonSach} ({sach.TenDauSach})", sach.SoLuongMuon);
             }
+        }
+
+        private void InitializeTabSachMuon()
+        {
+            Label labelNam = new Label()
+            {
+                Text = "Năm:",
+                Location = new Point(20, 20),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10)
+            };
+
+            numNamThongKe = new NumericUpDown()
+            {
+                Minimum = 2000,
+                Maximum = 2100,
+                Value = DateTime.Now.Year,
+                Location = new Point(70, 18),
+                Width = 80,
+                Font = new Font("Segoe UI", 10),
+                Enabled = false
+            };
+
+            // Label chọn tháng
+            Label labelThang = new Label()
+            {
+                Text = "Tháng:",
+                Location = new Point(170, 20),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10)
+            };
+
+            numThangThongKe = new NumericUpDown()
+            {
+                Minimum = 1,
+                Maximum = 12,
+                Value = DateTime.Now.Month,
+                Location = new Point(230, 18),
+                Width = 60,
+                Font = new Font("Segoe UI", 10),
+                Enabled = false
+            };
+
+            // Label thống kê theo
+            Label labelLuaChon = new Label()
+            {
+                Text = "Thống kê theo:",
+                Location = new Point(320, 20),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10)
+            };
+
+            cboThongKeTheo = new ComboBox()
+            {
+                Location = new Point(430, 17),
+                Width = 160,
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Font = new Font("Segoe UI", 10)
+            };
+            cboThongKeTheo.Items.AddRange(new string[] { "Thể loại", "Tháng", "Độc giả" });
+
+            // Nút thống kê
+            Button btnThongKe = new Button()
+            {
+                Text = "Thống kê",
+                Location = new Point(610, 15),
+                Height = 30,
+                Width = 100,
+                BackColor = ColorTranslator.FromHtml("#739a4f"),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10)
+            };
+            btnThongKe.FlatAppearance.BorderSize = 0;
+
+            // DataGridView hiển thị kết quả
+            dgvThongKeSachMuon = new DataGridView()
+            {
+                Location = new Point(20, 60),
+                Size = new Size(900, 400),
+                Font = new Font("Segoe UI", 10),
+                BackgroundColor = Color.White,
+                BorderStyle = BorderStyle.FixedSingle,
+                AllowUserToAddRows = false,
+                RowHeadersVisible = false,
+                ReadOnly = true,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            };
+
+            // Sự kiện khi thay đổi ComboBox
+            cboThongKeTheo.SelectedIndexChanged += (s, e) =>
+            {
+                string luaChon = cboThongKeTheo.SelectedItem?.ToString();
+                bool enableThangNam = luaChon == "Tháng";
+
+                numNamThongKe.Enabled = enableThangNam;
+                numThangThongKe.Enabled = enableThangNam;
+            };
+
+            btnThongKe.Click += (s, e) =>
+            {
+                string luaChon = cboThongKeTheo.SelectedItem?.ToString();
+
+                if (string.IsNullOrEmpty(luaChon))
+                {
+                    LoadTatCaSachDangMuon();
+                    return;
+                }
+
+                var thongKeDAO = new ThongKeDAO();
+
+                if (luaChon == "Thể loại")
+                {
+                    var data = thongKeDAO.GetThongKeSachMuonTheoTheLoai();
+                    dgvThongKeSachMuon.DataSource = data;
+                }
+                else if (luaChon == "Tháng")
+                {
+                    int nam = (int)numNamThongKe.Value;
+                    int thang = (int)numThangThongKe.Value;
+                    var data = thongKeDAO.GetThongKeSachMuonTheoThang(nam, thang);
+                    dgvThongKeSachMuon.DataSource = data;
+                }
+                else if (luaChon == "Độc giả")
+                {
+                    var data = thongKeDAO.GetThongKeSachMuonTheoDocGia();
+                    dgvThongKeSachMuon.DataSource = data;
+                }
+            };
+
+            // Khi tab được chọn, reset các control và load dữ liệu mặc định
+            tabSoLuongSachMuon.Enter += (s, e) =>
+            {
+                cboThongKeTheo.SelectedIndex = -1;
+                numNamThongKe.Enabled = false;
+                numThangThongKe.Enabled = false;
+                LoadTatCaSachDangMuon();
+            };
+
+            // Thêm controls vào tab
+            tabSoLuongSachMuon.Controls.Add(labelNam);
+            tabSoLuongSachMuon.Controls.Add(numNamThongKe);
+            tabSoLuongSachMuon.Controls.Add(labelThang);
+            tabSoLuongSachMuon.Controls.Add(numThangThongKe);
+            tabSoLuongSachMuon.Controls.Add(labelLuaChon);
+            tabSoLuongSachMuon.Controls.Add(cboThongKeTheo);
+            tabSoLuongSachMuon.Controls.Add(btnThongKe);
+            tabSoLuongSachMuon.Controls.Add(dgvThongKeSachMuon);
+        }
+
+        private void LoadTatCaSachDangMuon()
+        {
+            var thongKeDAO = new ThongKeDAO();
+            var data = thongKeDAO.GetTatCaSachDangMuon();
+            dgvThongKeSachMuon.DataSource = data;
         }
 
     }

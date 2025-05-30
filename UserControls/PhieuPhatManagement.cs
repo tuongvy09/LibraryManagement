@@ -181,18 +181,18 @@ namespace LibraryManagement.UserControls
         {
             if (dgvPhieuPhat.CurrentRow != null)
             {
-                var row = dgvPhieuPhat.CurrentRow;
+                int maPhieuPhat = Convert.ToInt32(dgvPhieuPhat.CurrentRow.Cells["MaPhieuPhat"].Value);
+                var chiTiet = currentData.FirstOrDefault(p => p.MaPhieuPhat == maPhieuPhat);
 
-                var chiTiet = new PhieuPhat
+                if (chiTiet != null)
                 {
-                    MaPhieuPhat = Convert.ToInt32(row.Cells["MaPhieuPhat"].Value),
-                    HoTen = row.Cells["TenDocGia"].Value?.ToString(),
-                    TongTien = decimal.Parse(row.Cells["TongTien"].Value.ToString().Replace(" đ", "")),
-                    LoiViPhams = new List<QDP>() // Nếu cần chi tiết hơn thì lấy từ DAO
-                };
-
-                var form = new FormChiTietPhieuPhat(chiTiet);
-                form.ShowDialog();
+                    var form = new FormChiTietPhieuPhat(chiTiet);
+                    form.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("Không tìm thấy chi tiết phiếu phạt!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }
