@@ -119,7 +119,7 @@ namespace LibraryManagement.Repositories
                     }
 
                     // Kiểm tra độc giả đã có thẻ thư viện chưa
-                    if (KiemTraDocGiaCoThe(maDocGia.Value))
+                    if (CheckDocGiaHasCard(maDocGia.Value))
                     {
                         err = "Độc giả đã có thẻ thư viện";
                         return false;
@@ -234,7 +234,7 @@ namespace LibraryManagement.Repositories
                         }
 
                         // Kiểm tra độc giả đã có thẻ khác chưa (trừ thẻ hiện tại)
-                        if (KiemTraDocGiaCoTheKhac(maDocGia.Value, maThe))
+                        if (CheckDocGiaHasCard(maDocGia.Value, maThe))
                         {
                             err = "Độc giả đã có thẻ thư viện khác";
                             return false;
@@ -515,7 +515,7 @@ namespace LibraryManagement.Repositories
                         MaDocGia = Convert.ToInt32(reader["MaDocGia"]),
                         HoTen = reader["HoTen"].ToString(),
                         SoDT = reader["SoDT"].ToString(),
-                        // Map other properties as needed
+                        TrangThai = Convert.ToBoolean(reader["TrangThai"])
                     };
                 }
             }
@@ -530,35 +530,6 @@ namespace LibraryManagement.Repositories
                 string query = "SELECT COUNT(*) FROM DocGia WHERE MaDocGia = @MaDocGia AND TrangThai = 1";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@MaDocGia", maDocGia);
-
-                conn.Open();
-                int count = Convert.ToInt32(cmd.ExecuteScalar());
-                return count > 0;
-            }
-        }
-
-        private bool KiemTraDocGiaCoThe(int maDocGia)
-        {
-            using (SqlConnection conn = dbConnection.GetConnection())
-            {
-                string query = "SELECT COUNT(*) FROM TheThuVien WHERE MaDG = @MaDocGia";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaDocGia", maDocGia);
-
-                conn.Open();
-                int count = Convert.ToInt32(cmd.ExecuteScalar());
-                return count > 0;
-            }
-        }
-
-        private bool KiemTraDocGiaCoTheKhac(int maDocGia, int excludeMaThe)
-        {
-            using (SqlConnection conn = dbConnection.GetConnection())
-            {
-                string query = "SELECT COUNT(*) FROM TheThuVien WHERE MaDG = @MaDocGia AND MaThe != @ExcludeMaThe";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaDocGia", maDocGia);
-                cmd.Parameters.AddWithValue("@ExcludeMaThe", excludeMaThe);
 
                 conn.Open();
                 int count = Convert.ToInt32(cmd.ExecuteScalar());
@@ -619,6 +590,63 @@ namespace LibraryManagement.Repositories
             }
         }
 
+        // NEW: Insert và return ID của thẻ vừa tạo
+        public int InsertTheThuVienAndGetId(TheThuVien theThuVien)
+        {
+            using (SqlConnection conn = dbConnection.GetConnection())
+            {
+                string query = @"
+                    INSERT INTO TheThuVien (MaDG, NgayCap, NgayHetHan)
+                    OUTPUT INSERTED.MaThe
+                    VALUES (@MaDG, @NgayCap, @NgayHetHan)";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaDG", theThuVien.MaDG ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@NgayCap", theThuVien.NgayCap);
+                cmd.Parameters.AddWithValue("@NgayHetHan", theThuVien.NgayHetHan);
+
+                conn.Open();
+                object result = cmd.ExecuteScalar();
+                return result != null ? Convert.ToInt32(result) : 0;
+            }
+        }
+
+        // NEW: Lấy thẻ mới nhất của độc giả
+        public TheThuVien GetLatestCardByDocGia(int maDG)
+        {
+            TheThuVien theThuVien = null;
+
+            using (SqlConnection conn = dbConnection.GetConnection())
+            {
+                string query = @"
+                    SELECT TOP 1 tt.MaThe, tt.MaDG, tt.NgayCap, tt.NgayHetHan,
+                           dg.HoTen as TenDocGia, dg.SoDT
+                    FROM TheThuVien tt
+                    LEFT JOIN DocGia dg ON tt.MaDG = dg.MaDocGia
+                    WHERE tt.MaDG = @MaDG
+                    ORDER BY tt.MaThe DESC";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaDG", maDG);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    theThuVien = new TheThuVien()
+                    {
+                        MaThe = Convert.ToInt32(reader["MaThe"]),
+                        MaDG = reader["MaDG"] == DBNull.Value ? null : (int?)reader["MaDG"],
+                        NgayCap = Convert.ToDateTime(reader["NgayCap"]),
+                        NgayHetHan = Convert.ToDateTime(reader["NgayHetHan"]),
+                        TenDocGia = reader["TenDocGia"]?.ToString() ?? "",
+                        SoDT = reader["SoDT"]?.ToString() ?? ""
+                    };
+                }
+            }
+            return theThuVien;
+        }
+
         public bool UpdateTheThuVien(TheThuVien theThuVien)
         {
             using (SqlConnection conn = dbConnection.GetConnection())
@@ -645,6 +673,7 @@ namespace LibraryManagement.Repositories
         {
             using (SqlConnection conn = dbConnection.GetConnection())
             {
+                // Hard delete vì thẻ thư viện không có trạng thái
                 string query = "DELETE FROM TheThuVien WHERE MaThe = @MaThe";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@MaThe", maThe);
@@ -726,11 +755,13 @@ namespace LibraryManagement.Repositories
             return theThuVien;
         }
 
+        // Lấy danh sách độc giả để binding vào ComboBox
         public DataTable GetDocGiaForComboBox()
         {
             return LayDocGiaChoComboBox();
         }
 
+        // Kiểm tra độc giả đã có thẻ thư viện chưa
         public bool CheckDocGiaHasCard(int maDG, int? excludeMaThe = null)
         {
             using (SqlConnection conn = dbConnection.GetConnection())
@@ -756,65 +787,6 @@ namespace LibraryManagement.Repositories
             }
         }
 
-        // Thêm vào cuối class TheThuVienDAO, trước dấu }
-
-        // NEW: Insert và return ID của thẻ vừa tạo
-        public int InsertTheThuVienAndGetId(TheThuVien theThuVien)
-        {
-            using (SqlConnection conn = dbConnection.GetConnection())
-            {
-                string query = @"
-            INSERT INTO TheThuVien (MaDG, NgayCap, NgayHetHan)
-            OUTPUT INSERTED.MaThe
-            VALUES (@MaDG, @NgayCap, @NgayHetHan)";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaDG", theThuVien.MaDG ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@NgayCap", theThuVien.NgayCap);
-                cmd.Parameters.AddWithValue("@NgayHetHan", theThuVien.NgayHetHan);
-
-                conn.Open();
-                object result = cmd.ExecuteScalar();
-                return result != null ? Convert.ToInt32(result) : 0;
-            }
-        }
-
-        // NEW: Lấy thẻ mới nhất của độc giả
-        public TheThuVien GetLatestCardByDocGia(int maDG)
-        {
-            TheThuVien theThuVien = null;
-
-            using (SqlConnection conn = dbConnection.GetConnection())
-            {
-                string query = @"
-            SELECT TOP 1 tt.MaThe, tt.MaDG, tt.NgayCap, tt.NgayHetHan,
-                   dg.HoTen as TenDocGia, dg.SoDT
-            FROM TheThuVien tt
-            LEFT JOIN DocGia dg ON tt.MaDG = dg.MaDocGia
-            WHERE tt.MaDG = @MaDG
-            ORDER BY tt.MaThe DESC";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaDG", maDG);
-
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    theThuVien = new TheThuVien()
-                    {
-                        MaThe = Convert.ToInt32(reader["MaThe"]),
-                        MaDG = reader["MaDG"] == DBNull.Value ? null : (int?)reader["MaDG"],
-                        NgayCap = Convert.ToDateTime(reader["NgayCap"]),
-                        NgayHetHan = Convert.ToDateTime(reader["NgayHetHan"]),
-                        TenDocGia = reader["TenDocGia"]?.ToString() ?? "",
-                        SoDT = reader["SoDT"]?.ToString() ?? ""
-                    };
-                }
-            }
-            return theThuVien;
-        }
-
         // Thống kê số thẻ được cấp theo tháng
         public List<ThongKeTheThuVienDTO> GetThongKeTheThuVienTheoThang(int nam)
         {
@@ -823,13 +795,13 @@ namespace LibraryManagement.Repositories
             using (SqlConnection conn = dbConnection.GetConnection())
             {
                 string query = @"
-            SELECT 
-                MONTH(NgayCap) as Thang,
-                COUNT(*) as SoTheCapMoi
-            FROM TheThuVien 
-            WHERE YEAR(NgayCap) = @Nam
-            GROUP BY MONTH(NgayCap)
-            ORDER BY Thang";
+                    SELECT 
+                        MONTH(NgayCap) as Thang,
+                        COUNT(*) as SoTheCapMoi
+                    FROM TheThuVien 
+                    WHERE YEAR(NgayCap) = @Nam
+                    GROUP BY MONTH(NgayCap)
+                    ORDER BY Thang";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Nam", nam);
@@ -860,12 +832,12 @@ namespace LibraryManagement.Repositories
             using (SqlConnection conn = dbConnection.GetConnection())
             {
                 string query = @"
-            SELECT tt.MaThe, tt.MaDG, tt.NgayCap, tt.NgayHetHan,
-                   dg.HoTen as TenDocGia, dg.SoDT
-            FROM TheThuVien tt
-            LEFT JOIN DocGia dg ON tt.MaDG = dg.MaDocGia
-            WHERE tt.NgayHetHan < GETDATE()
-            ORDER BY tt.NgayHetHan ASC";
+                    SELECT tt.MaThe, tt.MaDG, tt.NgayCap, tt.NgayHetHan,
+                           dg.HoTen as TenDocGia, dg.SoDT
+                    FROM TheThuVien tt
+                    LEFT JOIN DocGia dg ON tt.MaDG = dg.MaDocGia
+                    WHERE tt.NgayHetHan < GETDATE()
+                    ORDER BY tt.NgayHetHan ASC";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 conn.Open();
@@ -896,12 +868,12 @@ namespace LibraryManagement.Repositories
             using (SqlConnection conn = dbConnection.GetConnection())
             {
                 string query = @"
-            SELECT tt.MaThe, tt.MaDG, tt.NgayCap, tt.NgayHetHan,
-                   dg.HoTen as TenDocGia, dg.SoDT
-            FROM TheThuVien tt
-            LEFT JOIN DocGia dg ON tt.MaDG = dg.MaDocGia
-            WHERE tt.NgayHetHan BETWEEN GETDATE() AND DATEADD(DAY, @SoNgay, GETDATE())
-            ORDER BY tt.NgayHetHan ASC";
+                    SELECT tt.MaThe, tt.MaDG, tt.NgayCap, tt.NgayHetHan,
+                           dg.HoTen as TenDocGia, dg.SoDT
+                    FROM TheThuVien tt
+                    LEFT JOIN DocGia dg ON tt.MaDG = dg.MaDocGia
+                    WHERE tt.NgayHetHan BETWEEN GETDATE() AND DATEADD(DAY, @SoNgay, GETDATE())
+                    ORDER BY tt.NgayHetHan ASC";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@SoNgay", soNgay);
@@ -924,6 +896,14 @@ namespace LibraryManagement.Repositories
             }
             return theThuViens;
         }
+    }
 
+    // DTO cho thống kê thẻ thư viện
+    public class ThongKeTheThuVienDTO
+    {
+        public int Thang { get; set; }
+        public string TenThang { get; set; }
+        public int SoTheCapMoi { get; set; }
+        public int Nam { get; set; }
     }
 }
