@@ -18,4 +18,12 @@ namespace LibraryManagement.Models
         public string SoDT { get; set; }
         public bool TrangThaiThe => DateTime.Now <= NgayHetHan;
     }
+
+    public class ThongKeTheThuVienDTO
+    {
+        public int Thang { get; set; }
+        public string TenThang { get; set; }
+        public int SoTheCapMoi { get; set; }
+        public int Nam { get; set; }
+    }
 }
