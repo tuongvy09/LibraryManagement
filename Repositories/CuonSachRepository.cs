@@ -12,13 +12,19 @@ namespace LibraryManagement.Repositories
         public void AddCuonSach(int maDauSach, string trangThaiSach, string tenCuonSach)
         {
             string query = "INSERT INTO CuonSach (MaDauSach, TrangThaiSach, TenCuonSach) VALUES (@MaDauSach, @TrangThaiSach, @TenCuonSach)";
-            SqlCommand cmd = new SqlCommand(query, GetConnection());
-            cmd.Parameters.AddWithValue("@MaDauSach", maDauSach);
-            cmd.Parameters.AddWithValue("@TrangThaiSach", trangThaiSach);
-            cmd.Parameters.AddWithValue("@TenCuonSach", tenCuonSach);
-            GetConnection().Open();
-            cmd.ExecuteNonQuery();
-            GetConnection().Close();
+
+            using (SqlConnection conn = GetConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaDauSach", maDauSach);
+                    cmd.Parameters.AddWithValue("@TrangThaiSach", trangThaiSach);
+                    cmd.Parameters.AddWithValue("@TenCuonSach", tenCuonSach);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         // Cập nhật Cuốn Sách

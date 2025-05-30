@@ -7,7 +7,7 @@ namespace LibraryManagement
 {
     public partial class Login : Form
     {
-        private AuthService authService;
+        private AuthBLL authService;
 
         public Login()
         {
@@ -25,7 +25,7 @@ namespace LibraryManagement
                 conn.Open();
 
                 var userRepository = new UserRepository(dbConnection);
-                authService = new AuthService(userRepository);
+                authService = new AuthBLL(userRepository);
 
             }
 

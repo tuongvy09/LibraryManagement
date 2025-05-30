@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Repositories;
+﻿using LibraryManagement.BUS;
+using LibraryManagement.Repositories;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,21 +38,29 @@ namespace LibraryManagement.UserControls
             string password = txtPassword.Text.Trim();
             string role = cbRole.SelectedItem?.ToString();
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(role))
+            try
             {
-                MessageBox.Show("Vui lòng điền đầy đủ thông tin.");
-                return;
-            }
+                UserBLL userBLL = new UserBLL();
+                bool result = userBLL.ThemNguoiDung(username, password, role);
 
-            if (userRepo.AddUser(username, password, role))
-            {
-                MessageBox.Show("Thêm người dùng thành công.");
-                LoadUsers();
-                ClearInputs();
+                if (result)
+                {
+                    MessageBox.Show("Thêm người dùng thành công.");
+                    LoadUsers();
+                    ClearInputs();
+                }
+                else
+                {
+                    MessageBox.Show("Thêm thất bại. Có thể tên người dùng đã tồn tại.");
+                }
             }
-            else
+            catch (ArgumentException ex)
             {
-                MessageBox.Show("Thêm thất bại. Có thể tên người dùng đã tồn tại.");
+                MessageBox.Show("Lỗi dữ liệu: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi hệ thống: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
