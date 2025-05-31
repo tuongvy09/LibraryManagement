@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LibraryManagement.Services
+namespace LibraryManagement.BUS
 {
-    public class AuthService
+    public class AuthBLL
     {
         private UserRepository userRepository;
 
-        public AuthService(UserRepository userRepository)
+        public AuthBLL(UserRepository userRepository)
         {
             this.userRepository = userRepository;
         }
