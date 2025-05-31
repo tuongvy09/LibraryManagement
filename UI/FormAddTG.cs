@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Repositories.LibraryManagement.Repositories;
+﻿using LibraryManagement.BUS;
+using LibraryManagement.Repositories.LibraryManagement.Repositories;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -105,8 +106,8 @@ namespace LibraryManagement.UI
 
             try
             {
-                TacGiaRepository repo = new TacGiaRepository();
-                repo.AddTacGia(tenTacGia);
+                TacGiaBLL bll = new TacGiaBLL();
+                bll.ThemTacGia(tenTacGia);
 
                 MessageBox.Show("Thêm tác giả thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;

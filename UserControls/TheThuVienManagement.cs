@@ -10,69 +10,107 @@ using System.Windows.Forms;
 using LibraryManagement.Models;
 using LibraryManagement.Repositories;
 using LibraryManagement.UI;
+<<<<<<< Updated upstream
+=======
+using LibraryManagement.Utilities;
+>>>>>>> Stashed changes
 
 namespace LibraryManagement.UserControls
 {
     public partial class TheThuVienManagement : UserControl
     {
         private readonly TheThuVienDAO _theThuVienDAO = new TheThuVienDAO();
-        private List<TheThuVien> currentData;
 
         public TheThuVienManagement()
         {
             InitializeComponent();
-            LoadTheThuVienData();
+            InitializeDataGridViews();
+        }
+
+        private void InitializeDataGridViews()
+        {
+            try
+            {
+                // Khởi tạo DataTable rỗng để tránh null reference
+                DataTable emptyTable = new DataTable();
+                emptyTable.Columns.Add("Mã thẻ");
+                emptyTable.Columns.Add("Tên độc giả");
+                emptyTable.Columns.Add("Số ĐT");
+                emptyTable.Columns.Add("Ngày cấp");
+                emptyTable.Columns.Add("Ngày hết hạn");
+
+                dgvConHieuLuc.DataSource = emptyTable.Copy();
+
+                // Cho tab hết hạn thêm cột "Hết hạn từ"
+                DataTable emptyTableHetHan = emptyTable.Copy();
+                emptyTableHetHan.Columns.Add("Hết hạn từ");
+                dgvHetHan.DataSource = emptyTableHetHan;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error initializing DataGridViews: " + ex.Message);
+            }
+        }
+
+        private void TheThuVienManagement_Load(object sender, EventArgs e)
+        {
+            LoadData();
+            SetupSearchPlaceholder();
+        }
+
+        private void SetupSearchPlaceholder()
+        {
             txtSearch.Text = "Nhập mã thẻ, tên độc giả hoặc số điện thoại...";
             txtSearch.ForeColor = Color.Gray;
 
-            // Gán sự kiện
             txtSearch.Enter += TxtSearch_Enter;
             txtSearch.Leave += TxtSearch_Leave;
             txtSearch.KeyDown += TxtSearch_KeyDown;
         }
 
-        private void LoadTheThuVienData()
+        void LoadData()
         {
             try
             {
-                currentData = _theThuVienDAO.GetAllTheThuVien();
+                // Load data cho 2 tab
+                dgvConHieuLuc.DataSource = _theThuVienDAO.LayTheThuVienConHieuLuc();
+                dgvHetHan.DataSource = _theThuVienDAO.LayTheThuVienHetHan();
 
-                var displayData = currentData.Select(x => new
-                {
-                    MaThe = x.MaThe,
-                    TenDocGia = x.TenDocGia,
-                    SoDT = x.SoDT,
-                    NgayCap = x.NgayCap.ToString("dd/MM/yyyy"),
-                    NgayHetHan = x.NgayHetHan.ToString("dd/MM/yyyy"),
-                    TrangThai = x.TrangThaiThe ? "Còn hiệu lực" : "Hết hạn"
-                }).ToList();
+                dgvConHieuLuc.AutoResizeColumns();
+                dgvHetHan.AutoResizeColumns();
 
-                dgvTheThuVien.DataSource = displayData;
-
-                // Thiết lập header text giống như FormDocGiaManagement
-                SetupColumnHeaders();
+                UpdateTabTitles();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi",
-                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Không lấy được dữ liệu: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void SetupColumnHeaders()
+        private void UpdateTabTitles()
         {
-            if (dgvTheThuVien.Columns["MaThe"] != null)
-                dgvTheThuVien.Columns["MaThe"].HeaderText = "Mã thẻ";
-            if (dgvTheThuVien.Columns["TenDocGia"] != null)
-                dgvTheThuVien.Columns["TenDocGia"].HeaderText = "Tên độc giả";
-            if (dgvTheThuVien.Columns["SoDT"] != null)
-                dgvTheThuVien.Columns["SoDT"].HeaderText = "Số ĐT";
-            if (dgvTheThuVien.Columns["NgayCap"] != null)
-                dgvTheThuVien.Columns["NgayCap"].HeaderText = "Ngày cấp";
-            if (dgvTheThuVien.Columns["NgayHetHan"] != null)
-                dgvTheThuVien.Columns["NgayHetHan"].HeaderText = "Ngày hết hạn";
-            if (dgvTheThuVien.Columns["TrangThai"] != null)
-                dgvTheThuVien.Columns["TrangThai"].HeaderText = "Trạng thái";
+            try
+            {
+                // Cập nhật title với số lượng
+                int conHieuLuc = dgvConHieuLuc?.Rows?.Count ?? 0;
+                int hetHan = dgvHetHan?.Rows?.Count ?? 0;
+
+                if (tabConHieuLuc != null)
+                    tabConHieuLuc.Text = $"Còn hiệu lực ({conHieuLuc})";
+
+                if (tabHetHan != null)
+                    tabHetHan.Text = $"Hết hạn ({hetHan})";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error updating tab titles: " + ex.Message);
+            }
+        }
+
+        private DataGridView GetActiveDataGridView()
+        {
+            return tabControl.SelectedTab == tabConHieuLuc ? dgvConHieuLuc : dgvHetHan;
         }
 
         private void TxtSearch_Enter(object sender, EventArgs e)
@@ -103,108 +141,106 @@ namespace LibraryManagement.UserControls
 
         private void BtnSearch_Click(object sender, EventArgs e)
         {
-            SearchTheThuVien();
-        }
+            if (string.IsNullOrWhiteSpace(txtSearch.Text) ||
+                txtSearch.Text == "Nhập mã thẻ, tên độc giả hoặc số điện thoại...")
+            {
+                LoadData();
+                return;
+            }
 
-        private void SearchTheThuVien()
-        {
             try
             {
-                string searchText = txtSearch.Text.Trim();
-                if (searchText == "Nhập mã thẻ, tên độc giả hoặc số điện thoại..." || string.IsNullOrEmpty(searchText))
-                {
-                    LoadTheThuVienData();
-                }
-                else
-                {
-                    var searchResults = _theThuVienDAO.SearchTheThuVien(searchText);
-                    var displayData = searchResults.Select(x => new
-                    {
-                        MaThe = x.MaThe,
-                        TenDocGia = x.TenDocGia,
-                        SoDT = x.SoDT,
-                        NgayCap = x.NgayCap.ToString("dd/MM/yyyy"),
-                        NgayHetHan = x.NgayHetHan.ToString("dd/MM/yyyy"),
-                        TrangThai = x.TrangThaiThe ? "Còn hiệu lực" : "Hết hạn"
-                    }).ToList();
+                // Tìm kiếm trên cả 2 tab
+                var ketQuaTimKiem = _theThuVienDAO.TimKiemTheThuVien(txtSearch.Text.Trim());
 
-                    dgvTheThuVien.DataSource = displayData;
-                    currentData = searchResults;
-                    SetupColumnHeaders();
+                dgvConHieuLuc.DataSource = LayKetQuaTheoTrangThai(ketQuaTimKiem, true);
+                dgvHetHan.DataSource = LayKetQuaTheoTrangThai(ketQuaTimKiem, false);
+
+                dgvConHieuLuc.AutoResizeColumns();
+                dgvHetHan.AutoResizeColumns();
+
+                UpdateTabTitles();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi tìm kiếm: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private DataTable LayKetQuaTheoTrangThai(DataTable ketQua, bool conHieuLuc)
+        {
+            if (ketQua == null) return new DataTable();
+
+            DataTable result = ketQua.Clone();
+
+            try
+            {
+                foreach (DataRow row in ketQua.Rows)
+                {
+                    if (row == null) continue;
+
+                    string trangThai = row["Trạng thái"]?.ToString() ?? "";
+                    bool isConHieuLuc = trangThai == "Còn hiệu lực";
+
+                    if (isConHieuLuc == conHieuLuc)
+                    {
+                        result.ImportRow(row);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tìm kiếm: {ex.Message}", "Lỗi",
-                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine("Error filtering results: " + ex.Message);
             }
+
+            return result;
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            using (var formAdd = new FormAddTheThuVien())
+            try
             {
-                if (formAdd.ShowDialog() == DialogResult.OK)
+                using (var formAdd = new FormAddTheThuVien())
                 {
-                    LoadTheThuVienData();
+                    if (formAdd.ShowDialog() == DialogResult.OK)
+                    {
+                        LoadData();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi mở form thêm thẻ thư viện: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void BtnEdit_Click(object sender, EventArgs e)
         {
-            if (dgvTheThuVien.CurrentRow == null)
+            var activeGrid = GetActiveDataGridView();
+            if (activeGrid.CurrentRow == null)
             {
                 MessageBox.Show("Vui lòng chọn thẻ thư viện cần sửa!", "Thông báo",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            int maThe = Convert.ToInt32(dgvTheThuVien.CurrentRow.Cells["MaThe"].Value);
-
-            using (var formEdit = new FormEditTheThuVien(maThe))
+            try
             {
-                if (formEdit.ShowDialog() == DialogResult.OK)
+                int maThe = Convert.ToInt32(activeGrid.CurrentRow.Cells[0].Value);
+                using (var formEdit = new FormEditTheThuVien(maThe))
                 {
-                    LoadTheThuVienData();
-                }
-            }
-        }
-
-        private void BtnDelete_Click(object sender, EventArgs e)
-        {
-            if (dgvTheThuVien.CurrentRow == null)
-            {
-                MessageBox.Show("Vui lòng chọn thẻ thư viện cần xóa!", "Thông báo",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var result = MessageBox.Show("Bạn có chắc chắn muốn xóa thẻ thư viện này?",
-                "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes)
-            {
-                try
-                {
-                    int maThe = Convert.ToInt32(dgvTheThuVien.CurrentRow.Cells["MaThe"].Value);
-                    if (_theThuVienDAO.DeleteTheThuVien(maThe))
+                    if (formEdit.ShowDialog() == DialogResult.OK)
                     {
-                        MessageBox.Show("Xóa thẻ thư viện thành công!", "Thành công",
-                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadTheThuVienData();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Xóa thẻ thư viện thất bại!", "Lỗi",
-                                      MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        LoadData();
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi mở form sửa thẻ thư viện: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -212,17 +248,90 @@ namespace LibraryManagement.UserControls
         {
             txtSearch.Text = "Nhập mã thẻ, tên độc giả hoặc số điện thoại...";
             txtSearch.ForeColor = Color.Gray;
-            LoadTheThuVienData();
+            LoadData();
         }
 
+<<<<<<< Updated upstream
         private void DgvTheThuVien_CellContentClick(object sender, DataGridViewCellEventArgs e)
+=======
+        // QR Code Generation - Giữ nguyên như Version 1 cũ
+        private void BtnGenerateQR_Click(object sender, EventArgs e)
         {
-            // Có thể thêm logic xử lý click vào cell nếu cần
+            var activeGrid = GetActiveDataGridView();
+            if (activeGrid.CurrentRow == null)
+            {
+                MessageBox.Show("❗ Vui lòng chọn thẻ thư viện cần tạo QR Code!", "Thông báo",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                int maThe = Convert.ToInt32(activeGrid.CurrentRow.Cells[0].Value);
+                var theThuVien = _theThuVienDAO.GetTheThuVienById(maThe);
+
+                if (theThuVien != null)
+                {
+                    // Check if card is still valid
+                    if (!theThuVien.TrangThaiThe)
+                    {
+                        var continueResult = MessageBox.Show(
+                            "⚠️ Thẻ này đã hết hạn!\n\nBạn có muốn tiếp tục tạo QR Code không?",
+                            "Thẻ hết hạn",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning);
+
+                        if (continueResult == DialogResult.No)
+                            return;
+                    }
+
+                    // Generate QR Code
+                    string qrText = QRCodeManager.CreateLibraryCardQR(theThuVien);
+                    var qrImage = QRCodeManager.GenerateQRCode(qrText);
+
+                    // Show QR Code Dialog
+                    using (var qrDialog = new FormQRDisplay(qrImage, theThuVien))
+                    {
+                        qrDialog.ShowDialog();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("❌ Không tìm thấy thông tin thẻ thư viện!", "Lỗi",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ Lỗi khi tạo QR Code: {ex.Message}", "Lỗi",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void DgvTheThuVien_DoubleClick(object sender, EventArgs e)
+        private void DgvConHieuLuc_CellContentClick(object sender, DataGridViewCellEventArgs e)
+>>>>>>> Stashed changes
+        {
+            // Handle cell click for valid cards if needed
+        }
+
+        private void DgvHetHan_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Handle cell click for expired cards if needed
+        }
+
+        private void DgvConHieuLuc_DoubleClick(object sender, EventArgs e)
         {
             BtnEdit_Click(sender, e);
+        }
+
+        private void DgvHetHan_DoubleClick(object sender, EventArgs e)
+        {
+            BtnEdit_Click(sender, e);
+        }
+
+        public void RefreshData()
+        {
+            LoadData();
         }
     }
 }

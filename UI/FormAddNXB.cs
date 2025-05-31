@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Repositories;
+﻿using LibraryManagement.BUS;
+using LibraryManagement.Repositories;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -65,8 +66,8 @@ namespace LibraryManagement.UI
 
                 try
                 {
-                    var repository = new NXBRepository();
-                    repository.AddNXB(txtName.Text.Trim());
+                    var nxbBLL = new NXBBLL();
+                    nxbBLL.ThemNXB(txtName.Text.Trim());
 
                     MessageBox.Show("Thêm nhà xuất bản thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;

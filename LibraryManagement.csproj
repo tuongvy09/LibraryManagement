@@ -33,6 +33,32 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+<<<<<<< Updated upstream
+=======
+    <Reference Include="Microsoft.ReportViewer.Common, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.DataVisualization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Design, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.ProcessingObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.SqlServer.Types.14.0.314.76\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.6.0.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
+      <HintPath>packages\QRCoder.1.6.0\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
+>>>>>>> Stashed changes
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,6 +72,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< Updated upstream
+=======
+    <Compile Include="BUS\CuonSachBLL.cs" />
+    <Compile Include="BUS\DauSachBLL.cs" />
+    <Compile Include="BUS\NXBBLL.cs" />
+    <Compile Include="BUS\TacGiaBLL.cs" />
+    <Compile Include="BUS\TheLoaiBLL.cs" />
+    <Compile Include="BUS\UserBLL.cs" />
+    <Compile Include="Models\BienLai.cs" />
+>>>>>>> Stashed changes
     <Compile Include="Models\PhieuMuon.cs" />
     <Compile Include="Models\CuonSach.cs" />
     <Compile Include="Models\CuonSachDetailModel.cs" />
@@ -69,7 +105,20 @@
     <Compile Include="Repositories\TheLoaiRepository.cs" />
     <Compile Include="Repositories\TheThuVienDAO.cs" />
     <Compile Include="Repositories\ThuThuDAO.cs" />
+<<<<<<< HEAD
     <Compile Include="Services\ImportExcelToDatabase.cs" />
+    <Compile Include="SqlServerTypes\Loader.cs" />
+    <Compile Include="ThongKeReportDataSet.cs">
+      <DependentUpon>ThongKeReportDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ThongKeReportDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ThongKeReportDataSet.xsd</DependentUpon>
+    </Compile>
+=======
+    <Compile Include="BUS\ImportExcelToDatabase.cs" />
+>>>>>>> 23493a1a50a4e5ed5f7633857de01329d0231f65
     <Compile Include="UI\AuthorModal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -178,6 +227,12 @@
     <Compile Include="UI\FormThongKe.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="UI\FormThongKeReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormThongKeReport.Designer.cs">
+      <DependentUpon>FormThongKeReport.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\FormThuThuManagement.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -198,7 +253,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DBConnection.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
-    <Compile Include="Services\AuthService.cs" />
+    <Compile Include="BUS\AuthService.cs" />
     <Compile Include="UI\Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -242,6 +297,13 @@
     <Compile Include="UserControls\ThuThuUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
+<<<<<<< Updated upstream
+=======
+    <Compile Include="Utilities\QRCodeManager.cs" />
+    <Content Include="ThongKeReport.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+>>>>>>> Stashed changes
     <EmbeddedResource Include="UI\FormAddCuonSach.resx">
       <DependentUpon>FormAddCuonSach.cs</DependentUpon>
     </EmbeddedResource>
@@ -263,8 +325,13 @@
     <EmbeddedResource Include="UI\FormDocGiaManagement.resx">
       <DependentUpon>FormDocGiaManagement.cs</DependentUpon>
     </EmbeddedResource>
+<<<<<<< Updated upstream
     <EmbeddedResource Include="UI\FormEditPhieuMuon.resx">
       <DependentUpon>FormEditPhieuMuon.cs</DependentUpon>
+=======
+    <EmbeddedResource Include="UI\FormThongKeReport.resx">
+      <DependentUpon>FormThongKeReport.cs</DependentUpon>
+>>>>>>> Stashed changes
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Home.resx">
       <DependentUpon>Home.cs</DependentUpon>
@@ -289,6 +356,18 @@
     <EmbeddedResource Include="UserControls\TheThuVienManagement.resx">
       <DependentUpon>TheThuVienManagement.cs</DependentUpon>
     </EmbeddedResource>
+<<<<<<< Updated upstream
+=======
+    <EmbeddedResource Include="UserControls\ThongKeManagement.resx">
+      <DependentUpon>ThongKeManagement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ThuThuManagement.resx">
+      <DependentUpon>ThuThuManagement.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\DataSources\LibraryManagement.Repositories.ThongKeDAO.datasource" />
+    <None Include="Properties\DataSources\LibraryManagement.Repositories.ThongKeDoanhThuDTO.datasource" />
+>>>>>>> Stashed changes
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -298,12 +377,36 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="ThongKeReportDataSet.xsc">
+      <DependentUpon>ThongKeReportDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="ThongKeReportDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ThongKeReportDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ThongKeReportDataSet.xss">
+      <DependentUpon>ThongKeReportDataSet.xsd</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="SqlServerTypes\readme.htm" />
+    <Content Include="SqlServerTypes\x64\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x64\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\statistics.png" />
     <None Include="Resources\teamwork.png" />
     <None Include="Resources\voucher.png" />

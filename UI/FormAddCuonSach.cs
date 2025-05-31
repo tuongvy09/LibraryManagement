@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Models;
+﻿using LibraryManagement.BUS;
+using LibraryManagement.Models;
 using LibraryManagement.Repositories;
 using System;
 using System.Collections.Generic;
@@ -175,8 +176,10 @@ namespace LibraryManagement.UI
 
             try
             {
-                var repo = new CuonSachRepository();
-                repo.AddCuonSach(maDauSach, trangThai, tenCuonSach);
+                // Gọi tầng BLL, không gọi repo trực tiếp nữa
+                var bll = new CuonSachBLL();
+                bll.ThemCuonSach(maDauSach, trangThai, tenCuonSach);
+
                 MessageBox.Show("Thêm cuốn sách thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;
                 this.Close();

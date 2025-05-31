@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LibraryManagement.BUS;
 
 namespace LibraryManagement.UI
 {
@@ -414,22 +415,19 @@ namespace LibraryManagement.UI
 
         private void BtnXoa_Click(object sender, EventArgs e)
         {
-            // Kiểm tra xem người dùng có muốn xóa hay không
             DialogResult dr = MessageBox.Show("Bạn có chắc chắn muốn xóa đầu sách này không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dr == DialogResult.Yes)
             {
                 try
                 {
-                    // Giả sử bạn lấy mã đầu sách từ ô đang chọn trên DataGridView
                     int maDauSach = Convert.ToInt32(dgvDauSach.CurrentRow.Cells["MaDauSach"].Value);
 
-                    // Gọi hàm xóa trong repository
-                    dsRepository.DeleteDauSach(maDauSach);
+                    var dauSachBLL = new DauSachBLL();
+                    dauSachBLL.XoaDauSach(maDauSach);
 
                     MessageBox.Show("Xóa đầu sách thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Load lại dữ liệu lên DataGridView sau khi xóa
-                    LoadDauSachToDgv(); // Hàm này là hàm bạn dùng để load lại danh sách đầu sách
+                    LoadDauSachToDgv();
                 }
                 catch (Exception ex)
                 {
