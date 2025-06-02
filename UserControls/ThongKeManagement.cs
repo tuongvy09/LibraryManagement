@@ -598,45 +598,6 @@ namespace LibraryManagement.UserControls
 
         private void InitializeTabSachMuon()
         {
-            Label labelNam = new Label()
-            {
-                Text = "Năm:",
-                Location = new Point(20, 20),
-                AutoSize = true,
-                Font = new Font("Segoe UI", 10)
-            };
-
-            numNamThongKe = new NumericUpDown()
-            {
-                Minimum = 2000,
-                Maximum = 2100,
-                Value = DateTime.Now.Year,
-                Location = new Point(70, 18),
-                Width = 80,
-                Font = new Font("Segoe UI", 10),
-                Enabled = false
-            };
-
-            // Label chọn tháng
-            Label labelThang = new Label()
-            {
-                Text = "Tháng:",
-                Location = new Point(170, 20),
-                AutoSize = true,
-                Font = new Font("Segoe UI", 10)
-            };
-
-            numThangThongKe = new NumericUpDown()
-            {
-                Minimum = 1,
-                Maximum = 12,
-                Value = DateTime.Now.Month,
-                Location = new Point(230, 18),
-                Width = 60,
-                Font = new Font("Segoe UI", 10),
-                Enabled = false
-            };
-
             // Label thống kê theo
             Label labelLuaChon = new Label()
             {
@@ -653,7 +614,7 @@ namespace LibraryManagement.UserControls
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Font = new Font("Segoe UI", 10)
             };
-            cboThongKeTheo.Items.AddRange(new string[] { "Thể loại", "Tháng", "Độc giả" });
+            cboThongKeTheo.Items.AddRange(new string[] { "Thể loại", "Độc giả" });
 
             // Nút thống kê
             Button btnThongKe = new Button()
@@ -683,16 +644,6 @@ namespace LibraryManagement.UserControls
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
 
-            // Sự kiện khi thay đổi ComboBox
-            cboThongKeTheo.SelectedIndexChanged += (s, e) =>
-            {
-                string luaChon = cboThongKeTheo.SelectedItem?.ToString();
-                bool enableThangNam = luaChon == "Tháng";
-
-                numNamThongKe.Enabled = enableThangNam;
-                numThangThongKe.Enabled = enableThangNam;
-            };
-
             btnThongKe.Click += (s, e) =>
             {
                 string luaChon = cboThongKeTheo.SelectedItem?.ToString();
@@ -709,13 +660,7 @@ namespace LibraryManagement.UserControls
                 {
                     var data = thongKeDAO.GetThongKeSachMuonTheoTheLoai();
                     dgvThongKeSachMuon.DataSource = data;
-                }
-                else if (luaChon == "Tháng")
-                {
-                    int nam = (int)numNamThongKe.Value;
-                    int thang = (int)numThangThongKe.Value;
-                    var data = thongKeDAO.GetThongKeSachMuonTheoThang(nam, thang);
-                    dgvThongKeSachMuon.DataSource = data;
+
                 }
                 else if (luaChon == "Độc giả")
                 {
@@ -728,15 +673,10 @@ namespace LibraryManagement.UserControls
             tabSoLuongSachMuon.Enter += (s, e) =>
             {
                 cboThongKeTheo.SelectedIndex = -1;
-                numNamThongKe.Enabled = false;
-                numThangThongKe.Enabled = false;
-                LoadTatCaSachDangMuon();
             };
 
             // Thêm controls vào tab
-            tabSoLuongSachMuon.Controls.Add(labelNam);
             tabSoLuongSachMuon.Controls.Add(numNamThongKe);
-            tabSoLuongSachMuon.Controls.Add(labelThang);
             tabSoLuongSachMuon.Controls.Add(numThangThongKe);
             tabSoLuongSachMuon.Controls.Add(labelLuaChon);
             tabSoLuongSachMuon.Controls.Add(cboThongKeTheo);
