@@ -20,6 +20,8 @@ namespace LibraryManagement.UI
         private DateTimePicker dtpNgayMuon, dtpNgayTra;
         private Label lblTrangThaiValue;
         private Button btnSave, btnCancel;
+        private TextBox txtGiaMuon;
+        private TextBox txtTienCoc;
 
         private PhieuMuonDAO phieuMuonDAO = new PhieuMuonDAO();
         private DocGiaDAO docGiaDAO = new DocGiaDAO();
@@ -39,7 +41,7 @@ namespace LibraryManagement.UI
         private void InitializeComponentForm()
         {
             this.Text = "Thêm Phiếu Mượn";
-            this.Size = new Size(550, 400);
+            this.Size = new Size(550, 450);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -82,6 +84,28 @@ namespace LibraryManagement.UI
             lblNgayTra = CreateLabel("Ngày trả: *", 20, 180, mainColor);
             this.Controls.Add(lblNgayTra);
 
+            Label lblGiaMuon = CreateLabel("Giá mượn:", 20, 250, mainColor);
+            this.Controls.Add(lblGiaMuon);
+
+            txtGiaMuon = new TextBox()
+            {
+                Location = new Point(160, 247),
+                Width = 200,
+                Font = new Font("Segoe UI", 10)
+            };
+            this.Controls.Add(txtGiaMuon);
+
+            Label lblTienCoc = CreateLabel("Tiền cọc:", 20, 290, mainColor);
+            this.Controls.Add(lblTienCoc);
+
+            txtTienCoc = new TextBox()
+            {
+                Location = new Point(160, 287),
+                Width = 200,
+                Font = new Font("Segoe UI", 10)
+            };
+            this.Controls.Add(txtTienCoc);
+
             dtpNgayTra = CreateDateTimePicker(160, 177);
             dtpNgayTra.Value = DateTime.Now.Date.AddDays(7);
             dtpNgayTra.ValueChanged += (s, e) => UpdateTrangThaiDisplay();
@@ -105,8 +129,8 @@ namespace LibraryManagement.UI
                 Text = "Lưu",
                 BackColor = mainColor,
                 ForeColor = Color.White,
-                Location = new Point(160, 270),
-                Size = new Size(80, 35),
+                Location = new Point(130, 330),
+                Size = new Size(100, 35),
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10)
             };
@@ -119,8 +143,8 @@ namespace LibraryManagement.UI
                 Text = "Hủy",
                 BackColor = Color.Gray,
                 ForeColor = Color.White,
-                Location = new Point(270, 270),
-                Size = new Size(80, 35),
+                Location = new Point(260, 330),
+                Size = new Size(100, 35),
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10)
             };
@@ -131,7 +155,7 @@ namespace LibraryManagement.UI
             Label lblNote = new Label()
             {
                 Text = "* Trường bắt buộc",
-                Location = new Point(20, 320),
+                Location = new Point(20, 390),
                 AutoSize = true,
                 Font = new Font("Segoe UI", 8, FontStyle.Italic),
                 ForeColor = Color.Red
@@ -186,7 +210,7 @@ namespace LibraryManagement.UI
             foreach (var cs in cuonSachs)
             {
                 cbTenDauSach.Items.Add(cs.TenCuonSach);
-                cuonSachDict[cs.TenCuonSach] = cs.MaDauSach;
+                cuonSachDict[cs.TenCuonSach] = cs.MaCuonSach;
             }
 
             if (cbTenDocGia.Items.Count > 0) cbTenDocGia.SelectedIndex = 0;
@@ -206,19 +230,34 @@ namespace LibraryManagement.UI
 
             try
             {
-                var phieuMuonToAdd = new PhieuMuon()
+                int maDocGia = GetMaDocGiaFromName(cbTenDocGia.SelectedItem.ToString());
+                if (maDocGia == -1)
                 {
-                    MaDocGia = GetMaDocGiaFromName(cbTenDocGia.SelectedItem.ToString()),
-                    NgayMuon = dtpNgayMuon.Value.Date,
-                    NgayTra = dtpNgayTra.Value.Date,
-                    TrangThaiM = lblTrangThaiValue.Text,
-                    GiaMuon = 0,
-                    SoNgayMuon = (dtpNgayTra.Value.Date - dtpNgayMuon.Value.Date).Days,
-                    TienCoc = 0
-                };
+                    MessageBox.Show("Không tìm thấy mã độc giả tương ứng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 List<int> danhSachMaCuonSach = GetDanhSachMaCuonSach();
+                if (danhSachMaCuonSach.Count == 0)
+                {
+                    MessageBox.Show("Không tìm thấy mã cuốn sách!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
+                decimal giaMuon = 0, tienCoc = 0;
+                decimal.TryParse(txtGiaMuon.Text.Trim(), out giaMuon);
+                decimal.TryParse(txtTienCoc.Text.Trim(), out tienCoc);
+
+                var phieuMuonToAdd = new PhieuMuon()
+                {
+                    MaDocGia = maDocGia,
+                    NgayMuon = dtpNgayMuon.Value.Date,
+                    NgayTra = dtpNgayTra.Value.Date,
+                    TrangThaiM = "Chua tra",
+                    GiaMuon = giaMuon,
+                    SoNgayMuon = (dtpNgayTra.Value.Date - dtpNgayMuon.Value.Date).Days,
+                    TienCoc = tienCoc
+                };
                 bool success = phieuMuonDAO.AddPhieuMuon(phieuMuonToAdd, danhSachMaCuonSach);
 
                 if (success)
@@ -251,6 +290,7 @@ namespace LibraryManagement.UI
             string tenCuonSach = cbTenDauSach.SelectedItem.ToString();
             if (cuonSachDict.TryGetValue(tenCuonSach, out int maCuonSach))
             {
+
                 return new List<int> { maCuonSach };
             }
             return new List<int>();
@@ -279,6 +319,12 @@ namespace LibraryManagement.UI
                 MessageBox.Show("Ngày trả không được nhỏ hơn ngày mượn!", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 dtpNgayTra.Focus();
+                return false;
+            }
+
+            if (!decimal.TryParse(txtGiaMuon.Text.Trim(), out _) || !decimal.TryParse(txtTienCoc.Text.Trim(), out _))
+            {
+                MessageBox.Show("Vui lòng nhập đúng định dạng số cho Giá mượn và Tiền cọc!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 

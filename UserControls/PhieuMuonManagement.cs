@@ -36,6 +36,7 @@ namespace LibraryManagement.UserControls
             btnAdd.Click += BtnAdd_Click;
             btnEdit.Click += BtnEdit_Click;
             btnDelete.Click += BtnDelete_Click;
+            dgvPhieuMuon.CellFormatting += dgvPhieuMuon_CellFormatting;
         }
 
         private void LoadPhieuMuonData()
@@ -234,6 +235,20 @@ namespace LibraryManagement.UserControls
 
                 FormChiTietPhieuMuon form = new FormChiTietPhieuMuon(chiTiet);
                 form.ShowDialog();
+            }
+        }
+
+        private void dgvPhieuMuon_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgvPhieuMuon.Columns[e.ColumnIndex].Name == "GiaMuon" ||
+                dgvPhieuMuon.Columns[e.ColumnIndex].Name == "TienCoc")
+            {
+                if (e.Value != null && decimal.TryParse(e.Value.ToString(), out decimal amount))
+                {
+                    // Định dạng tiền tệ Việt Nam (VND)
+                    e.Value = string.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:c0}", amount);
+                    e.FormattingApplied = true;
+                }
             }
         }
     }

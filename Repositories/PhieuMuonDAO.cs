@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace LibraryManagement.Repositories
 {
@@ -22,13 +23,16 @@ namespace LibraryManagement.Repositories
             List<PhieuMuon> list = new List<PhieuMuon>();
 
             string query = @"
-                SELECT ms.MaMuonSach, dg.HoTen AS TenDocGia, cs.TenCuonSach,
-                       ms.NgayMuon, ms.NgayTra, ms.TrangThaiM, ms.GiaMuon, ms.SoNgayMuon, ms.TienCoc
-                FROM MuonSach ms
-                JOIN PhieuMuonSach pms ON ms.MaPhieu = pms.MaPhieu
-                JOIN DocGia dg ON pms.MaDocGia = dg.MaDocGia
-                JOIN PhieuMuonSach_CuonSach pmcs ON pms.MaPhieu = pmcs.MaPhieu
-                JOIN CuonSach cs ON pmcs.MaSach = cs.MaCuonSach";
+        SELECT ms.MaMuonSach, ms.MaPhieu, dg.MaDocGia, dg.HoTen AS TenDocGia,
+               ms.NgayMuon, ms.NgayTra, ms.TrangThaiM, ms.GiaMuon, ms.SoNgayMuon, ms.TienCoc,
+               cs.TenCuonSach
+        FROM MuonSach ms
+        JOIN PhieuMuonSach pms ON ms.MaPhieu = pms.MaPhieu
+        JOIN DocGia dg ON pms.MaDocGia = dg.MaDocGia
+        JOIN PhieuMuonSach_CuonSach pmcs ON pmcs.MaPhieu = pms.MaPhieu
+        JOIN CuonSach cs ON cs.MaCuonSach = pmcs.MaSach
+        ORDER BY ms.MaMuonSach
+    ";
 
             using (SqlConnection con = dbConnection.GetConnection())
             using (SqlCommand cmd = new SqlCommand(query, con))
@@ -36,23 +40,39 @@ namespace LibraryManagement.Repositories
                 con.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
+                    Dictionary<int, PhieuMuon> map = new Dictionary<int, PhieuMuon>();
+
                     while (reader.Read())
                     {
-                        PhieuMuon pm = new PhieuMuon
-                        {
-                            MaMuonSach = reader.GetInt32(0),
-                            TenDocGia = reader.GetString(1),
-                            TenCuonSach = reader.GetString(2),
-                            NgayMuon = reader.GetDateTime(3),
-                            NgayTra = reader.GetDateTime(4),
-                            TrangThaiM = reader.GetString(5),
-                            GiaMuon = reader.IsDBNull(6) ? 0 : reader.GetDecimal(6),
-                            SoNgayMuon = reader.IsDBNull(7) ? 0 : reader.GetInt32(7),
-                            TienCoc = reader.IsDBNull(8) ? 0 : reader.GetDecimal(8),
-                        };
+                        int maMuonSach = reader.GetInt32(0);
 
-                        list.Add(pm);
+                        if (!map.ContainsKey(maMuonSach))
+                        {
+                            var pm = new PhieuMuon
+                            {
+                                MaMuonSach = maMuonSach,
+                                MaPhieu = reader.GetInt32(1),
+                                MaDocGia = reader.GetInt32(2),
+                                TenDocGia = reader.GetString(3),
+                                NgayMuon = reader.GetDateTime(4),
+                                NgayTra = reader.GetDateTime(5),
+                                TrangThaiM = reader.GetString(6),
+                                GiaMuon = reader.IsDBNull(7) ? 0 : reader.GetDecimal(7),
+                                SoNgayMuon = reader.IsDBNull(8) ? 0 : reader.GetInt32(8),
+                                TienCoc = reader.IsDBNull(9) ? 0 : reader.GetDecimal(9),
+                                DanhSachTenCuonSach = new List<string>()
+                            };
+
+                            map[maMuonSach] = pm;
+                        }
+
+                        // Add cuốn sách vào danh sách
+                        string tenCuonSach = reader.IsDBNull(10) ? "" : reader.GetString(10);
+                        if (!string.IsNullOrWhiteSpace(tenCuonSach))
+                            map[maMuonSach].DanhSachTenCuonSach.Add(tenCuonSach);
                     }
+
+                    list = map.Values.ToList();
                 }
             }
 
@@ -102,15 +122,15 @@ namespace LibraryManagement.Repositories
                         }
 
                         string insertChiTietQuery = @"
-                    INSERT INTO PhieuMuonSach_CuonSach (MaPhieu, MaCuonSach)
-                    VALUES (@MaPhieu, @MaCuonSach);
-                ";
+                                INSERT INTO PhieuMuonSach_CuonSach (MaPhieu, MaSach)
+                                VALUES (@MaPhieu, @MaSach);";
+
                         foreach (int maCuonSach in danhSachMaCuonSach)
                         {
                             using (SqlCommand cmd = new SqlCommand(insertChiTietQuery, con, transaction))
                             {
                                 cmd.Parameters.AddWithValue("@MaPhieu", maPhieu);
-                                cmd.Parameters.AddWithValue("@MaCuonSach", maCuonSach);
+                                cmd.Parameters.AddWithValue("@MaSach", maCuonSach);
                                 cmd.ExecuteNonQuery();
                             }
                         }
@@ -120,8 +140,7 @@ namespace LibraryManagement.Repositories
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
-                        // Có thể log lỗi hoặc throw tùy bạn
+                        MessageBox.Show("Lỗi khi thêm phiếu mượn:\n" + ex.ToString(), "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
                 }
@@ -269,7 +288,7 @@ namespace LibraryManagement.Repositories
         public List<int> GetDanhSachMaCuonSachByMaPhieu(int maPhieu)
         {
             List<int> list = new List<int>();
-            string query = "SELECT MaCuonSach FROM PhieuMuon_CuonSach WHERE MaMuonSach = @MaPhieu";
+            string query = "SELECT MaCuonSach FROM PhieuMuonSach_CuonSach WHERE MaMuonSach = @MaPhieu";
 
             using (SqlConnection con = dbConnection.GetConnection())
             using (SqlCommand cmd = new SqlCommand(query, con))
@@ -291,20 +310,22 @@ namespace LibraryManagement.Repositories
         {
             PhieuMuon phieu = null;
             string query = @"
-        SELECT 
-            p.MaMuonSach,
-            d.TenDocGia,
-            c.TenCuonSach,
-            p.NgayMuon,
-            p.NgayTra,
-            p.TrangThaiM,
-            p.GiaMuon,
-            p.SoNgayMuon,
-            p.TienCoc
-        FROM PhieuMuonSach p
-        JOIN DocGia d ON p.MaDocGia = d.MaDocGia
-        JOIN CuonSach c ON p.MaCuonSach = c.MaCuonSach
-        WHERE p.MaMuonSach = @MaMuonSach";
+            SELECT TOP 1 
+                ms.MaMuonSach,
+                dg.HoTen AS TenDocGia,
+                cs.TenCuonSach,
+                ms.NgayMuon,
+                ms.NgayTra,
+                ms.TrangThaiM,
+                ms.GiaMuon,
+                ms.SoNgayMuon,
+                ms.TienCoc
+            FROM MuonSach ms
+            JOIN PhieuMuonSach pms ON ms.MaPhieu = pms.MaPhieu
+            JOIN DocGia dg ON pms.MaDocGia = dg.MaDocGia
+            JOIN PhieuMuonSach_CuonSach pmcs ON pmcs.MaPhieu = ms.MaPhieu
+            JOIN CuonSach cs ON pmcs.MaSach = cs.MaCuonSach
+            WHERE ms.MaMuonSach = @MaMuonSach";
 
             using (SqlConnection con = dbConnection.GetConnection())
             using (SqlCommand cmd = new SqlCommand(query, con))

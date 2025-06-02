@@ -12,7 +12,21 @@ namespace LibraryManagement.Models
         public int MaPhieu { get; set; }
         public int MaDocGia { get; set; }
         public string TenDocGia { get; set; }
-        public string TenCuonSach { get; set; }
+        private string _tenCuonSach;
+
+        public string TenCuonSach
+        {
+            get
+            {
+                return DanhSachTenCuonSach != null
+                    ? string.Join(", ", DanhSachTenCuonSach)
+                    : _tenCuonSach;
+            }
+            set
+            {
+                _tenCuonSach = value;
+            }
+        }
         public List<string> DanhSachTenCuonSach { get; set; }
         public DateTime NgayMuon { get; set; }
         public DateTime NgayTra { get; set; }
