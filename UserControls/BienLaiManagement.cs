@@ -138,74 +138,6 @@ namespace LibraryManagement.UserControls
             }
         }
 
-        private void BtnAdd_Click(object sender, EventArgs e)
-        {
-            using (var formAdd = new FormAddBienLai())
-            {
-                if (formAdd.ShowDialog() == DialogResult.OK)
-                {
-                    LoadBienLaiData();
-                }
-            }
-        }
-
-        private void BtnEdit_Click(object sender, EventArgs e)
-        {
-            if (dgvBienLai.CurrentRow == null)
-            {
-                MessageBox.Show("Vui lòng chọn biên lai cần sửa!", "Thông báo",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int maBienLai = Convert.ToInt32(dgvBienLai.CurrentRow.Cells["MaBienLai"].Value);
-
-            using (var formEdit = new FormEditBienLai(maBienLai))
-            {
-                if (formEdit.ShowDialog() == DialogResult.OK)
-                {
-                    LoadBienLaiData();
-                }
-            }
-        }
-
-        private void BtnDelete_Click(object sender, EventArgs e)
-        {
-            if (dgvBienLai.CurrentRow == null)
-            {
-                MessageBox.Show("Vui lòng chọn biên lai cần xóa!", "Thông báo",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var result = MessageBox.Show("Bạn có chắc chắn muốn xóa biên lai này?",
-                "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes)
-            {
-                try
-                {
-                    int maBienLai = Convert.ToInt32(dgvBienLai.CurrentRow.Cells["MaBienLai"].Value);
-                    if (_bienLaiDAO.DeleteBienLai(maBienLai))
-                    {
-                        MessageBox.Show("Xóa biên lai thành công!", "Thành công",
-                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadBienLaiData();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Xóa biên lai thất bại!", "Lỗi",
-                                      MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             txtSearch.Text = "Nhập mã biên lai, tên độc giả hoặc hình thức thanh toán...";
@@ -216,11 +148,6 @@ namespace LibraryManagement.UserControls
         private void DgvBienLai_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             // Có thể thêm logic xử lý click vào cell nếu cần
-        }
-
-        private void DgvBienLai_DoubleClick(object sender, EventArgs e)
-        {
-            BtnEdit_Click(sender, e);
         }
     }
 }

@@ -123,7 +123,7 @@ namespace LibraryManagement.UI
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Font = new Font("Segoe UI", 10)
             };
-            cboGioiTinh.Items.AddRange(new object[] { "M", "F" });
+            cboGioiTinh.Items.AddRange(new object[] { "Nam", "Nữ" });
             this.Controls.Add(cboGioiTinh);
 
             // Số điện thoại

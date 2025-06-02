@@ -127,20 +127,42 @@ namespace LibraryManagement.Repositories
             using (SqlConnection conn = dbConnection.GetConnection())
             {
                 string query = @"
-                    INSERT INTO DocGia (MaLoaiDG, HoTen, Tuoi, SoDT, CCCD, GioiTinh,
-                                      Email, DiaChi, NgayDangKy, TienNo, TrangThai, NgayTao) 
-                    VALUES (@MaLoaiDG, @HoTen, @Tuoi, @SoDT, @CCCD, @GioiTinh,
-                            @Email, @DiaChi, @NgayDangKy, @TienNo, @TrangThai, @NgayTao)";
+            INSERT INTO DocGia (MaLoaiDG, HoTen, Tuoi, SoDT, CCCD, GioiTinh,
+                              Email, DiaChi, NgayDangKy, TienNo, TrangThai, NgayTao) 
+            VALUES (@MaLoaiDG, @HoTen, @Tuoi, @SoDT, @CCCD, @GioiTinh,
+                    @Email, @DiaChi, @NgayDangKy, @TienNo, @TrangThai, @NgayTao)";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@MaLoaiDG", docGia.MaLoaiDG ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@HoTen", docGia.HoTen);
+                cmd.Parameters.AddWithValue("@HoTen", docGia.HoTen ?? "");
                 cmd.Parameters.AddWithValue("@Tuoi", docGia.Tuoi);
-                cmd.Parameters.AddWithValue("@SoDT", docGia.SoDT);
-                cmd.Parameters.AddWithValue("@CCCD", docGia.CCCD ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@GioiTinh", docGia.GioiTinh ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@Email", docGia.Email ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@DiaChi", docGia.DiaChi ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@SoDT", docGia.SoDT ?? "");
+
+                // Fix CCCD: chỉ insert nếu có đúng 12 số, không thì NULL
+                if (string.IsNullOrWhiteSpace(docGia.CCCD) || docGia.CCCD.Length != 12 || !docGia.CCCD.All(char.IsDigit))
+                {
+                    cmd.Parameters.AddWithValue("@CCCD", DBNull.Value);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@CCCD", docGia.CCCD);
+                }
+
+                // Fix GioiTinh: chỉ insert nếu là giá trị hợp lệ
+                if (string.IsNullOrWhiteSpace(docGia.GioiTinh) ||
+                    !new[] { "Nam", "Nữ", "Khác" }.Contains(docGia.GioiTinh))
+                {
+                    cmd.Parameters.AddWithValue("@GioiTinh", DBNull.Value);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@GioiTinh", docGia.GioiTinh);
+                }
+
+                cmd.Parameters.AddWithValue("@Email",
+                    string.IsNullOrWhiteSpace(docGia.Email) ? (object)DBNull.Value : docGia.Email);
+                cmd.Parameters.AddWithValue("@DiaChi",
+                    string.IsNullOrWhiteSpace(docGia.DiaChi) ? (object)DBNull.Value : docGia.DiaChi);
                 cmd.Parameters.AddWithValue("@NgayDangKy", DateTime.Now);
                 cmd.Parameters.AddWithValue("@TienNo", 0);
                 cmd.Parameters.AddWithValue("@TrangThai", true);
@@ -156,29 +178,49 @@ namespace LibraryManagement.Repositories
             using (SqlConnection conn = dbConnection.GetConnection())
             {
                 string query = @"
-                    UPDATE DocGia SET 
-                        MaLoaiDG = @MaLoaiDG,
-                        HoTen = @HoTen,
-                        Tuoi = @Tuoi,
-                        SoDT = @SoDT,
-                        CCCD = @CCCD,
-                        GioiTinh = @GioiTinh,
-                        Email = @Email,
-                        DiaChi = @DiaChi,
-                        TrangThai = @TrangThai,
-                        NgayCapNhat = @NgayCapNhat
-                    WHERE MaDocGia = @MaDocGia";
+            UPDATE DocGia SET 
+                MaLoaiDG = @MaLoaiDG,
+                HoTen = @HoTen,
+                Tuoi = @Tuoi,
+                SoDT = @SoDT,
+                CCCD = @CCCD,
+                GioiTinh = @GioiTinh,
+                Email = @Email,
+                DiaChi = @DiaChi,
+                TienNo = @TienNo,
+                TrangThai = @TrangThai,
+                NgayCapNhat = @NgayCapNhat
+            WHERE MaDocGia = @MaDocGia";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@MaDocGia", docGia.MaDocGia);
                 cmd.Parameters.AddWithValue("@MaLoaiDG", docGia.MaLoaiDG ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@HoTen", docGia.HoTen);
+                cmd.Parameters.AddWithValue("@HoTen", docGia.HoTen ?? "");
                 cmd.Parameters.AddWithValue("@Tuoi", docGia.Tuoi);
-                cmd.Parameters.AddWithValue("@SoDT", docGia.SoDT);
-                cmd.Parameters.AddWithValue("@CCCD", docGia.CCCD ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@GioiTinh", docGia.GioiTinh ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@Email", docGia.Email ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@DiaChi", docGia.DiaChi ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@SoDT", docGia.SoDT ?? "");
+
+                // CCCD validation and handling
+                if (string.IsNullOrWhiteSpace(docGia.CCCD))
+                {
+                    cmd.Parameters.AddWithValue("@CCCD", DBNull.Value);
+                }
+                else if (docGia.CCCD.Length == 12 && docGia.CCCD.All(char.IsDigit))
+                {
+                    cmd.Parameters.AddWithValue("@CCCD", docGia.CCCD);
+                }
+                else
+                {
+                    // Invalid CCCD format - set to NULL
+                    cmd.Parameters.AddWithValue("@CCCD", DBNull.Value);
+                }
+
+                cmd.Parameters.AddWithValue("@GioiTinh",
+                    string.IsNullOrWhiteSpace(docGia.GioiTinh) ? (object)DBNull.Value : docGia.GioiTinh);
+                cmd.Parameters.AddWithValue("@Email",
+                    string.IsNullOrWhiteSpace(docGia.Email) ? (object)DBNull.Value : docGia.Email);
+                cmd.Parameters.AddWithValue("@DiaChi",
+                    string.IsNullOrWhiteSpace(docGia.DiaChi) ? (object)DBNull.Value : docGia.DiaChi);
+                cmd.Parameters.AddWithValue("@TienNo", docGia.TienNo);
                 cmd.Parameters.AddWithValue("@TrangThai", docGia.TrangThai);
                 cmd.Parameters.AddWithValue("@NgayCapNhat", DateTime.Now);
 
@@ -380,6 +422,95 @@ namespace LibraryManagement.Repositories
                 }
             }
             return results;
+        }
+
+        public DocGiaDTO GetDocGiaById(int maDocGia)
+        {
+            using (SqlConnection conn = dbConnection.GetConnection())
+            {
+                string query = @"
+                SELECT 
+                    dg.MaDocGia, dg.MaLoaiDG, dg.HoTen, dg.Tuoi, dg.SoDT, 
+                    dg.CCCD, dg.GioiTinh, dg.Email, dg.DiaChi, dg.NgayDangKy,
+                    ISNULL(SUM(CASE WHEN pp.TrangThai = N'Chưa thanh toán' THEN qdp.TienPhat ELSE 0 END), 0) AS TienNo,
+                    dg.TrangThai, dg.NgayTao, dg.NgayCapNhat, dg.MaThe,
+                    ldg.TenLoaiDG
+                FROM DocGia dg
+                LEFT JOIN LoaiDocGia ldg ON dg.MaLoaiDG = ldg.MaLoaiDG
+                LEFT JOIN PhieuPhat pp ON dg.MaDocGia = pp.MaDG
+                LEFT JOIN PhieuPhat_QDP ppqdp ON pp.MaPhieuPhat = ppqdp.MaPhieuPhat
+                LEFT JOIN QDP qdp ON ppqdp.MaQDP = qdp.MaQDP
+                WHERE dg.MaDocGia = @MaDocGia
+                GROUP BY dg.MaDocGia, dg.MaLoaiDG, dg.HoTen, dg.Tuoi, dg.SoDT, 
+                        dg.CCCD, dg.GioiTinh, dg.Email, dg.DiaChi, dg.NgayDangKy,
+                        dg.TrangThai, dg.NgayTao, dg.NgayCapNhat, dg.MaThe,
+                        ldg.TenLoaiDG";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaDocGia", maDocGia);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return new DocGiaDTO()
+                    {
+                        MaDocGia = Convert.ToInt32(reader["MaDocGia"]),
+                        MaLoaiDG = reader["MaLoaiDG"] == DBNull.Value ? null : (int?)reader["MaLoaiDG"],
+                        HoTen = reader["HoTen"].ToString(),
+                        Tuoi = Convert.ToInt32(reader["Tuoi"]),
+                        SoDT = reader["SoDT"].ToString(),
+                        CCCD = reader["CCCD"]?.ToString(),
+                        GioiTinh = reader["GioiTinh"]?.ToString(),
+                        Email = reader["Email"]?.ToString(),
+                        DiaChi = reader["DiaChi"]?.ToString(),
+                        NgayDangKy = reader["NgayDangKy"] == DBNull.Value ? DateTime.Now : Convert.ToDateTime(reader["NgayDangKy"]),
+                        TienNo = reader["TienNo"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["TienNo"]),
+                        TrangThai = reader["TrangThai"] == DBNull.Value ? true : Convert.ToBoolean(reader["TrangThai"]),
+                        NgayTao = reader["NgayTao"] == DBNull.Value ? DateTime.Now : Convert.ToDateTime(reader["NgayTao"]),
+                        NgayCapNhat = reader["NgayCapNhat"] == DBNull.Value ? null : (DateTime?)reader["NgayCapNhat"],
+                        MaThe = reader["MaThe"] == DBNull.Value ? null : (int?)reader["MaThe"],
+                        TenLoaiDG = reader["TenLoaiDG"]?.ToString()
+                    };
+                }
+                return null;
+            }
+        }
+
+        // Thêm method đơn giản hơn nếu chỉ cần thông tin cơ bản
+        public DocGiaDTO GetDocGiaByIdSimple(int maDocGia)
+        {
+            using (SqlConnection conn = dbConnection.GetConnection())
+            {
+                string query = @"
+                SELECT 
+                    dg.MaDocGia, dg.HoTen, dg.SoDT, dg.Email, dg.TrangThai,
+                    ldg.TenLoaiDG
+                FROM DocGia dg
+                LEFT JOIN LoaiDocGia ldg ON dg.MaLoaiDG = ldg.MaLoaiDG
+                WHERE dg.MaDocGia = @MaDocGia";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaDocGia", maDocGia);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return new DocGiaDTO()
+                    {
+                        MaDocGia = Convert.ToInt32(reader["MaDocGia"]),
+                        HoTen = reader["HoTen"].ToString(),
+                        SoDT = reader["SoDT"].ToString(),
+                        Email = reader["Email"]?.ToString(),
+                        TrangThai = reader["TrangThai"] == DBNull.Value ? true : Convert.ToBoolean(reader["TrangThai"]),
+                        TenLoaiDG = reader["TenLoaiDG"]?.ToString()
+                    };
+                }
+                return null;
+            }
         }
     }
 }

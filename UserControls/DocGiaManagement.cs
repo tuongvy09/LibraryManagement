@@ -20,23 +20,53 @@ namespace LibraryManagement.UserControls
         private List<DocGiaDTO> currentData;
         private string placeholderText = "Nhập tên, số điện thoại hoặc CCCD...";
         private bool dataLoaded = false;
+        private bool isPlaceholderActive = true; // Track placeholder state
 
         public DocGiaManagement()
         {
             InitializeComponent();
+            InitializePlaceholder();
 
             // Đăng ký events
             dgvDocGia.DataBindingComplete += DgvDocGia_DataBindingComplete;
             this.Load += DocGiaManagement_Load;
+        }
 
+        // Khởi tạo placeholder text
+        private void InitializePlaceholder()
+        {
             // Setup placeholder text
-            txtSearch.Text = placeholderText;
-            txtSearch.ForeColor = Color.Gray;
+            SetPlaceholder();
 
             // Gán sự kiện
             txtSearch.Enter += TxtSearch_Enter;
             txtSearch.Leave += TxtSearch_Leave;
             txtSearch.KeyDown += TxtSearch_KeyDown;
+            txtSearch.TextChanged += TxtSearch_TextChanged;
+        }
+
+        // Thiết lập placeholder
+        private void SetPlaceholder()
+        {
+            if (string.IsNullOrWhiteSpace(txtSearch.Text) || isPlaceholderActive)
+            {
+                txtSearch.Text = placeholderText;
+                txtSearch.ForeColor = Color.Gray;
+                txtSearch.Font = new Font(txtSearch.Font, FontStyle.Italic);
+                isPlaceholderActive = true;
+            }
+        }
+
+        // Xóa placeholder
+        private void ClearPlaceholder()
+        {
+            if (isPlaceholderActive)
+            {
+                txtSearch.Text = "";
+                txtSearch.ForeColor = Color.Black;
+                txtSearch.Font = new Font(txtSearch.Font, FontStyle.Regular);
+                isPlaceholderActive = false;
+            }
         }
 
         // Event handler cho Load
@@ -104,8 +134,11 @@ namespace LibraryManagement.UserControls
         {
             if (this.IsHandleCreated || this.Created)
             {
+                ClearPlaceholder();
                 txtSearch.Text = searchText;
                 txtSearch.ForeColor = Color.Black;
+                txtSearch.Font = new Font(txtSearch.Font, FontStyle.Regular);
+                isPlaceholderActive = false;
                 SearchDocGia();
             }
         }
@@ -115,8 +148,7 @@ namespace LibraryManagement.UserControls
         {
             if (this.IsHandleCreated || this.Created)
             {
-                txtSearch.Text = placeholderText;
-                txtSearch.ForeColor = Color.Gray;
+                SetPlaceholder();
                 LoadData();
             }
         }
@@ -180,6 +212,22 @@ namespace LibraryManagement.UserControls
                     dgvDocGia.Columns["TienNo"].HeaderText = "Tiền nợ";
                 if (dgvDocGia.Columns["TrangThai"] != null)
                     dgvDocGia.Columns["TrangThai"].HeaderText = "Trạng thái";
+
+                // Căn giữa cho một số cột
+                if (dgvDocGia.Columns["MaDocGia"] != null)
+                    dgvDocGia.Columns["MaDocGia"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                if (dgvDocGia.Columns["Tuoi"] != null)
+                    dgvDocGia.Columns["Tuoi"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                if (dgvDocGia.Columns["SoDT"] != null)
+                    dgvDocGia.Columns["SoDT"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                if (dgvDocGia.Columns["CCCD"] != null)
+                    dgvDocGia.Columns["CCCD"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                if (dgvDocGia.Columns["NgayDangKy"] != null)
+                    dgvDocGia.Columns["NgayDangKy"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                if (dgvDocGia.Columns["TienNo"] != null)
+                    dgvDocGia.Columns["TienNo"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                if (dgvDocGia.Columns["TrangThai"] != null)
+                    dgvDocGia.Columns["TrangThai"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             }
             catch (Exception ex)
             {
@@ -229,22 +277,27 @@ namespace LibraryManagement.UserControls
             }
         }
 
-        // Xử lý placeholder text
+        // ===== XỬ LÝ PLACEHOLDER TEXT =====
         private void TxtSearch_Enter(object sender, EventArgs e)
         {
-            if (txtSearch.Text == placeholderText && txtSearch.ForeColor == Color.Gray)
-            {
-                txtSearch.Text = "";
-                txtSearch.ForeColor = Color.Black;
-            }
+            ClearPlaceholder();
         }
 
         private void TxtSearch_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtSearch.Text))
             {
-                txtSearch.Text = placeholderText;
-                txtSearch.ForeColor = Color.Gray;
+                SetPlaceholder();
+            }
+        }
+
+        private void TxtSearch_TextChanged(object sender, EventArgs e)
+        {
+            // Nếu user đang nhập và không phải placeholder
+            if (!isPlaceholderActive && txtSearch.Focused)
+            {
+                txtSearch.ForeColor = Color.Black;
+                txtSearch.Font = new Font(txtSearch.Font, FontStyle.Regular);
             }
         }
 
@@ -253,9 +306,18 @@ namespace LibraryManagement.UserControls
             if (e.KeyCode == Keys.Enter)
             {
                 BtnSearch_Click(sender, e);
+                e.Handled = true; // Ngăn tiếng beep
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                BtnRefresh_Click(sender, e);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
         }
 
+        // ===== CÁC BUTTON EVENTS =====
         private void BtnAdd_Click(object sender, EventArgs e)
         {
             using (var formAdd = new FormAddEditDocGia())
@@ -336,6 +398,8 @@ namespace LibraryManagement.UserControls
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             ClearSearch();
+            MessageBox.Show("Đã làm mới dữ liệu!", "Thông báo",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void BtnSearch_Click(object sender, EventArgs e)
@@ -347,34 +411,45 @@ namespace LibraryManagement.UserControls
         {
             try
             {
-                string searchText = txtSearch.Text.Trim();
-
-                if (searchText == placeholderText || string.IsNullOrEmpty(searchText))
+                // Kiểm tra nếu đang hiển thị placeholder
+                if (isPlaceholderActive || string.IsNullOrWhiteSpace(txtSearch.Text))
                 {
                     LoadData();
+                    return;
+                }
+
+                string searchText = txtSearch.Text.Trim();
+                var searchResults = docGiaDAO.SearchDocGia(searchText);
+
+                var displayData = searchResults.Select(dg => new
+                {
+                    MaDocGia = dg.MaDocGia,
+                    HoTen = dg.HoTen,
+                    Tuoi = dg.Tuoi,
+                    SoDT = dg.SoDT,
+                    CCCD = dg.CCCD,
+                    Email = dg.Email,
+                    DiaChi = dg.DiaChi,
+                    TenLoaiDG = dg.TenLoaiDG,
+                    NgayDangKy = dg.NgayDangKy.ToString("dd/MM/yyyy"),
+                    TienNo = dg.TienNo.ToString("N0") + " VNĐ",
+                    TrangThai = dg.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
+                }).ToList();
+
+                dgvDocGia.DataSource = displayData;
+                currentData = searchResults;
+
+                // Hiển thị kết quả tìm kiếm
+                if (searchResults.Count == 0)
+                {
+                    MessageBox.Show($"Không tìm thấy độc giả nào với từ khóa '{searchText}'!", "Kết quả tìm kiếm",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    var searchResults = docGiaDAO.SearchDocGia(searchText);
-                    var displayData = searchResults.Select(dg => new
-                    {
-                        MaDocGia = dg.MaDocGia,
-                        HoTen = dg.HoTen,
-                        Tuoi = dg.Tuoi,
-                        SoDT = dg.SoDT,
-                        CCCD = dg.CCCD,
-                        Email = dg.Email,
-                        DiaChi = dg.DiaChi,
-                        TenLoaiDG = dg.TenLoaiDG,
-                        NgayDangKy = dg.NgayDangKy.ToString("dd/MM/yyyy"),
-                        TienNo = dg.TienNo.ToString("N0") + " VNĐ",
-                        TrangThai = dg.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
-                    }).ToList();
-
-                    dgvDocGia.DataSource = displayData;
-                    currentData = searchResults;
-                    // SetupColumnHeaders sẽ được gọi trong event DataBindingComplete
+                    lblTitle.Text = $"QUẢN LÝ ĐỘC GIẢ - Tìm thấy {searchResults.Count} kết quả";
                 }
+                // SetupColumnHeaders sẽ được gọi trong event DataBindingComplete
             }
             catch (Exception ex)
             {
@@ -392,5 +467,13 @@ namespace LibraryManagement.UserControls
         {
             // Có thể thêm logic xử lý click vào cell nếu cần
         }
+
+        // Reset title khi clear search
+        private void ResetTitle()
+        {
+            lblTitle.Text = "QUẢN LÝ ĐỘC GIẢ";
+        }
+
+        // Override các method public để reset title
     }
 }

@@ -209,11 +209,13 @@ namespace LibraryManagement
             switch (item)
             {
                 case "Quản lý Thủ thư":
-                    newForm = new FormThuThuManagement();
+                    newContent = new ThuThuManagement();
+                    newContent.Dock = DockStyle.Fill;
                     break;
 
                 case "Quản lý Độc giả":
-                    newForm = new FormDocGiaManagement();
+                    newContent = new DocGiaManagement();
+                    newContent.Dock = DockStyle.Fill;
                     break;
 
                 case "Quản lý Thẻ thư viện":

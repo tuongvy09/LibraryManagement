@@ -18,7 +18,6 @@ namespace LibraryManagement.UserControls
         private readonly ThongKeDAO thongKeDAO = new ThongKeDAO();
         private bool dataLoaded = false;
         private bool isLoading = false;
-        private bool columnsInitialized = false;
         private CuonSachRepository CuonSachRepository = new CuonSachRepository();
 
         private ComboBox cboThongKeTheo;
@@ -26,14 +25,10 @@ namespace LibraryManagement.UserControls
         private NumericUpDown numThangThongKe;
         private DataGridView dgvThongKeSachMuon;
 
-
         public ThongKeManagement()
         {
             InitializeComponent();
             this.Load += ThongKeManagement_Load;
-
-            // Khởi tạo columns ngay từ đầu
-            KhoiTaoDataGridViewColumns();
 
             // Khởi tạo giá trị mặc định cho ComboBox
             InitializeComboBoxes();
@@ -43,115 +38,6 @@ namespace LibraryManagement.UserControls
             LoadTop10BestSellerData();
 
             InitializeTabSachMuon();
-
-        }
-
-        private void KhoiTaoDataGridViewColumns()
-        {
-            try
-            {
-                if (columnsInitialized) return;
-
-                dgvThongKe.AutoGenerateColumns = false;
-                dgvThongKe.Columns.Clear();
-
-                // Tạo từng column một cách manual
-                DataGridViewTextBoxColumn colSTT = new DataGridViewTextBoxColumn
-                {
-                    Name = "STT",
-                    HeaderText = "STT",
-                    DataPropertyName = "STT",
-                    Width = 50,
-                    ReadOnly = true
-                };
-                dgvThongKe.Columns.Add(colSTT);
-
-                DataGridViewTextBoxColumn colMaDocGia = new DataGridViewTextBoxColumn
-                {
-                    Name = "MaDocGia",
-                    HeaderText = "Mã ĐG",
-                    DataPropertyName = "MaDocGia",
-                    Width = 80,
-                    ReadOnly = true
-                };
-                dgvThongKe.Columns.Add(colMaDocGia);
-
-                DataGridViewTextBoxColumn colHoTen = new DataGridViewTextBoxColumn
-                {
-                    Name = "HoTen",
-                    HeaderText = "Họ tên",
-                    DataPropertyName = "HoTen",
-                    Width = 150,
-                    ReadOnly = true
-                };
-                dgvThongKe.Columns.Add(colHoTen);
-
-                DataGridViewTextBoxColumn colTongTienMuon = new DataGridViewTextBoxColumn
-                {
-                    Name = "TongTienMuon",
-                    HeaderText = "Tiền mượn",
-                    DataPropertyName = "TongTienMuon",
-                    Width = 120,
-                    ReadOnly = true
-                };
-                dgvThongKe.Columns.Add(colTongTienMuon);
-
-                DataGridViewTextBoxColumn colTongTienPhat = new DataGridViewTextBoxColumn
-                {
-                    Name = "TongTienPhat",
-                    HeaderText = "Tiền phạt",
-                    DataPropertyName = "TongTienPhat",
-                    Width = 120,
-                    ReadOnly = true
-                };
-                dgvThongKe.Columns.Add(colTongTienPhat);
-
-                DataGridViewTextBoxColumn colTongCong = new DataGridViewTextBoxColumn
-                {
-                    Name = "TongCong",
-                    HeaderText = "Tổng cộng",
-                    DataPropertyName = "TongCong",
-                    Width = 130,
-                    ReadOnly = true,
-                    DefaultCellStyle = new DataGridViewCellStyle
-                    {
-                        Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                        ForeColor = Color.Red
-                    }
-                };
-                dgvThongKe.Columns.Add(colTongCong);
-
-                DataGridViewTextBoxColumn colSoLanMuon = new DataGridViewTextBoxColumn
-                {
-                    Name = "SoLanMuon",
-                    HeaderText = "Số lần mượn",
-                    DataPropertyName = "SoLanMuon",
-                    Width = 100,
-                    ReadOnly = true
-                };
-                dgvThongKe.Columns.Add(colSoLanMuon);
-
-                DataGridViewTextBoxColumn colLanMuonGanNhat = new DataGridViewTextBoxColumn
-                {
-                    Name = "LanMuonGanNhat",
-                    HeaderText = "Lần mượn gần nhất",
-                    DataPropertyName = "LanMuonGanNhat",
-                    Width = 130,
-                    ReadOnly = true
-                };
-                dgvThongKe.Columns.Add(colLanMuonGanNhat);
-
-                // Áp dụng style ngay
-                StyleDataGridView();
-
-                columnsInitialized = true;
-                System.Diagnostics.Debug.WriteLine("DataGridView columns đã được khởi tạo thành công!");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Lỗi khởi tạo columns: {ex.Message}");
-                MessageBox.Show($"Lỗi khởi tạo bảng: {ex.Message}", "Lỗi");
-            }
         }
 
         private void InitializeComboBoxes()
@@ -263,8 +149,7 @@ namespace LibraryManagement.UserControls
                 }
 
                 LoadThongKeDocGiaChart(nam);
-                LoadThongKeDoanhThuChart(nam); // ✅ Đổi tên method và gọi doanh thu
-                LoadThongKeTienMuonTable(thang, nam);
+                LoadThongKeDoanhThuChart(nam);
 
                 dataLoaded = true;
             }
@@ -330,7 +215,6 @@ namespace LibraryManagement.UserControls
             }
         }
 
-        // ✅ NEW - Method thống kê doanh thu từ bảng BienLai
         private void LoadThongKeDoanhThuChart(int nam)
         {
             try
@@ -448,103 +332,6 @@ namespace LibraryManagement.UserControls
             }
         }
 
-        private void LoadThongKeTienMuonTable(int thang, int nam)
-        {
-            try
-            {
-                // Đảm bảo columns đã được khởi tạo
-                if (!columnsInitialized)
-                {
-                    KhoiTaoDataGridViewColumns();
-                }
-
-                var data = thongKeDAO.GetThongKeTienMuonDocGia(thang, nam);
-
-                // Tạo DataTable đơn giản
-                DataTable dt = new DataTable();
-                dt.Columns.Add("STT", typeof(int));
-                dt.Columns.Add("MaDocGia", typeof(string));
-                dt.Columns.Add("HoTen", typeof(string));
-                dt.Columns.Add("TongTienMuon", typeof(string));
-                dt.Columns.Add("TongTienPhat", typeof(string));
-                dt.Columns.Add("TongCong", typeof(string));
-                dt.Columns.Add("SoLanMuon", typeof(int));
-                dt.Columns.Add("LanMuonGanNhat", typeof(string));
-
-                if (data == null || data.Count == 0)
-                {
-                    // Thêm dòng dữ liệu rỗng
-                    dt.Rows.Add(1, "N/A", "Không có dữ liệu cho tháng này", "0 VNĐ", "0 VNĐ", "0 VNĐ", 0, "N/A");
-                }
-                else
-                {
-                    // Thêm dữ liệu thực
-                    int index = 1;
-                    foreach (var x in data.Take(20))
-                    {
-                        dt.Rows.Add(
-                            index++,
-                            x.MaDocGia.ToString(),
-                            x.HoTen,
-                            x.TongTienMuon.ToString("N0") + " VNĐ",
-                            x.TongTienPhat.ToString("N0") + " VNĐ",
-                            x.TongCong.ToString("N0") + " VNĐ",
-                            x.SoLanMuon,
-                            x.LanMuonGanNhat?.ToString("dd/MM/yyyy") ?? "Chưa mượn"
-                        );
-                    }
-                }
-
-                // Binding dữ liệu
-                dgvThongKe.DataSource = dt;
-
-                // Cập nhật label
-                lblThongKeThang.Text = $"🏆 Top 20 độc giả có chi phí cao nhất - Tháng {thang}/{nam}";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi tải bảng thống kê: {ex.Message}", "Lỗi");
-                dgvThongKe.DataSource = null;
-            }
-        }
-
-        private void StyleDataGridView()
-        {
-            try
-            {
-                if (dgvThongKe == null) return;
-
-                // Header style
-                dgvThongKe.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(115, 154, 79);
-                dgvThongKe.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-                dgvThongKe.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-                dgvThongKe.ColumnHeadersHeight = 35;
-                dgvThongKe.EnableHeadersVisualStyles = false;
-
-                // Row style
-                dgvThongKe.RowTemplate.Height = 30;
-                dgvThongKe.DefaultCellStyle.Font = new Font("Segoe UI", 9F);
-                dgvThongKe.DefaultCellStyle.SelectionBackColor = Color.FromArgb(115, 154, 79);
-                dgvThongKe.DefaultCellStyle.SelectionForeColor = Color.White;
-                dgvThongKe.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 249, 250);
-
-                // Border
-                dgvThongKe.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-                dgvThongKe.GridColor = Color.LightGray;
-
-                // Misc
-                dgvThongKe.AllowUserToAddRows = false;
-                dgvThongKe.AllowUserToDeleteRows = false;
-                dgvThongKe.ReadOnly = true;
-                dgvThongKe.MultiSelect = false;
-                dgvThongKe.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Lỗi style DataGridView: {ex.Message}");
-            }
-        }
-
         private void CboNam_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (dataLoaded && !isLoading)
@@ -573,6 +360,7 @@ namespace LibraryManagement.UserControls
                 MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void LoadTop10BestSellerData()
         {
             dgvBestSeller.Rows.Clear();
@@ -745,6 +533,5 @@ namespace LibraryManagement.UserControls
             var data = thongKeDAO.GetTatCaSachDangMuon();
             dgvThongKeSachMuon.DataSource = data;
         }
-
     }
 }
