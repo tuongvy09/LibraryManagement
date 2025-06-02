@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using LibraryManagement.Repositories;
 using LibraryManagement.Models;
+using LibraryManagement.UI;
 
 namespace LibraryManagement.UserControls
 {
@@ -350,15 +351,18 @@ namespace LibraryManagement.UserControls
 
         private void BtnExport_Click(object sender, EventArgs e)
         {
-            try
+            if (dgvThongKe.Rows.Count == 0 && dgvThongKeSachMuon.Rows.Count == 0)
             {
-                MessageBox.Show("Chức năng xuất báo cáo Excel đang được phát triển!\n\nDữ liệu hiện tại có thể copy từ bảng thống kê.",
-                    "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Không có dữ liệu để xuất!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+
+            DataTable dtChiPhi = ConvertDataGridViewToDataTable(dgvThongKe);
+            DataTable dtSachMuon = ConvertDataGridViewToDataTable(dgvThongKeSachMuon);
+            var dtTop10 = GetTop10SachMuonDataTable();
+
+            FormThongKeReport form = new FormThongKeReport(dtChiPhi, dtSachMuon, dtTop10);
+            form.ShowDialog();
         }
 
         private void LoadTop10BestSellerData()
@@ -533,5 +537,51 @@ namespace LibraryManagement.UserControls
             var data = thongKeDAO.GetTatCaSachDangMuon();
             dgvThongKeSachMuon.DataSource = data;
         }
+<<<<<<< HEAD
+=======
+
+        private DataTable ConvertDataGridViewToDataTable(DataGridView dgv)
+        {
+            var dt = new DataTable();
+            foreach (DataGridViewColumn col in dgv.Columns)
+            {
+                dt.Columns.Add(col.Name, typeof(string));
+            }
+
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    var newRow = dt.NewRow();
+                    foreach (DataGridViewColumn col in dgv.Columns)
+                    {
+                        newRow[col.Name] = row.Cells[col.Index].Value?.ToString() ?? "";
+                    }
+                    dt.Rows.Add(newRow);
+                }
+            }
+
+            return dt;
+        }
+
+        private DataTable GetTop10SachMuonDataTable()
+        {
+            var list = CuonSachRepository.GetTop10CuonSachHot();
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("STT", typeof(int));
+            dt.Columns.Add("TenSach", typeof(string));
+            dt.Columns.Add("SoLuong", typeof(int));
+
+            int stt = 1;
+            foreach (var sach in list)
+            {
+                dt.Rows.Add(stt++, $"{sach.TenCuonSach} ({sach.TenDauSach})", sach.SoLuongMuon);
+            }
+
+            return dt;
+        }
+
+>>>>>>> 2854fc3154537b7a3e30ce04aca0812e768b6298
     }
 }
