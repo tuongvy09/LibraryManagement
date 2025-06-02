@@ -28,15 +28,14 @@ namespace LibraryManagement.UI
         {
             qrImage = qr;
             cardInfo = card;
-            InitializeCustomComponents(); // CHANGED: Đổi tên method
+            InitializeCustomComponents();
             DisplayQRCode();
         }
 
-        // CHANGED: Đổi tên từ InitializeComponent() thành InitializeCustomComponents()
         private void InitializeCustomComponents()
         {
             this.Text = "QR Code - Thẻ Thư Viện";
-            this.Size = new Size(480, 520);
+            this.Size = new Size(520, 600); // Tăng height từ 560 → 600
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -50,7 +49,7 @@ namespace LibraryManagement.UI
                 Text = "QR CODE THẺ THƯ VIỆN",
                 Font = new Font("Segoe UI", 14, FontStyle.Bold),
                 ForeColor = mainColor,
-                Location = new Point(120, 15),
+                Location = new Point(140, 15),
                 AutoSize = true
             };
             this.Controls.Add(lblTitle);
@@ -58,7 +57,7 @@ namespace LibraryManagement.UI
             // QR Code PictureBox
             picQR = new PictureBox()
             {
-                Location = new Point(90, 50),
+                Location = new Point(110, 50),
                 Size = new Size(300, 300),
                 SizeMode = PictureBoxSizeMode.Zoom,
                 BorderStyle = BorderStyle.FixedSingle,
@@ -69,7 +68,7 @@ namespace LibraryManagement.UI
             // Info label
             lblInfo = new Label()
             {
-                Location = new Point(50, 360),
+                Location = new Point(70, 360),
                 Size = new Size(380, 80),
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Segoe UI", 10),
@@ -81,7 +80,7 @@ namespace LibraryManagement.UI
             btnSave = new Button()
             {
                 Text = "💾 Lưu QR",
-                Location = new Point(60, 450),
+                Location = new Point(30, 470),
                 Size = new Size(100, 35),
                 BackColor = mainColor,
                 ForeColor = Color.White,
@@ -92,11 +91,11 @@ namespace LibraryManagement.UI
             btnSave.Click += BtnSave_Click;
             this.Controls.Add(btnSave);
 
-            // Print button  
+            // Print button
             btnPrint = new Button()
             {
                 Text = "🖨️ In thẻ",
-                Location = new Point(170, 450),
+                Location = new Point(145, 470),
                 Size = new Size(100, 35),
                 BackColor = ColorTranslator.FromHtml("#2196F3"),
                 ForeColor = Color.White,
@@ -111,7 +110,7 @@ namespace LibraryManagement.UI
             Button btnCopy = new Button()
             {
                 Text = "📋 Copy",
-                Location = new Point(280, 450),
+                Location = new Point(260, 470),
                 Size = new Size(80, 35),
                 BackColor = ColorTranslator.FromHtml("#FF9800"),
                 ForeColor = Color.White,
@@ -126,7 +125,7 @@ namespace LibraryManagement.UI
             btnClose = new Button()
             {
                 Text = "❌ Đóng",
-                Location = new Point(370, 450),
+                Location = new Point(355, 470),
                 Size = new Size(80, 35),
                 BackColor = Color.Gray,
                 ForeColor = Color.White,
@@ -136,6 +135,29 @@ namespace LibraryManagement.UI
             btnClose.FlatAppearance.BorderSize = 0;
             btnClose.Click += (s, e) => this.Close();
             this.Controls.Add(btnClose);
+
+            // Label hướng dẫn phím tắt
+            Label lblShortcuts = new Label()
+            {
+                Text = "Phím tắt: S-Lưu | P-In | C-Copy | Esc-Đóng",
+                Font = new Font("Segoe UI", 8, FontStyle.Italic),
+                ForeColor = Color.Gray,
+                Location = new Point(30, 520), 
+                Size = new Size(460, 20), 
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+            this.Controls.Add(lblShortcuts);
+
+            Label lblQRInfo = new Label()
+            {
+                Text = "QR Code chứa thông tin thẻ để kiểm tra nhanh",
+                Font = new Font("Segoe UI", 8, FontStyle.Regular),
+                ForeColor = Color.DarkGray,
+                Location = new Point(30, 545),
+                Size = new Size(460, 15),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+            this.Controls.Add(lblQRInfo);
         }
 
         private void DisplayQRCode()
@@ -243,6 +265,27 @@ namespace LibraryManagement.UI
                 MessageBox.Show("✅ Đã gửi lệnh in thẻ!", "Thành công",
                               MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        // Thêm keyboard shortcuts
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.S:
+                    BtnSave_Click(null, null);
+                    return true;
+                case Keys.P:
+                    BtnPrint_Click(null, null);
+                    return true;
+                case Keys.C:
+                    BtnCopy_Click(null, null);
+                    return true;
+                case Keys.Escape:
+                    this.Close();
+                    return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }

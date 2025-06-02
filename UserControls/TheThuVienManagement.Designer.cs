@@ -140,7 +140,7 @@ namespace LibraryManagement.UserControls
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(107, 43);
             this.btnEdit.TabIndex = 5;
-            this.btnEdit.Text = "Sửa";
+            this.btnEdit.Text = "Gia hạn thẻ";
             this.btnEdit.UseVisualStyleBackColor = false;
             this.btnEdit.Click += new System.EventHandler(this.BtnEdit_Click);
 

@@ -14,8 +14,7 @@ namespace LibraryManagement.UI
     {
         private Label lblTitle;
         private Label lblMaThe, lblDocGia, lblNgayCap, lblNgayHetHan, lblTrangThai;
-        private TextBox txtMaThe;
-        private ComboBox cboDocGia;
+        private TextBox txtMaThe, txtDocGia;
         private DateTimePicker dtpNgayCap, dtpNgayHetHan;
         private Label lblTrangThaiValue;
         private Button btnSave, btnCancel;
@@ -28,14 +27,13 @@ namespace LibraryManagement.UI
         {
             InitializeComponentForm();
             InitializeCustomStyle();
-            LoadComboBoxData();
             LoadTheThuVienData(maThe);
         }
 
         private void InitializeComponentForm()
         {
-            this.Text = "Sửa Thẻ Thư Viện";
-            this.Size = new Size(500, 400);
+            this.Text = "Gia hạn Thẻ Thư Viện";
+            this.Size = new Size(500, 420);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -48,10 +46,10 @@ namespace LibraryManagement.UI
 
             lblTitle = new Label()
             {
-                Text = "Sửa Thẻ Thư Viện",
+                Text = "Gia hạn Thẻ Thư Viện",
                 Font = new Font("Segoe UI", 14, FontStyle.Bold),
                 ForeColor = mainColor,
-                Location = new Point(170, 15),
+                Location = new Point(150, 15),
                 AutoSize = true
             };
             this.Controls.Add(lblTitle);
@@ -77,10 +75,10 @@ namespace LibraryManagement.UI
             };
             this.Controls.Add(txtMaThe);
 
-            // Độc giả
+            // Độc giả (readonly)
             lblDocGia = new Label()
             {
-                Text = "Độc giả: *",
+                Text = "Độc giả:",
                 Location = new Point(20, 100),
                 AutoSize = true,
                 Font = new Font("Segoe UI", 10),
@@ -88,19 +86,20 @@ namespace LibraryManagement.UI
             };
             this.Controls.Add(lblDocGia);
 
-            cboDocGia = new ComboBox()
+            txtDocGia = new TextBox()
             {
                 Location = new Point(150, 97),
                 Width = 300,
-                DropDownStyle = ComboBoxStyle.DropDownList,
+                ReadOnly = true,
+                BackColor = Color.LightGray,
                 Font = new Font("Segoe UI", 10)
             };
-            this.Controls.Add(cboDocGia);
+            this.Controls.Add(txtDocGia);
 
             // Ngày cấp
             lblNgayCap = new Label()
             {
-                Text = "Ngày cấp: *",
+                Text = "Ngày cấp:",
                 Location = new Point(20, 140),
                 AutoSize = true,
                 Font = new Font("Segoe UI", 10),
@@ -115,6 +114,7 @@ namespace LibraryManagement.UI
                 Format = DateTimePickerFormat.Short,
                 Font = new Font("Segoe UI", 10)
             };
+            dtpNgayCap.ValueChanged += DtpNgayCap_ValueChanged;
             this.Controls.Add(dtpNgayCap);
 
             // Ngày hết hạn
@@ -123,8 +123,8 @@ namespace LibraryManagement.UI
                 Text = "Ngày hết hạn: *",
                 Location = new Point(20, 180),
                 AutoSize = true,
-                Font = new Font("Segoe UI", 10),
-                ForeColor = mainColor
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                ForeColor = Color.Red
             };
             this.Controls.Add(lblNgayHetHan);
 
@@ -133,7 +133,8 @@ namespace LibraryManagement.UI
                 Location = new Point(150, 177),
                 Width = 200,
                 Format = DateTimePickerFormat.Short,
-                Font = new Font("Segoe UI", 10)
+                Font = new Font("Segoe UI", 10),
+                BackColor = Color.LightYellow // Highlight field chính
             };
             dtpNgayHetHan.ValueChanged += DtpNgayHetHan_ValueChanged;
             this.Controls.Add(dtpNgayHetHan);
@@ -159,14 +160,25 @@ namespace LibraryManagement.UI
             };
             this.Controls.Add(lblTrangThaiValue);
 
+            // Thông tin gia hạn
+            Label lblGiaHanInfo = new Label()
+            {
+                Text = "💡 Thay đổi ngày hết hạn để gia hạn thẻ",
+                Location = new Point(20, 250),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 9, FontStyle.Italic),
+                ForeColor = Color.Blue
+            };
+            this.Controls.Add(lblGiaHanInfo);
+
             // Buttons
             btnSave = new Button()
             {
-                Text = "Lưu",
+                Text = "✅ Gia hạn",
                 BackColor = mainColor,
                 ForeColor = Color.White,
-                Location = new Point(150, 280),
-                Size = new Size(80, 35),
+                Location = new Point(150, 300),
+                Size = new Size(100, 35),
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10)
             };
@@ -176,10 +188,10 @@ namespace LibraryManagement.UI
 
             btnCancel = new Button()
             {
-                Text = "Hủy",
+                Text = "❌ Hủy",
                 BackColor = Color.Gray,
                 ForeColor = Color.White,
-                Location = new Point(250, 280),
+                Location = new Point(270, 300),
                 Size = new Size(80, 35),
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10)
@@ -189,36 +201,30 @@ namespace LibraryManagement.UI
             this.Controls.Add(btnCancel);
 
             // Thêm ghi chú
-            Label lblNote = new Label()
+            //Label lblNote = new Label()
+            //{
+            //    Text = "* Trường bắt buộc - Focus vào ngày hết hạn để gia hạn",
+            //    Location = new Point(20, 275),
+            //    AutoSize = true,
+            //    Font = new Font("Segoe UI", 8, FontStyle.Italic),
+            //    ForeColor = Color.Red
+            //};
+            //this.Controls.Add(lblNote);
+
+            // Thêm button tự động gia hạn
+            Button btnAutoExtend = new Button()
             {
-                Text = "* Trường bắt buộc",
-                Location = new Point(20, 250),
-                AutoSize = true,
-                Font = new Font("Segoe UI", 8, FontStyle.Italic),
-                ForeColor = Color.Red
+                Text = "📅 +1 năm",
+                BackColor = Color.Orange,
+                ForeColor = Color.White,
+                Location = new Point(360, 177),
+                Size = new Size(80, 30),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 8)
             };
-            this.Controls.Add(lblNote);
-        }
-
-        private void LoadComboBoxData()
-        {
-            try
-            {
-                var docGiaList = docGiaDAO.GetAllDocGia().Where(d => d.TrangThai).ToList();
-
-                // Thêm item mặc định
-                var defaultItem = new DocGiaDTO { MaDocGia = 0, HoTen = "-- Chọn độc giả --" };
-                docGiaList.Insert(0, defaultItem);
-
-                cboDocGia.DataSource = docGiaList;
-                cboDocGia.DisplayMember = "HoTen";
-                cboDocGia.ValueMember = "MaDocGia";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi tải danh sách độc giả: {ex.Message}",
-                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            btnAutoExtend.FlatAppearance.BorderSize = 0;
+            btnAutoExtend.Click += BtnAutoExtend_Click;
+            this.Controls.Add(btnAutoExtend);
         }
 
         private void LoadTheThuVienData(int maThe)
@@ -229,10 +235,24 @@ namespace LibraryManagement.UI
                 if (theThuVienToEdit != null)
                 {
                     txtMaThe.Text = theThuVienToEdit.MaThe.ToString();
-                    cboDocGia.SelectedValue = theThuVienToEdit.MaDG ?? 0;
+
+                    // Load thông tin độc giả - CHỈ HIỂN THỊ TÊN
+                    if (theThuVienToEdit.MaDG.HasValue)
+                    {
+                        var docGia = docGiaDAO.GetDocGiaById(theThuVienToEdit.MaDG.Value);
+                        txtDocGia.Text = docGia != null ? docGia.HoTen : "Không tìm thấy thông tin độc giả";
+                    }
+                    else
+                    {
+                        txtDocGia.Text = "Chưa gán độc giả";
+                    }
+
                     dtpNgayCap.Value = theThuVienToEdit.NgayCap;
                     dtpNgayHetHan.Value = theThuVienToEdit.NgayHetHan;
                     UpdateTrangThaiDisplay();
+
+                    // Focus vào ngày hết hạn (trường chính cần sửa)
+                    dtpNgayHetHan.Focus();
                 }
                 else
                 {
@@ -249,6 +269,17 @@ namespace LibraryManagement.UI
             }
         }
 
+        private void DtpNgayCap_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateTrangThaiDisplay();
+
+            // Tự động điều chỉnh ngày hết hạn nếu nhỏ hơn ngày cấp
+            if (dtpNgayHetHan.Value <= dtpNgayCap.Value)
+            {
+                dtpNgayHetHan.Value = dtpNgayCap.Value.AddYears(1);
+            }
+        }
+
         private void DtpNgayHetHan_ValueChanged(object sender, EventArgs e)
         {
             UpdateTrangThaiDisplay();
@@ -259,6 +290,30 @@ namespace LibraryManagement.UI
             bool conHieuLuc = DateTime.Now <= dtpNgayHetHan.Value;
             lblTrangThaiValue.Text = conHieuLuc ? "Còn hiệu lực" : "Hết hạn";
             lblTrangThaiValue.ForeColor = conHieuLuc ? Color.Green : Color.Red;
+
+            // Hiển thị số ngày còn lại hoặc đã hết hạn
+            TimeSpan timeSpan = dtpNgayHetHan.Value - DateTime.Now;
+            if (conHieuLuc)
+            {
+                lblTrangThaiValue.Text += $" ({timeSpan.Days} ngày)";
+            }
+            else
+            {
+                lblTrangThaiValue.Text += $" ({Math.Abs(timeSpan.Days)} ngày)";
+            }
+        }
+
+        private void BtnAutoExtend_Click(object sender, EventArgs e)
+        {
+            // Tự động gia hạn thêm 1 năm từ ngày hiện tại hoặc ngày hết hạn cũ
+            DateTime newExpiryDate = dtpNgayHetHan.Value > DateTime.Now ?
+                dtpNgayHetHan.Value.AddYears(1) :
+                DateTime.Now.AddYears(1);
+
+            dtpNgayHetHan.Value = newExpiryDate;
+
+            MessageBox.Show($"Đã tự động gia hạn đến {newExpiryDate:dd/MM/yyyy}", "Thông báo",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
@@ -268,7 +323,8 @@ namespace LibraryManagement.UI
 
             try
             {
-                theThuVienToEdit.MaDG = Convert.ToInt32(cboDocGia.SelectedValue);
+                DateTime oldExpiryDate = theThuVienToEdit.NgayHetHan;
+
                 theThuVienToEdit.NgayCap = dtpNgayCap.Value.Date;
                 theThuVienToEdit.NgayHetHan = dtpNgayHetHan.Value.Date;
 
@@ -276,14 +332,19 @@ namespace LibraryManagement.UI
 
                 if (success)
                 {
-                    MessageBox.Show("Cập nhật thẻ thư viện thành công!",
-                        "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    string message = "Gia hạn thẻ thư viện thành công!\n\n";
+                    message += $"Ngày hết hạn cũ: {oldExpiryDate:dd/MM/yyyy}\n";
+                    message += $"Ngày hết hạn mới: {theThuVienToEdit.NgayHetHan:dd/MM/yyyy}";
+
+                    MessageBox.Show(message, "Thành công",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Cập nhật thẻ thư viện thất bại!",
+                    MessageBox.Show("Gia hạn thẻ thư viện thất bại!",
                         "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -296,24 +357,6 @@ namespace LibraryManagement.UI
 
         private bool ValidateInput()
         {
-            if (cboDocGia.SelectedValue == null || Convert.ToInt32(cboDocGia.SelectedValue) == 0)
-            {
-                MessageBox.Show("Vui lòng chọn độc giả!", "Thông báo",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cboDocGia.Focus();
-                return false;
-            }
-
-            // Kiểm tra độc giả đã có thẻ khác chưa (trừ thẻ hiện tại)
-            int maDG = Convert.ToInt32(cboDocGia.SelectedValue);
-            if (theThuVienDAO.CheckDocGiaHasCard(maDG, theThuVienToEdit.MaThe))
-            {
-                MessageBox.Show("Độc giả này đã có thẻ thư viện khác!", "Thông báo",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cboDocGia.Focus();
-                return false;
-            }
-
             if (dtpNgayHetHan.Value <= dtpNgayCap.Value)
             {
                 MessageBox.Show("Ngày hết hạn phải sau ngày cấp!", "Thông báo",
@@ -322,7 +365,46 @@ namespace LibraryManagement.UI
                 return false;
             }
 
+            // Cảnh báo nếu gia hạn quá xa trong tương lai
+            if (dtpNgayHetHan.Value > DateTime.Now.AddYears(5))
+            {
+                var result = MessageBox.Show(
+                    "Ngày hết hạn xa quá trong tương lai (>5 năm).\nBạn có chắc chắn muốn tiếp tục?",
+                    "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.No)
+                {
+                    dtpNgayHetHan.Focus();
+                    return false;
+                }
+            }
+
             return true;
+        }
+
+        // Thêm keyboard shortcuts
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.Enter:
+                    BtnSave_Click(null, null);
+                    return true;
+                case Keys.Escape:
+                    this.Close();
+                    return true;
+                case Keys.F1: // Quick extend 1 year
+                    BtnAutoExtend_Click(null, null);
+                    return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        // Auto focus vào ngày hết hạn khi form load xong
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            dtpNgayHetHan.Focus();
         }
     }
 }
