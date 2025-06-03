@@ -395,55 +395,6 @@ namespace LibraryManagement.Repositories
             return result;
         }
 
-        public List<ThongKeSachMuonTheoThangDTO> GetThongKeSachMuonTheoThang(int nam, int thang)
-        {
-            List<ThongKeSachMuonTheoThangDTO> result = new List<ThongKeSachMuonTheoThangDTO>();
-
-            try
-            {
-                using (SqlConnection conn = dbConnection.GetConnection())
-                {
-                    string query = @"
-                SELECT ds.TenDauSach, COUNT(*) AS SoLuongMuon
-                FROM MuonSach ms
-                JOIN PhieuMuonSach_CuonSach pmcs ON ms.MaPhieu = pmcs.MaPhieu
-                JOIN CuonSach cs ON pmcs.MaSach = cs.MaCuonSach
-                JOIN DauSach ds ON cs.MaDauSach = ds.MaDauSach
-                WHERE YEAR(ms.NgayMuon) = @Nam AND MONTH(ms.NgayMuon) = @Thang
-                GROUP BY ds.TenDauSach
-                ORDER BY SoLuongMuon DESC";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Nam", nam);
-                        cmd.Parameters.AddWithValue("@Thang", thang);
-
-                        conn.Open();
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                ThongKeSachMuonTheoThangDTO item = new ThongKeSachMuonTheoThangDTO()
-                                {
-                                    TenDauSach = reader["TenDauSach"].ToString(),
-                                    SoLuongMuon = Convert.ToInt32(reader["SoLuongMuon"])
-                                };
-                                result.Add(item);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Lỗi GetThongKeSachMuonTheoThang: {ex.Message}");
-                return new List<ThongKeSachMuonTheoThangDTO>();
-            }
-
-            return result;
-        }
-
         public List<SachMuonDTO> GetTatCaSachDangMuon()
         {
             List<SachMuonDTO> list = new List<SachMuonDTO>();

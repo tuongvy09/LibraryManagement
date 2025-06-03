@@ -53,12 +53,6 @@ namespace LibraryManagement.Models
         public int SoLuongMuon { get; set; }
     }
 
-    public class ThongKeSachMuonTheoThangDTO
-    {
-        public string TenDauSach { get; set; }
-        public int SoLuongMuon { get; set; }
-    }
-
     public class SachMuonDTO
     {
         public string MaSach { get; set; }

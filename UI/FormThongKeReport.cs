@@ -13,16 +13,19 @@ namespace LibraryManagement.UI
 {
     public partial class FormThongKeReport : Form
     {
-        public FormThongKeReport(DataTable dtChiPhi, DataTable dtSachMuon, DataTable dtTop10)
+        public FormThongKeReport(DataTable dtDocGiaMoiTheoThang, DataTable dtDoanhThuTheoThang, DataTable dtTop10, DataTable dtSachMuonTheoTheLoai, DataTable dtSachMuonTheoDocGia)
         {
             InitializeComponent();
 
             reportViewer1.LocalReport.ReportPath = "ThongKeReport.rdlc";
             reportViewer1.LocalReport.DataSources.Clear();
 
-            reportViewer1.LocalReport.DataSources.Add(new ReportDataSource("ThongKeChiPhiDataSet", dtChiPhi));
-            reportViewer1.LocalReport.DataSources.Add(new ReportDataSource("ThongKeSachMuonDataSet", dtSachMuon));
+            reportViewer1.LocalReport.DataSources.Add(new ReportDataSource("DocGiaMoiTheoThangDataSet", dtDocGiaMoiTheoThang));
+            reportViewer1.LocalReport.DataSources.Add(new ReportDataSource("DoangThuTheoThangDataSet", dtDoanhThuTheoThang));
             reportViewer1.LocalReport.DataSources.Add(new ReportDataSource("Top10SachMuonDataSet", dtTop10));
+            reportViewer1.LocalReport.DataSources.Add(new ReportDataSource("ThongKeSachMuonTheoTheLoaiDataSet", dtSachMuonTheoTheLoai));
+            reportViewer1.LocalReport.DataSources.Add(new ReportDataSource("ThongKeSachMuonTheoDocGiaDataSet", dtSachMuonTheoDocGia));
+            
 
             reportViewer1.RefreshReport();
         }

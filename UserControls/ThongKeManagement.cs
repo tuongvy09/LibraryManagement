@@ -27,6 +27,9 @@ namespace LibraryManagement.UserControls
         private NumericUpDown numThangThongKe;
         private DataGridView dgvThongKeSachMuon;
 
+        private List<ThongKeSachMuonTheoTheLoaiDTO> thongKeSachMuonTheoTheLoai = new List<ThongKeSachMuonTheoTheLoaiDTO>();
+        private List<ThongKeSachMuonTheoDocGiaDTO> thongKeSachMuonTheoDocGia = new List<ThongKeSachMuonTheoDocGiaDTO>();
+
 
         public ThongKeManagement()
         {
@@ -569,12 +572,27 @@ namespace LibraryManagement.UserControls
                 MessageBox.Show("Không có dữ liệu để xuất!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            if (thongKeSachMuonTheoTheLoai == null || thongKeSachMuonTheoDocGia == null)
+            {
+                MessageBox.Show("Vui lòng nhấn nút 'Thống kê' trước khi xuất!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-            DataTable dtChiPhi = ConvertDataGridViewToDataTable(dgvThongKe);
-            DataTable dtSachMuon = ConvertDataGridViewToDataTable(dgvThongKeSachMuon);
+            var thongKeDAO = new ThongKeDAO();
+
+            int nam = int.Parse(cboNam.SelectedItem.ToString());
+
+            int thang = int.Parse(cboThang.SelectedItem.ToString());
+
+            // Gọi các DAO cần năm
+            var dtDocGiaMoiTheoThang = ConvertToDataTable(thongKeDAO.GetThongKeDocGiaTheoThang(nam));
+            var dtDoanhThuTheoThang = ConvertToDataTable(thongKeDAO.GetThongKeDoanhThuTheoThang(nam));
+            DataTable dtSachMuonTheoTheLoai = ConvertToDataTable(thongKeSachMuonTheoTheLoai);
+            DataTable dtSachMuonTheoDocGia = ConvertToDataTable(thongKeSachMuonTheoDocGia);
             var dtTop10 = GetTop10SachMuonDataTable();
+            
 
-            FormThongKeReport form = new FormThongKeReport(dtChiPhi, dtSachMuon, dtTop10);
+            FormThongKeReport form = new FormThongKeReport(dtDocGiaMoiTheoThang,dtDoanhThuTheoThang, dtTop10, dtSachMuonTheoTheLoai, dtSachMuonTheoDocGia );
             form.ShowDialog();
         }
 
@@ -658,14 +676,13 @@ namespace LibraryManagement.UserControls
 
                 if (luaChon == "Thể loại")
                 {
-                    var data = thongKeDAO.GetThongKeSachMuonTheoTheLoai();
-                    dgvThongKeSachMuon.DataSource = data;
-
+                    thongKeSachMuonTheoTheLoai = thongKeDAO.GetThongKeSachMuonTheoTheLoai();
+                    dgvThongKeSachMuon.DataSource = thongKeSachMuonTheoTheLoai;
                 }
                 else if (luaChon == "Độc giả")
                 {
-                    var data = thongKeDAO.GetThongKeSachMuonTheoDocGia();
-                    dgvThongKeSachMuon.DataSource = data;
+                    thongKeSachMuonTheoDocGia = thongKeDAO.GetThongKeSachMuonTheoDocGia();
+                    dgvThongKeSachMuon.DataSource = thongKeSachMuonTheoDocGia;
                 }
             };
 
@@ -676,8 +693,6 @@ namespace LibraryManagement.UserControls
             };
 
             // Thêm controls vào tab
-            tabSoLuongSachMuon.Controls.Add(numNamThongKe);
-            tabSoLuongSachMuon.Controls.Add(numThangThongKe);
             tabSoLuongSachMuon.Controls.Add(labelLuaChon);
             tabSoLuongSachMuon.Controls.Add(cboThongKeTheo);
             tabSoLuongSachMuon.Controls.Add(btnThongKe);
@@ -691,28 +706,30 @@ namespace LibraryManagement.UserControls
             dgvThongKeSachMuon.DataSource = data;
         }
 
-        private DataTable ConvertDataGridViewToDataTable(DataGridView dgv)
+        public static DataTable ConvertToDataTable<T>(List<T> items)
         {
-            var dt = new DataTable();
-            foreach (DataGridViewColumn col in dgv.Columns)
+            DataTable dataTable = new DataTable(typeof(T).Name);
+
+            // Lấy thông tin các property
+            var properties = typeof(T).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+            foreach (var prop in properties)
             {
-                dt.Columns.Add(col.Name, typeof(string));
+                dataTable.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
             }
 
-            foreach (DataGridViewRow row in dgv.Rows)
+            foreach (var item in items)
             {
-                if (!row.IsNewRow)
+                var values = new object[properties.Length];
+                for (int i = 0; i < properties.Length; i++)
                 {
-                    var newRow = dt.NewRow();
-                    foreach (DataGridViewColumn col in dgv.Columns)
-                    {
-                        newRow[col.Name] = row.Cells[col.Index].Value?.ToString() ?? "";
-                    }
-                    dt.Rows.Add(newRow);
+                    values[i] = properties[i].GetValue(item, null);
                 }
+
+                dataTable.Rows.Add(values);
             }
 
-            return dt;
+            return dataTable;
         }
 
         private DataTable GetTop10SachMuonDataTable()

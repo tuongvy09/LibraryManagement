@@ -7,6 +7,7 @@ using LibraryManagement.Models;
 using LibraryManagement.Repositories;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Data;
 
 namespace LibraryManagement.UI
 {
@@ -16,7 +17,6 @@ namespace LibraryManagement.UI
         private TabControl tabControl;
         private TabPage tabTienMuon, tabTienMuonVaPhat, tabDocGiaMoi, tabTop10BestSeller;
         private TabPage tabTheoTheLoai;
-        private TabPage tabSachDangMuon;
 
         private NumericUpDown numNamThongKe;
         private NumericUpDown numThangThongKe;
@@ -25,6 +25,8 @@ namespace LibraryManagement.UI
 
         private DocGiaDAO docGiaDAO = new DocGiaDAO();
         private CuonSachRepository CuonSachRepository = new CuonSachRepository();
+        private List<ThongKeSachMuonTheoTheLoaiDTO> thongKeSachMuonTheoTheLoai;
+        private List<ThongKeSachMuonTheoDocGiaDTO> thongKeSachMuonTheoDocGia;
 
         public FormThongKe()
         {
@@ -465,20 +467,13 @@ namespace LibraryManagement.UI
 
                 if (luaChon == "Thể loại")
                 {
-                    var data = thongKeDAO.GetThongKeSachMuonTheoTheLoai();
-                    dgvThongKeSachMuon.DataSource = data;
-                }
-                else if (luaChon == "Tháng")
-                {
-                    int nam = (int)numNamThongKe.Value;
-                    int thang = (int)numThangThongKe.Value;
-                    var data = thongKeDAO.GetThongKeSachMuonTheoThang(nam, thang);
-                    dgvThongKeSachMuon.DataSource = data;
+                    thongKeSachMuonTheoTheLoai = thongKeDAO.GetThongKeSachMuonTheoTheLoai();
+                    dgvThongKeSachMuon.DataSource = thongKeSachMuonTheoTheLoai;
                 }
                 else if (luaChon == "Độc giả")
                 {
-                    var data = thongKeDAO.GetThongKeSachMuonTheoDocGia();
-                    dgvThongKeSachMuon.DataSource = data;
+                    thongKeSachMuonTheoDocGia = thongKeDAO.GetThongKeSachMuonTheoDocGia();
+                    dgvThongKeSachMuon.DataSource = thongKeSachMuonTheoDocGia;
                 }
             };
 
