@@ -21,6 +21,10 @@ namespace LibraryManagement.UI
         private DateTimePicker dtpNgayMuon, dtpNgayTra;
         private Label lblTrangThaiValue;
         private Button btnSave, btnCancel;
+        private TextBox txtGiaMuon;
+        private TextBox txtTienCoc;
+        private ComboBox cbTrangThai;
+
 
         private PhieuMuonDAO phieuMuonDAO = new PhieuMuonDAO();
         private PhieuMuon phieuMuonToEdit;
@@ -35,7 +39,7 @@ namespace LibraryManagement.UI
         private void InitializeComponentForm()
         {
             this.Text = "Sửa Phiếu Mượn";
-            this.Size = new Size(550, 450);
+            this.Size = new Size(550, 500);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -70,7 +74,7 @@ namespace LibraryManagement.UI
             {
                 Location = new Point(160, 57),
                 Width = 100,
-                ReadOnly = true,
+                ReadOnly = false,
                 BackColor = Color.LightGray,
                 Font = new Font("Segoe UI", 10)
             };
@@ -100,7 +104,7 @@ namespace LibraryManagement.UI
             {
                 Text = "Tên sách:",
                 Location = new Point(20, 140),
-                AutoSize = true,
+                AutoSize = false,
                 Font = new Font("Segoe UI", 10),
                 ForeColor = mainColor
             };
@@ -111,7 +115,7 @@ namespace LibraryManagement.UI
                 Location = new Point(160, 137),
                 Width = 300,
                 Font = new Font("Segoe UI", 10),
-                ReadOnly = true,
+                ReadOnly = false,
                 BackColor = Color.LightGray
             };
             this.Controls.Add(txtTenCuonSach);
@@ -165,22 +169,56 @@ namespace LibraryManagement.UI
             };
             this.Controls.Add(lblTrangThai);
 
+            cbTrangThai = new ComboBox()
+            {
+                Location = new Point(160, 257),
+                Width = 200,
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Font = new Font("Segoe UI", 10),
+            };
+            cbTrangThai.Items.AddRange(new string[] { "Chua tra", "Da tra" });
+            this.Controls.Add(cbTrangThai);
+
             lblTrangThaiValue = new Label()
             {
-                Text = "Chưa trả",
-                Location = new Point(160, 260),
+                Location = new Point(370, 257),
                 AutoSize = true,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold),
-                ForeColor = Color.Red
+                Font = new Font("Segoe UI", 10),
+                ForeColor = Color.Red,
+                Text = "Chưa trả"
             };
             this.Controls.Add(lblTrangThaiValue);
+
+            Label lblGiaMuon = CreateLabel("Giá mượn:", 20, 305, mainColor);
+            this.Controls.Add(lblGiaMuon);
+
+            txtGiaMuon = new TextBox()
+            {
+                Location = new Point(160, 300),
+                Width = 200,
+                Font = new Font("Segoe UI", 10)
+            };
+            this.Controls.Add(txtGiaMuon);
+            txtGiaMuon.Leave += TxtGiaMuon_Leave;
+
+            Label lblTienCoc = CreateLabel("Tiền cọc:", 20, 350, mainColor);
+            this.Controls.Add(lblTienCoc);
+
+            txtTienCoc = new TextBox()
+            {
+                Location = new Point(160, 345),
+                Width = 200,
+                Font = new Font("Segoe UI", 10)
+            };
+            this.Controls.Add(txtTienCoc);
+            txtTienCoc.Leave += TxtTienCoc_Leave;
 
             btnSave = new Button()
             {
                 Text = "Lưu",
                 BackColor = mainColor,
                 ForeColor = Color.White,
-                Location = new Point(160, 320),
+                Location = new Point(160, 400),
                 Size = new Size(80, 35),
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10)
@@ -194,7 +232,7 @@ namespace LibraryManagement.UI
                 Text = "Hủy",
                 BackColor = Color.Gray,
                 ForeColor = Color.White,
-                Location = new Point(270, 320),
+                Location = new Point(270, 400),
                 Size = new Size(80, 35),
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10)
@@ -206,12 +244,23 @@ namespace LibraryManagement.UI
             Label lblNote = new Label()
             {
                 Text = "* Trường bắt buộc",
-                Location = new Point(20, 290),
+                Location = new Point(20, 405),
                 AutoSize = true,
                 Font = new Font("Segoe UI", 8, FontStyle.Italic),
                 ForeColor = Color.Red
             };
             this.Controls.Add(lblNote);
+        }
+        private Label CreateLabel(string text, int x, int y, Color foreColor)
+        {
+            return new Label()
+            {
+                Text = text,
+                Location = new Point(x, y),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10),
+                ForeColor = foreColor
+            };
         }
 
         private void LoadPhieuMuonData(int maPhieuMuon)
@@ -226,20 +275,22 @@ namespace LibraryManagement.UI
                     txtTenCuonSach.Text = phieuMuonToEdit.TenCuonSach;
                     dtpNgayMuon.Value = phieuMuonToEdit.NgayMuon;
                     dtpNgayTra.Value = phieuMuonToEdit.NgayTra;
+                    cbTrangThai.SelectedItem = phieuMuonToEdit.TrangThaiM;
+                    txtGiaMuon.Text = phieuMuonToEdit.GiaMuon.ToString("N0");
+                    txtTienCoc.Text = phieuMuonToEdit.TienCoc.ToString("N0");
                     UpdateTrangThaiDisplay();
                 }
                 else
                 {
-                    MessageBox.Show("Không tìm thấy phiếu mượn!", "Lỗi",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Close();
+                    MessageBox.Show("Không tìm thấy phiếu mượn!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    throw new Exception("Không tìm thấy phiếu mượn");
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi khi tải phiếu mượn: {ex.Message}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-                this.Close();
+                throw;
             }
         }
 
@@ -265,8 +316,19 @@ namespace LibraryManagement.UI
             {
                 phieuMuonToEdit.NgayMuon = dtpNgayMuon.Value.Date;
                 phieuMuonToEdit.NgayTra = dtpNgayTra.Value.Date;
-                phieuMuonToEdit.TrangThaiM = lblTrangThaiValue.Text;
+                phieuMuonToEdit.TrangThaiM = cbTrangThai.SelectedItem?.ToString() ?? "Chua tra";
                 phieuMuonToEdit.SoNgayMuon = (dtpNgayTra.Value.Date - dtpNgayMuon.Value.Date).Days;
+                
+                if (!decimal.TryParse(txtGiaMuon.Text, out decimal giaMuon) ||
+                    !decimal.TryParse(txtTienCoc.Text, out decimal tienCoc))
+                {
+                    MessageBox.Show("Vui lòng nhập đúng định dạng số cho giá mượn và tiền cọc.", "Lỗi",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                phieuMuonToEdit.GiaMuon = giaMuon;
+                phieuMuonToEdit.TienCoc = tienCoc;
 
                 bool success = phieuMuonDAO.UpdatePhieuMuon(phieuMuonToEdit);
 
@@ -301,6 +363,24 @@ namespace LibraryManagement.UI
             }
 
             return true;
+        }
+
+        private void TxtGiaMuon_Leave(object sender, EventArgs e)
+        {
+            if (!decimal.TryParse(txtGiaMuon.Text, out decimal giaMuon) || giaMuon < 0)
+            {
+                MessageBox.Show("Giá mượn phải là một số hợp lệ không âm.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtGiaMuon.Focus();
+            }
+        }
+
+        private void TxtTienCoc_Leave(object sender, EventArgs e)
+        {
+            if (!decimal.TryParse(txtTienCoc.Text, out decimal tienCoc) || tienCoc < 0)
+            {
+                MessageBox.Show("Tiền cọc phải là một số hợp lệ không âm.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTienCoc.Focus();
+            }
         }
     }
 }

@@ -310,22 +310,22 @@ namespace LibraryManagement.Repositories
         {
             PhieuMuon phieu = null;
             string query = @"
-            SELECT TOP 1 
-                ms.MaMuonSach,
-                dg.HoTen AS TenDocGia,
-                cs.TenCuonSach,
-                ms.NgayMuon,
-                ms.NgayTra,
-                ms.TrangThaiM,
-                ms.GiaMuon,
-                ms.SoNgayMuon,
-                ms.TienCoc
-            FROM MuonSach ms
-            JOIN PhieuMuonSach pms ON ms.MaPhieu = pms.MaPhieu
-            JOIN DocGia dg ON pms.MaDocGia = dg.MaDocGia
-            JOIN PhieuMuonSach_CuonSach pmcs ON pmcs.MaPhieu = ms.MaPhieu
-            JOIN CuonSach cs ON pmcs.MaSach = cs.MaCuonSach
-            WHERE ms.MaMuonSach = @MaMuonSach";
+    SELECT TOP 1 
+        ms.MaMuonSach,
+        dg.HoTen AS TenDocGia,
+        cs.TenCuonSach,
+        ms.NgayMuon,
+        ms.NgayTra,
+        ms.TrangThaiM,
+        ms.GiaMuon,
+        ms.SoNgayMuon,
+        ms.TienCoc
+    FROM MuonSach ms
+    JOIN PhieuMuonSach pms ON ms.MaPhieu = pms.MaPhieu
+    JOIN DocGia dg ON pms.MaDocGia = dg.MaDocGia
+    JOIN PhieuMuonSach_CuonSach pmcs ON pmcs.MaPhieu = ms.MaPhieu
+    JOIN CuonSach cs ON pmcs.MaSach = cs.MaCuonSach
+    WHERE ms.MaMuonSach = @MaMuonSach";
 
             using (SqlConnection con = dbConnection.GetConnection())
             using (SqlCommand cmd = new SqlCommand(query, con))
@@ -339,14 +339,14 @@ namespace LibraryManagement.Repositories
                         phieu = new PhieuMuon()
                         {
                             MaMuonSach = reader.GetInt32(reader.GetOrdinal("MaMuonSach")),
-                            TenDocGia = reader["TenDocGia"].ToString(),
-                            TenCuonSach = reader["TenCuonSach"].ToString(),
+                            TenDocGia = reader["TenDocGia"]?.ToString() ?? "",
+                            TenCuonSach = reader["TenCuonSach"]?.ToString() ?? "",
                             NgayMuon = reader.GetDateTime(reader.GetOrdinal("NgayMuon")),
-                            NgayTra = reader.GetDateTime(reader.GetOrdinal("NgayTra")),
-                            TrangThaiM = reader["TrangThaiM"].ToString(),
-                            GiaMuon = reader.GetDecimal(reader.GetOrdinal("GiaMuon")),
-                            SoNgayMuon = reader.GetInt32(reader.GetOrdinal("SoNgayMuon")),
-                            TienCoc = reader.GetDecimal(reader.GetOrdinal("TienCoc"))
+                            NgayTra = reader["NgayTra"] == DBNull.Value ? DateTime.MinValue : reader.GetDateTime(reader.GetOrdinal("NgayTra")),
+                            TrangThaiM = reader["TrangThaiM"]?.ToString() ?? "",
+                            GiaMuon = reader["GiaMuon"] == DBNull.Value ? 0 : reader.GetDecimal(reader.GetOrdinal("GiaMuon")),
+                            SoNgayMuon = reader["SoNgayMuon"] == DBNull.Value ? 0 : reader.GetInt32(reader.GetOrdinal("SoNgayMuon")),
+                            TienCoc = reader["TienCoc"] == DBNull.Value ? 0 : reader.GetDecimal(reader.GetOrdinal("TienCoc"))
                         };
                     }
                 }

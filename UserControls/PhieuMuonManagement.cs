@@ -167,12 +167,20 @@ namespace LibraryManagement.UserControls
 
             int maMuonSach = Convert.ToInt32(dgvPhieuMuon.CurrentRow.Cells["MaMuonSach"].Value);
 
-            using (var formEdit = new FormEditPhieuMuon(maMuonSach))
+            try
             {
-                if (formEdit.ShowDialog() == DialogResult.OK)
+                using (var formEdit = new FormEditPhieuMuon(maMuonSach))
                 {
-                    LoadPhieuMuonData();
+                    var result = formEdit.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        LoadPhieuMuonData();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thể mở form sửa phiếu mượn do: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
