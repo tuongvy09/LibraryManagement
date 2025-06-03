@@ -19,6 +19,7 @@ namespace LibraryManagement.UserControls
         private List<ThuThu> currentData;
         private string placeholderText = "Nhập tên, email hoặc số điện thoại...";
         private bool dataLoaded = false;
+        private bool isPlaceholderActive = true; // Track placeholder state
 
         public ThuThuManagement()
         {
@@ -29,13 +30,43 @@ namespace LibraryManagement.UserControls
             this.Load += ThuThuManagement_Load;
 
             // Setup placeholder text
-            txtSearch.Text = placeholderText;
-            txtSearch.ForeColor = Color.Gray;
+            InitializePlaceholder();
+        }
+
+        // Khởi tạo placeholder text
+        private void InitializePlaceholder()
+        {
+            SetPlaceholder();
 
             // Gán sự kiện
             txtSearch.Enter += TxtSearch_Enter;
             txtSearch.Leave += TxtSearch_Leave;
             txtSearch.KeyDown += TxtSearch_KeyDown;
+            txtSearch.TextChanged += TxtSearch_TextChanged;
+        }
+
+        // Thiết lập placeholder
+        private void SetPlaceholder()
+        {
+            if (string.IsNullOrWhiteSpace(txtSearch.Text) || isPlaceholderActive)
+            {
+                txtSearch.Text = placeholderText;
+                txtSearch.ForeColor = Color.Gray;
+                txtSearch.Font = new Font(txtSearch.Font, FontStyle.Italic);
+                isPlaceholderActive = true;
+            }
+        }
+
+        // Xóa placeholder
+        private void ClearPlaceholder()
+        {
+            if (isPlaceholderActive)
+            {
+                txtSearch.Text = "";
+                txtSearch.ForeColor = Color.Black;
+                txtSearch.Font = new Font(txtSearch.Font, FontStyle.Regular);
+                isPlaceholderActive = false;
+            }
         }
 
         // Event handler cho Load
@@ -104,8 +135,11 @@ namespace LibraryManagement.UserControls
         {
             if (this.IsHandleCreated || this.Created)
             {
+                ClearPlaceholder();
                 txtSearch.Text = searchText;
                 txtSearch.ForeColor = Color.Black;
+                txtSearch.Font = new Font(txtSearch.Font, FontStyle.Regular);
+                isPlaceholderActive = false;
                 SearchThuThu();
             }
         }
@@ -115,8 +149,7 @@ namespace LibraryManagement.UserControls
         {
             if (this.IsHandleCreated || this.Created)
             {
-                txtSearch.Text = placeholderText;
-                txtSearch.ForeColor = Color.Gray;
+                SetPlaceholder();
                 LoadData();
             }
         }
@@ -126,21 +159,30 @@ namespace LibraryManagement.UserControls
             try
             {
                 currentData = thuThuDAO.GetAllThuThu();
-                var displayData = currentData.Select(tt => new
-                {
-                    MaThuThu = tt.MaThuThu,
-                    TenThuThu = tt.TenThuThu,
-                    Email = string.IsNullOrEmpty(tt.Email) ? "Chưa cập nhật" : tt.Email,
-                    SoDienThoai = string.IsNullOrEmpty(tt.SoDienThoai) ? "Chưa cập nhật" : tt.SoDienThoai,
-                    DiaChi = string.IsNullOrEmpty(tt.DiaChi) ? "Chưa cập nhật" : tt.DiaChi,
-                    NgaySinh = tt.NgaySinh.ToString("dd/MM/yyyy"),
-                    NgayBatDauLam = tt.NgayBatDauLam.ToString("dd/MM/yyyy"),
-                    GioiTinh = tt.GioiTinh == "M" ? "Nam" : tt.GioiTinh == "F" ? "Nữ" : "Chưa xác định",
-                    TrangThai = tt.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
-                }).ToList();
+
+                // ✅ Sắp xếp: Hoạt động trước, Ngừng hoạt động sau, trong mỗi nhóm sắp xếp theo tên
+                var displayData = currentData
+                    .OrderByDescending(tt => tt.TrangThai) // True (Hoạt động) trước, False (Ngừng hoạt động) sau
+                    .ThenBy(tt => tt.TenThuThu) // Sắp xếp theo tên trong mỗi nhóm
+                    .Select(tt => new
+                    {
+                        MaThuThu = tt.MaThuThu,
+                        TenThuThu = tt.TenThuThu,
+                        Email = string.IsNullOrEmpty(tt.Email) ? "Chưa cập nhật" : tt.Email,
+                        SoDienThoai = string.IsNullOrEmpty(tt.SoDienThoai) ? "Chưa cập nhật" : tt.SoDienThoai,
+                        DiaChi = string.IsNullOrEmpty(tt.DiaChi) ? "Chưa cập nhật" : tt.DiaChi,
+                        NgaySinh = tt.NgaySinh.ToString("dd/MM/yyyy"),
+                        NgayBatDauLam = tt.NgayBatDauLam.ToString("dd/MM/yyyy"),
+                        GioiTinh = tt.GioiTinh == "M" ? "Nam" :
+                                  tt.GioiTinh == "F" ? "Nữ" :
+                                  tt.GioiTinh == "Nam" ? "Nam" :
+                                  tt.GioiTinh == "Nữ" ? "Nữ" : "Chưa xác định",
+                        TrangThai = tt.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
+                    }).ToList();
 
                 dgvThuThu.DataSource = displayData;
                 dataLoaded = true;
+                ResetTitle(); // ✅ Reset title khi load data
                 // SetupColumnHeaders sẽ được gọi trong event DataBindingComplete
             }
             catch (Exception ex)
@@ -160,6 +202,7 @@ namespace LibraryManagement.UserControls
                 {
                     dgvThuThu.Columns["MaThuThu"].HeaderText = "Mã TT";
                     dgvThuThu.Columns["MaThuThu"].Width = 70;
+                    dgvThuThu.Columns["MaThuThu"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
                 if (dgvThuThu.Columns["TenThuThu"] != null)
                 {
@@ -175,6 +218,7 @@ namespace LibraryManagement.UserControls
                 {
                     dgvThuThu.Columns["SoDienThoai"].HeaderText = "Số điện thoại";
                     dgvThuThu.Columns["SoDienThoai"].Width = 120;
+                    dgvThuThu.Columns["SoDienThoai"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
                 if (dgvThuThu.Columns["DiaChi"] != null)
                 {
@@ -185,21 +229,35 @@ namespace LibraryManagement.UserControls
                 {
                     dgvThuThu.Columns["NgaySinh"].HeaderText = "Ngày sinh";
                     dgvThuThu.Columns["NgaySinh"].Width = 100;
+                    dgvThuThu.Columns["NgaySinh"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
                 if (dgvThuThu.Columns["NgayBatDauLam"] != null)
                 {
                     dgvThuThu.Columns["NgayBatDauLam"].HeaderText = "Ngày bắt đầu làm";
                     dgvThuThu.Columns["NgayBatDauLam"].Width = 130;
+                    dgvThuThu.Columns["NgayBatDauLam"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
                 if (dgvThuThu.Columns["GioiTinh"] != null)
                 {
                     dgvThuThu.Columns["GioiTinh"].HeaderText = "Giới tính";
                     dgvThuThu.Columns["GioiTinh"].Width = 80;
+                    dgvThuThu.Columns["GioiTinh"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
                 if (dgvThuThu.Columns["TrangThai"] != null)
                 {
                     dgvThuThu.Columns["TrangThai"].HeaderText = "Trạng thái";
                     dgvThuThu.Columns["TrangThai"].Width = 100;
+                    dgvThuThu.Columns["TrangThai"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
+
+                // ✅ Highlight các dòng "Ngừng hoạt động"
+                foreach (DataGridViewRow row in dgvThuThu.Rows)
+                {
+                    if (row.Cells["TrangThai"]?.Value?.ToString() == "Ngừng hoạt động")
+                    {
+                        row.DefaultCellStyle.BackColor = Color.FromArgb(248, 249, 250); // Màu xám nhạt
+                        row.DefaultCellStyle.ForeColor = Color.Gray; // Chữ màu xám
+                    }
                 }
             }
             catch (Exception ex)
@@ -208,22 +266,27 @@ namespace LibraryManagement.UserControls
             }
         }
 
-        // Xử lý placeholder text
+        // ===== XỬ LÝ PLACEHOLDER TEXT =====
         private void TxtSearch_Enter(object sender, EventArgs e)
         {
-            if (txtSearch.Text == placeholderText && txtSearch.ForeColor == Color.Gray)
-            {
-                txtSearch.Text = "";
-                txtSearch.ForeColor = Color.Black;
-            }
+            ClearPlaceholder();
         }
 
         private void TxtSearch_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtSearch.Text))
             {
-                txtSearch.Text = placeholderText;
-                txtSearch.ForeColor = Color.Gray;
+                SetPlaceholder();
+            }
+        }
+
+        private void TxtSearch_TextChanged(object sender, EventArgs e)
+        {
+            // Nếu user đang nhập và không phải placeholder
+            if (!isPlaceholderActive && txtSearch.Focused)
+            {
+                txtSearch.ForeColor = Color.Black;
+                txtSearch.Font = new Font(txtSearch.Font, FontStyle.Regular);
             }
         }
 
@@ -232,9 +295,18 @@ namespace LibraryManagement.UserControls
             if (e.KeyCode == Keys.Enter)
             {
                 BtnSearch_Click(sender, e);
+                e.Handled = true; // Ngăn tiếng beep
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                BtnRefresh_Click(sender, e);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
         }
 
+        // ===== CÁC BUTTON EVENTS =====
         private void BtnAdd_Click(object sender, EventArgs e)
         {
             using (var formAdd = new FormAddEditThuThu())
@@ -278,36 +350,72 @@ namespace LibraryManagement.UserControls
         {
             if (dgvThuThu.CurrentRow == null)
             {
-                MessageBox.Show("Vui lòng chọn thủ thư cần xóa!", "Thông báo",
+                MessageBox.Show("Vui lòng chọn thủ thư cần vô hiệu hóa!", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             string tenThuThu = dgvThuThu.CurrentRow.Cells["TenThuThu"].Value.ToString();
-            var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa thủ thư '{tenThuThu}'?\n\nLưu ý: Thao tác này không thể hoàn tác!",
-                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            string trangThaiHienTai = dgvThuThu.CurrentRow.Cells["TrangThai"].Value.ToString();
 
-            if (result == DialogResult.Yes)
+            // ✅ Kiểm tra trạng thái hiện tại để hiển thị thông báo phù hợp
+            if (trangThaiHienTai == "Ngừng hoạt động")
             {
-                try
+                var result = MessageBox.Show($"Thủ thư '{tenThuThu}' đã được vô hiệu hóa trước đó.\n\nBạn có muốn kích hoạt lại tài khoản này không?",
+                    "Kích hoạt lại tài khoản", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
                 {
-                    int maThuThu = Convert.ToInt32(dgvThuThu.CurrentRow.Cells["MaThuThu"].Value);
-                    if (thuThuDAO.DeleteThuThu(maThuThu))
+                    try
                     {
-                        MessageBox.Show("Xóa thủ thư thành công!", "Thành công",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadData();
+                        int maThuThu = Convert.ToInt32(dgvThuThu.CurrentRow.Cells["MaThuThu"].Value);
+                        if (thuThuDAO.DeleteThuThu(maThuThu)) // Method này sẽ toggle trạng thái
+                        {
+                            MessageBox.Show($"Đã kích hoạt lại tài khoản thủ thư '{tenThuThu}' thành công!", "Thành công",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadData();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Kích hoạt lại tài khoản thất bại!", "Lỗi",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Xóa thủ thư thất bại!", "Lỗi",
+                        MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                catch (Exception ex)
+            }
+            else
+            {
+                var result = MessageBox.Show($"Bạn có chắc chắn muốn vô hiệu hóa tài khoản thủ thư '{tenThuThu}'?\n\n" +
+                    "Lưu ý: Thủ thư sẽ không thể truy cập hệ thống, nhưng dữ liệu sẽ được lưu trữ.",
+                    "Xác nhận vô hiệu hóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
                 {
-                    MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    try
+                    {
+                        int maThuThu = Convert.ToInt32(dgvThuThu.CurrentRow.Cells["MaThuThu"].Value);
+                        if (thuThuDAO.DeleteThuThu(maThuThu))
+                        {
+                            MessageBox.Show($"Đã vô hiệu hóa tài khoản thủ thư '{tenThuThu}' thành công!", "Thành công",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadData();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Vô hiệu hóa tài khoản thất bại!", "Lỗi",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
@@ -315,6 +423,8 @@ namespace LibraryManagement.UserControls
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             ClearSearch();
+            MessageBox.Show("Đã làm mới dữ liệu!", "Thông báo",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void BtnSearch_Click(object sender, EventArgs e)
@@ -326,16 +436,21 @@ namespace LibraryManagement.UserControls
         {
             try
             {
-                string searchText = txtSearch.Text.Trim();
-
-                if (searchText == placeholderText || string.IsNullOrEmpty(searchText))
+                // Kiểm tra nếu đang hiển thị placeholder
+                if (isPlaceholderActive || string.IsNullOrWhiteSpace(txtSearch.Text))
                 {
                     LoadData();
+                    return;
                 }
-                else
-                {
-                    var searchResults = thuThuDAO.SearchThuThu(searchText);
-                    var displayData = searchResults.Select(tt => new
+
+                string searchText = txtSearch.Text.Trim();
+                var searchResults = thuThuDAO.SearchThuThu(searchText);
+
+                // ✅ Sắp xếp kết quả tìm kiếm tương tự như LoadData
+                var displayData = searchResults
+                    .OrderByDescending(tt => tt.TrangThai) // True (Hoạt động) trước, False (Ngừng hoạt động) sau
+                    .ThenBy(tt => tt.TenThuThu) // Sắp xếp theo tên trong mỗi nhóm
+                    .Select(tt => new
                     {
                         MaThuThu = tt.MaThuThu,
                         TenThuThu = tt.TenThuThu,
@@ -344,14 +459,27 @@ namespace LibraryManagement.UserControls
                         DiaChi = string.IsNullOrEmpty(tt.DiaChi) ? "Chưa cập nhật" : tt.DiaChi,
                         NgaySinh = tt.NgaySinh.ToString("dd/MM/yyyy"),
                         NgayBatDauLam = tt.NgayBatDauLam.ToString("dd/MM/yyyy"),
-                        GioiTinh = tt.GioiTinh == "M" ? "Nam" : tt.GioiTinh == "F" ? "Nữ" : "Chưa xác định",
+                        GioiTinh = tt.GioiTinh == "M" ? "Nam" :
+                                  tt.GioiTinh == "F" ? "Nữ" :
+                                  tt.GioiTinh == "Nam" ? "Nam" :
+                                  tt.GioiTinh == "Nữ" ? "Nữ" : "Chưa xác định",
                         TrangThai = tt.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
                     }).ToList();
 
-                    dgvThuThu.DataSource = displayData;
-                    currentData = searchResults;
-                    // SetupColumnHeaders sẽ được gọi trong event DataBindingComplete
+                dgvThuThu.DataSource = displayData;
+                currentData = searchResults;
+
+                // Hiển thị kết quả tìm kiếm
+                if (searchResults.Count == 0)
+                {
+                    MessageBox.Show($"Không tìm thấy thủ thư nào với từ khóa '{searchText}'!", "Kết quả tìm kiếm",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+                else
+                {
+                    lblTitle.Text = $"QUẢN LÝ THỦ THƯ - Tìm thấy {searchResults.Count} kết quả";
+                }
+                // SetupColumnHeaders sẽ được gọi trong event DataBindingComplete
             }
             catch (Exception ex)
             {
@@ -368,6 +496,12 @@ namespace LibraryManagement.UserControls
         private void DgvThuThu_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             // Có thể thêm logic xử lý click vào cell nếu cần
+        }
+
+        // Reset title khi clear search
+        private void ResetTitle()
+        {
+            lblTitle.Text = "QUẢN LÝ THỦ THƯ";
         }
     }
 }
