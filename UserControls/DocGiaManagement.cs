@@ -158,23 +158,30 @@ namespace LibraryManagement.UserControls
             try
             {
                 currentData = docGiaDAO.GetAllDocGia();
-                var displayData = currentData.Select(dg => new
-                {
-                    MaDocGia = dg.MaDocGia,
-                    HoTen = dg.HoTen,
-                    Tuoi = dg.Tuoi,
-                    SoDT = dg.SoDT,
-                    CCCD = dg.CCCD,
-                    Email = dg.Email,
-                    DiaChi = dg.DiaChi,
-                    TenLoaiDG = dg.TenLoaiDG,
-                    NgayDangKy = dg.NgayDangKy.ToString("dd/MM/yyyy"),
-                    TienNo = dg.TienNo.ToString("N0") + " VNĐ",
-                    TrangThai = dg.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
-                }).ToList();
+
+                // ✅ Sắp xếp: Hoạt động trước, Ngừng hoạt động sau, trong mỗi nhóm sắp xếp theo tên
+                var displayData = currentData
+                    .OrderByDescending(dg => dg.TrangThai) // True (Hoạt động) trước, False (Ngừng hoạt động) sau
+                    .ThenBy(dg => dg.HoTen) // Sắp xếp theo tên trong mỗi nhóm
+                    .Select(dg => new
+                    {
+                        MaDocGia = dg.MaDocGia,
+                        HoTen = dg.HoTen,
+                        Tuoi = dg.Tuoi,
+                        GioiTinh = dg.GioiTinh,
+                        SoDT = dg.SoDT,
+                        CCCD = dg.CCCD,
+                        Email = dg.Email,
+                        DiaChi = dg.DiaChi,
+                        TenLoaiDG = dg.TenLoaiDG,
+                        NgayDangKy = dg.NgayDangKy.ToString("dd/MM/yyyy"),
+                        TienNo = dg.TienNo.ToString("N0") + " VNĐ",
+                        TrangThai = dg.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
+                    }).ToList();
 
                 dgvDocGia.DataSource = displayData;
                 dataLoaded = true;
+                ResetTitle();
                 // SetupColumnHeaders sẽ được gọi trong event DataBindingComplete
             }
             catch (Exception ex)
@@ -196,6 +203,8 @@ namespace LibraryManagement.UserControls
                     dgvDocGia.Columns["HoTen"].HeaderText = "Họ tên";
                 if (dgvDocGia.Columns["Tuoi"] != null)
                     dgvDocGia.Columns["Tuoi"].HeaderText = "Tuổi";
+                if (dgvDocGia.Columns["GioiTinh"] != null)
+                    dgvDocGia.Columns["GioiTinh"].HeaderText = "Giới tính";
                 if (dgvDocGia.Columns["SoDT"] != null)
                     dgvDocGia.Columns["SoDT"].HeaderText = "Số ĐT";
                 if (dgvDocGia.Columns["CCCD"] != null)
@@ -218,6 +227,8 @@ namespace LibraryManagement.UserControls
                     dgvDocGia.Columns["MaDocGia"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 if (dgvDocGia.Columns["Tuoi"] != null)
                     dgvDocGia.Columns["Tuoi"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                if (dgvDocGia.Columns["GioiTinh"] != null)
+                    dgvDocGia.Columns["GioiTinh"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 if (dgvDocGia.Columns["SoDT"] != null)
                     dgvDocGia.Columns["SoDT"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 if (dgvDocGia.Columns["CCCD"] != null)
@@ -228,6 +239,42 @@ namespace LibraryManagement.UserControls
                     dgvDocGia.Columns["TienNo"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 if (dgvDocGia.Columns["TrangThai"] != null)
                     dgvDocGia.Columns["TrangThai"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+                // Thiết lập độ rộng cột phù hợp
+                if (dgvDocGia.Columns["MaDocGia"] != null)
+                    dgvDocGia.Columns["MaDocGia"].FillWeight = 60;
+                if (dgvDocGia.Columns["HoTen"] != null)
+                    dgvDocGia.Columns["HoTen"].FillWeight = 120;
+                if (dgvDocGia.Columns["Tuoi"] != null)
+                    dgvDocGia.Columns["Tuoi"].FillWeight = 50;
+                if (dgvDocGia.Columns["GioiTinh"] != null)
+                    dgvDocGia.Columns["GioiTinh"].FillWeight = 70;
+                if (dgvDocGia.Columns["SoDT"] != null)
+                    dgvDocGia.Columns["SoDT"].FillWeight = 90;
+                if (dgvDocGia.Columns["CCCD"] != null)
+                    dgvDocGia.Columns["CCCD"].FillWeight = 100;
+                if (dgvDocGia.Columns["Email"] != null)
+                    dgvDocGia.Columns["Email"].FillWeight = 130;
+                if (dgvDocGia.Columns["DiaChi"] != null)
+                    dgvDocGia.Columns["DiaChi"].FillWeight = 150;
+                if (dgvDocGia.Columns["TenLoaiDG"] != null)
+                    dgvDocGia.Columns["TenLoaiDG"].FillWeight = 80;
+                if (dgvDocGia.Columns["NgayDangKy"] != null)
+                    dgvDocGia.Columns["NgayDangKy"].FillWeight = 90;
+                if (dgvDocGia.Columns["TienNo"] != null)
+                    dgvDocGia.Columns["TienNo"].FillWeight = 80;
+                if (dgvDocGia.Columns["TrangThai"] != null)
+                    dgvDocGia.Columns["TrangThai"].FillWeight = 90;
+
+                // ✅ Highlight các dòng "Ngừng hoạt động"
+                foreach (DataGridViewRow row in dgvDocGia.Rows)
+                {
+                    if (row.Cells["TrangThai"]?.Value?.ToString() == "Ngừng hoạt động")
+                    {
+                        row.DefaultCellStyle.BackColor = Color.FromArgb(248, 249, 250); // Màu xám nhạt
+                        row.DefaultCellStyle.ForeColor = Color.Gray; // Chữ màu xám
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -361,36 +408,72 @@ namespace LibraryManagement.UserControls
         {
             if (dgvDocGia.CurrentRow == null)
             {
-                MessageBox.Show("Vui lòng chọn độc giả cần xóa!", "Thông báo",
+                MessageBox.Show("Vui lòng chọn độc giả cần vô hiệu hóa!", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             string hoTen = dgvDocGia.CurrentRow.Cells["HoTen"].Value.ToString();
-            var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa độc giả '{hoTen}'?\n\nLưu ý: Thao tác này không thể hoàn tác!",
-                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            string trangThaiHienTai = dgvDocGia.CurrentRow.Cells["TrangThai"].Value.ToString();
 
-            if (result == DialogResult.Yes)
+            // ✅ Kiểm tra trạng thái hiện tại để hiển thị thông báo phù hợp
+            if (trangThaiHienTai == "Ngừng hoạt động")
             {
-                try
+                var result = MessageBox.Show($"Độc giả '{hoTen}' đã được vô hiệu hóa trước đó.\n\nBạn có muốn kích hoạt lại tài khoản này không?",
+                    "Kích hoạt lại tài khoản", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
                 {
-                    int maDocGia = Convert.ToInt32(dgvDocGia.CurrentRow.Cells["MaDocGia"].Value);
-                    if (docGiaDAO.DeleteDocGia(maDocGia))
+                    try
                     {
-                        MessageBox.Show("Xóa độc giả thành công!", "Thành công",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadData();
+                        int maDocGia = Convert.ToInt32(dgvDocGia.CurrentRow.Cells["MaDocGia"].Value);
+                        if (docGiaDAO.DeleteDocGia(maDocGia)) // Method này sẽ toggle trạng thái
+                        {
+                            MessageBox.Show($"Đã kích hoạt lại tài khoản độc giả '{hoTen}' thành công!", "Thành công",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadData();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Kích hoạt lại tài khoản thất bại!", "Lỗi",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Xóa độc giả thất bại!", "Lỗi",
+                        MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                catch (Exception ex)
+            }
+            else
+            {
+                var result = MessageBox.Show($"Bạn có chắc chắn muốn vô hiệu hóa tài khoản độc giả '{hoTen}'?\n\n" +
+                    "Lưu ý: Độc giả sẽ không thể mượn sách mới, nhưng dữ liệu sẽ được lưu trữ.",
+                    "Xác nhận vô hiệu hóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
                 {
-                    MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    try
+                    {
+                        int maDocGia = Convert.ToInt32(dgvDocGia.CurrentRow.Cells["MaDocGia"].Value);
+                        if (docGiaDAO.DeleteDocGia(maDocGia))
+                        {
+                            MessageBox.Show($"Đã vô hiệu hóa tài khoản độc giả '{hoTen}' thành công!", "Thành công",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadData();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Vô hiệu hóa tài khoản thất bại!", "Lỗi",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
@@ -421,20 +504,25 @@ namespace LibraryManagement.UserControls
                 string searchText = txtSearch.Text.Trim();
                 var searchResults = docGiaDAO.SearchDocGia(searchText);
 
-                var displayData = searchResults.Select(dg => new
-                {
-                    MaDocGia = dg.MaDocGia,
-                    HoTen = dg.HoTen,
-                    Tuoi = dg.Tuoi,
-                    SoDT = dg.SoDT,
-                    CCCD = dg.CCCD,
-                    Email = dg.Email,
-                    DiaChi = dg.DiaChi,
-                    TenLoaiDG = dg.TenLoaiDG,
-                    NgayDangKy = dg.NgayDangKy.ToString("dd/MM/yyyy"),
-                    TienNo = dg.TienNo.ToString("N0") + " VNĐ",
-                    TrangThai = dg.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
-                }).ToList();
+                // ✅ Sắp xếp kết quả tìm kiếm tương tự như LoadData
+                var displayData = searchResults
+                    .OrderByDescending(dg => dg.TrangThai) // True (Hoạt động) trước, False (Ngừng hoạt động) sau
+                    .ThenBy(dg => dg.HoTen) // Sắp xếp theo tên trong mỗi nhóm
+                    .Select(dg => new
+                    {
+                        MaDocGia = dg.MaDocGia,
+                        HoTen = dg.HoTen,
+                        Tuoi = dg.Tuoi,
+                        GioiTinh = dg.GioiTinh,
+                        SoDT = dg.SoDT,
+                        CCCD = dg.CCCD,
+                        Email = dg.Email,
+                        DiaChi = dg.DiaChi,
+                        TenLoaiDG = dg.TenLoaiDG,
+                        NgayDangKy = dg.NgayDangKy.ToString("dd/MM/yyyy"),
+                        TienNo = dg.TienNo.ToString("N0") + " VNĐ",
+                        TrangThai = dg.TrangThai ? "Hoạt động" : "Ngừng hoạt động"
+                    }).ToList();
 
                 dgvDocGia.DataSource = displayData;
                 currentData = searchResults;
@@ -473,7 +561,5 @@ namespace LibraryManagement.UserControls
         {
             lblTitle.Text = "QUẢN LÝ ĐỘC GIẢ";
         }
-
-        // Override các method public để reset title
     }
 }
