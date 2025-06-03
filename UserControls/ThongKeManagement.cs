@@ -500,7 +500,7 @@ namespace LibraryManagement.UserControls
                 dgvThongKe.DataSource = dt;
 
                 // Cập nhật label
-                lblThongKeThang.Text = $"🏆 Top 20 độc giả có chi phí cao nhất - Tháng {thang}/{nam}";
+                //lblThongKeThang.Text = $"🏆 Top 20 độc giả có chi phí cao nhất - Tháng {thang}/{nam}";
             }
             catch (Exception ex)
             {

@@ -42,7 +42,7 @@ namespace LibraryManagement.UserControls
             this.chartDocGia = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabDoanhthu = new System.Windows.Forms.TabPage();
             this.chartTien = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.tabChitiet = new System.Windows.Forms.TabPage();
+            //this.tabChitiet = new System.Windows.Forms.TabPage();
             this.dgvThongKe = new System.Windows.Forms.DataGridView();
             this.lblThongKeThang = new System.Windows.Forms.Label();
             this.tabTop10SachMuonNhieuNhat = new System.Windows.Forms.TabPage();
@@ -54,7 +54,7 @@ namespace LibraryManagement.UserControls
             ((System.ComponentModel.ISupportInitialize)(this.chartDocGia)).BeginInit();
             this.tabDoanhthu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartTien)).BeginInit();
-            this.tabChitiet.SuspendLayout();
+            //this.tabChitiet.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvThongKe)).BeginInit();
             this.tabTop10SachMuonNhieuNhat.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBestSeller)).BeginInit();
@@ -173,7 +173,7 @@ namespace LibraryManagement.UserControls
             // 
             this.tabControl.Controls.Add(this.tabDocGia);
             this.tabControl.Controls.Add(this.tabDoanhthu);
-            this.tabControl.Controls.Add(this.tabChitiet);
+            //this.tabControl.Controls.Add(this.tabChitiet);
             this.tabControl.Controls.Add(this.tabTop10SachMuonNhieuNhat);
             this.tabControl.Controls.Add(this.tabSoLuongSachMuon);
             this.tabControl.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -229,14 +229,14 @@ namespace LibraryManagement.UserControls
             // 
             // tabChitiet
             // 
-            this.tabChitiet.Controls.Add(this.dgvThongKe);
-            this.tabChitiet.Controls.Add(this.lblThongKeThang);
-            this.tabChitiet.Location = new System.Drawing.Point(4, 29);
-            this.tabChitiet.Name = "tabChitiet";
-            this.tabChitiet.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabChitiet.Size = new System.Drawing.Size(1142, 368);
-            this.tabChitiet.TabIndex = 2;
-            this.tabChitiet.UseVisualStyleBackColor = true;
+            //this.tabChitiet.Controls.Add(this.dgvThongKe);
+            //this.tabChitiet.Controls.Add(this.lblThongKeThang);
+            //this.tabChitiet.Location = new System.Drawing.Point(4, 29);
+            //this.tabChitiet.Name = "tabChitiet";
+            //this.tabChitiet.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            //this.tabChitiet.Size = new System.Drawing.Size(1142, 368);
+            //this.tabChitiet.TabIndex = 2;
+            //this.tabChitiet.UseVisualStyleBackColor = true;
             // 
             // dgvThongKe
             // 
@@ -257,14 +257,14 @@ namespace LibraryManagement.UserControls
             // 
             // lblThongKeThang
             // 
-            this.lblThongKeThang.AutoSize = true;
-            this.lblThongKeThang.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblThongKeThang.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(115)))), ((int)(((byte)(154)))), ((int)(((byte)(79)))));
-            this.lblThongKeThang.Location = new System.Drawing.Point(6, 12);
-            this.lblThongKeThang.Name = "lblThongKeThang";
-            this.lblThongKeThang.Size = new System.Drawing.Size(332, 25);
-            this.lblThongKeThang.TabIndex = 0;
-            this.lblThongKeThang.Text = "🏆 Top 20 độc giả có chi phí cao nhất";
+            //this.lblThongKeThang.AutoSize = true;
+            //this.lblThongKeThang.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            //this.lblThongKeThang.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(115)))), ((int)(((byte)(154)))), ((int)(((byte)(79)))));
+            //this.lblThongKeThang.Location = new System.Drawing.Point(6, 12);
+            //this.lblThongKeThang.Name = "lblThongKeThang";
+            //this.lblThongKeThang.Size = new System.Drawing.Size(332, 25);
+            //this.lblThongKeThang.TabIndex = 0;
+            //this.lblThongKeThang.Text = "🏆 Top 20 độc giả có chi phí cao nhất";
             // 
             // tabTop10SachMuonNhieuNhat
             // 
@@ -322,8 +322,8 @@ namespace LibraryManagement.UserControls
             ((System.ComponentModel.ISupportInitialize)(this.chartDocGia)).EndInit();
             this.tabDoanhthu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chartTien)).EndInit();
-            this.tabChitiet.ResumeLayout(false);
-            this.tabChitiet.PerformLayout();
+            //this.tabChitiet.ResumeLayout(false);
+            //this.tabChitiet.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvThongKe)).EndInit();
             this.tabTop10SachMuonNhieuNhat.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvBestSeller)).EndInit();
@@ -344,7 +344,7 @@ namespace LibraryManagement.UserControls
         private Chart chartDocGia;
         private System.Windows.Forms.TabPage tabDoanhthu;
         private Chart chartTien;
-        private System.Windows.Forms.TabPage tabChitiet;
+        //private System.Windows.Forms.TabPage tabChitiet;
         private System.Windows.Forms.DataGridView dgvThongKe;
         private System.Windows.Forms.Label lblThongKeThang;
         private System.Windows.Forms.TabPage tabTop10SachMuonNhieuNhat;
