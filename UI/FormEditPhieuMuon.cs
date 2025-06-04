@@ -17,22 +17,27 @@ namespace LibraryManagement.UI
         private Label lblTitle;
         private Label lblMaPhieuMuon, lblDocGia, lblSach, lblNgayMuon, lblNgayTra, lblTrangThai;
         private TextBox txtMaPhieuMuon;
-        private TextBox txtTenDocGia, txtTenCuonSach;
         private DateTimePicker dtpNgayMuon, dtpNgayTra;
         private Label lblTrangThaiValue;
         private Button btnSave, btnCancel;
         private TextBox txtGiaMuon;
         private TextBox txtTienCoc;
         private ComboBox cbTrangThai;
+        private ComboBox cbTenDocGia;
+        private ComboBox cbTenCuonSach;
 
-
+        private Dictionary<string, int> docGiaDict = new Dictionary<string, int>();
+        private Dictionary<string, int> cuonSachDict = new Dictionary<string, int>();
         private PhieuMuonDAO phieuMuonDAO = new PhieuMuonDAO();
         private PhieuMuon phieuMuonToEdit;
+        private DocGiaDAO docGiaDAO = new DocGiaDAO();
+        private CuonSachRepository cuonSachDAO = new CuonSachRepository();
 
         public FormEditPhieuMuon(int maPhieuMuon)
         {
             InitializeComponentForm();
             InitializeCustomStyle();
+            LoadComboBoxData();      
             LoadPhieuMuonData(maPhieuMuon);
         }
 
@@ -90,15 +95,14 @@ namespace LibraryManagement.UI
             };
             this.Controls.Add(lblDocGia);
 
-            txtTenDocGia = new TextBox()
+            cbTenDocGia = new ComboBox()
             {
                 Location = new Point(160, 97),
                 Width = 300,
                 Font = new Font("Segoe UI", 10),
-                ReadOnly = true,
-                BackColor = Color.LightGray
+                DropDownStyle = ComboBoxStyle.DropDownList
             };
-            this.Controls.Add(txtTenDocGia);
+            this.Controls.Add(cbTenDocGia);
 
             lblSach = new Label()
             {
@@ -110,15 +114,14 @@ namespace LibraryManagement.UI
             };
             this.Controls.Add(lblSach);
 
-            txtTenCuonSach = new TextBox()
+            cbTenCuonSach = new ComboBox()
             {
                 Location = new Point(160, 137),
                 Width = 300,
                 Font = new Font("Segoe UI", 10),
-                ReadOnly = false,
-                BackColor = Color.LightGray
+                DropDownStyle = ComboBoxStyle.DropDownList
             };
-            this.Controls.Add(txtTenCuonSach);
+            this.Controls.Add(cbTenCuonSach);
 
             lblNgayMuon = new Label()
             {
@@ -263,6 +266,8 @@ namespace LibraryManagement.UI
             };
         }
 
+        
+
         private void LoadPhieuMuonData(int maPhieuMuon)
         {
             try
@@ -271,8 +276,8 @@ namespace LibraryManagement.UI
                 if (phieuMuonToEdit != null)
                 {
                     txtMaPhieuMuon.Text = phieuMuonToEdit.MaMuonSach.ToString();
-                    txtTenDocGia.Text = phieuMuonToEdit.TenDocGia;
-                    txtTenCuonSach.Text = phieuMuonToEdit.TenCuonSach;
+                    cbTenDocGia.SelectedValue = phieuMuonToEdit.MaDocGia;
+                    cbTenCuonSach.SelectedValue = phieuMuonToEdit.MaPhieu;
                     dtpNgayMuon.Value = phieuMuonToEdit.NgayMuon;
                     dtpNgayTra.Value = phieuMuonToEdit.NgayTra;
                     cbTrangThai.SelectedItem = phieuMuonToEdit.TrangThaiM;
@@ -292,6 +297,26 @@ namespace LibraryManagement.UI
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
+        }
+
+        private void LoadComboBoxData()
+        {
+            var docGias = docGiaDAO.GetAllDocGia();
+            foreach (var dg in docGias)
+            {
+                cbTenDocGia.Items.Add(dg.HoTen);
+                docGiaDict[dg.HoTen] = dg.MaDocGia;
+            }
+
+            var cuonSachs = cuonSachDAO.GetAllCuonSachDetails();
+            foreach (var cs in cuonSachs)
+            {
+                cbTenCuonSach.Items.Add(cs.TenCuonSach);
+                cuonSachDict[cs.TenCuonSach] = cs.MaCuonSach;
+            }
+
+            if (cbTenDocGia.Items.Count > 0) cbTenDocGia.SelectedIndex = 0;
+            if (cbTenCuonSach.Items.Count > 0) cbTenCuonSach.SelectedIndex = 0;
         }
 
         private void DtpNgayTra_ValueChanged(object sender, EventArgs e)
